@@ -9,35 +9,51 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class ShowDiskTree {
+    public class MyFile {
+        private File file;
+        private String filename;
+        public MyFile(File file){
+            this.file = file;
+            this.filename = file.getName();
+        }
+        public MyFile(File file,String filename){
+            this.file = file;
+            this.filename = filename;
+        }
+        @Override
+        public String toString(){
+            return this.filename;
+        }
+    }
+
     public ShowDiskTree(TreeView disktree){
         //设置树视图的根目录
-        disktree.setRoot(new TreeItem(new File("此电脑")));
+        disktree.setRoot(new TreeItem(new MyFile(new File("此电脑"))));
         //获取电脑磁盘分区
-        ArrayList<File> diskPartitions = getDiskPartitions();
-        for(File partition : diskPartitions){
+        ArrayList<MyFile> diskPartitions = getDiskPartitions();
+        for(MyFile partition : diskPartitions){
             //递归获取每一个分区的目录
-            TreeItem<File> item = createNode(partition);
+            TreeItem<MyFile> item = createNode(partition);
             //将分区添加到“此电脑”根节点
             disktree.getTreeItem(0).getChildren().add(item);
             System.out.println(partition.toString());
         }
-
     }
 
     // TODO 获取电脑磁盘分区
-    private ArrayList<File> getDiskPartitions(){
-        ArrayList<File> diskPartitions = new ArrayList<>();
+    private ArrayList<MyFile> getDiskPartitions(){
+        ArrayList<MyFile> diskPartitions = new ArrayList<>();
         File[] disks = File.listRoots();
         if(disks == null){
             return null;
         }
         for(File partition : disks){
-            diskPartitions.add(partition);
+            diskPartitions.add(new MyFile(partition,partition.getPath()));
         }
         return diskPartitions;
     }
 
-    private TreeItem<File> createNode(File file){
+    private TreeItem<MyFile> createNode(MyFile file){
         return new TreeItem<>(file){
             private boolean isLeaf;
             /*
@@ -46,7 +62,7 @@ public class ShowDiskTree {
             private boolean isFirstTimeChildren = true;
             private boolean isFirstTimeLeaf = true;
             @Override
-            public ObservableList<TreeItem<File>> getChildren(){
+            public ObservableList<TreeItem<MyFile>> getChildren(){
                 // 重新构建父节点的列表
                if(isFirstTimeChildren) {
                    isFirstTimeChildren = false;
@@ -60,25 +76,25 @@ public class ShowDiskTree {
             public boolean isLeaf(){
                 if(isFirstTimeLeaf){
                     isFirstTimeLeaf = false;
-                    File f = getValue() ;
-                    isLeaf = f.isFile() ;
+                    MyFile f = getValue();
+                    isLeaf = f.file.isFile() ;
                 }
                 return isLeaf;
             }
 
             // 递归构建子目录
-            private ObservableList<TreeItem<File>> buildChildren(){
-                if(file == null){
+            private ObservableList<TreeItem<MyFile>> buildChildren(){
+                if(file.file == null){
                     return FXCollections.emptyObservableList();
                 }
-                if(file.isFile()){
+                if(file.file.isFile()){
                     return FXCollections.emptyObservableList();
                 }
-                File[] files = file.listFiles();
+                File[] files = file.file.listFiles();
                 if(files != null){
-                    ObservableList<TreeItem<File>> children = FXCollections.observableArrayList();
+                    ObservableList<TreeItem<MyFile>> children = FXCollections.observableArrayList();
                     for(File f : files){
-                        children.add(createNode(f));
+                        children.add(createNode(new MyFile(f)));
                     }
                     return children;
                 }
