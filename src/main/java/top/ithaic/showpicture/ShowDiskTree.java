@@ -6,6 +6,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 
 public class ShowDiskTree {
@@ -82,6 +83,27 @@ public class ShowDiskTree {
                 return isLeaf;
             }
 
+            //文件过滤器
+            private File[] getImageFiles(File dir){
+                return dir.listFiles(pathname->{
+                    boolean result = false;
+                    if(pathname.isDirectory())
+                        result = true;
+                    else if(pathname.isFile()){
+                        String filename = pathname.getName().toLowerCase();
+                        //显示图片的格式
+                        String[] formats = {".jpg",".jpeg",".bmp",".gif",".png"};
+                        for(String format:formats){
+                            if(filename.endsWith(format)){
+                                result = true;
+                                break;
+                            }
+                        }
+                    }
+                    return result;
+                });
+            }
+
             // 递归构建子目录
             private ObservableList<TreeItem<MyFile>> buildChildren(){
                 if(file.file == null){
@@ -90,16 +112,18 @@ public class ShowDiskTree {
                 if(file.file.isFile()){
                     return FXCollections.emptyObservableList();
                 }
-                File[] files = file.file.listFiles();
+                File[] files = getImageFiles(file.file);
                 if(files != null){
                     ObservableList<TreeItem<MyFile>> children = FXCollections.observableArrayList();
                     for(File f : files){
+                        if(f.isHidden())continue;  //隐藏文件不加入集合
                         children.add(createNode(new MyFile(f)));
                     }
                     return children;
                 }
                 return FXCollections.emptyObservableList();
             }
+
             // 获取相对于根目录的路径
 /*            private String getRelativePath(File f) {
                 String rootPath = new File("").getAbsolutePath(); // 根目录的绝对路径
