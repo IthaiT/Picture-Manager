@@ -6,7 +6,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.ArrayList;
 
 public class ShowDiskTree {
@@ -85,21 +84,21 @@ public class ShowDiskTree {
 
             //文件过滤器
             private File[] getImageFiles(File dir){
-                return dir.listFiles(pathname->{
+                return dir.listFiles( pathname ->{
                     boolean result = false;
                     if(pathname.isDirectory())
                         result = true;
-                    else if(pathname.isFile()){
-                        String filename = pathname.getName().toLowerCase();
-                        //显示图片的格式
-                        String[] formats = {".jpg",".jpeg",".bmp",".gif",".png"};
-                        for(String format:formats){
-                            if(filename.endsWith(format)){
-                                result = true;
-                                break;
-                            }
-                        }
-                    }
+//                    else if(pathname.isFile()){
+//                        String filename = pathname.getName().toLowerCase();
+//                        //显示图片的格式
+//                        String[] formats = {".jpg",".jpeg",".bmp",".gif",".png"};
+//                        for(String format:formats){
+//                            if(filename.endsWith(format)){
+//                                result = true;
+//                                break;
+//                            }
+//                        }
+//                    }
                     return result;
                 });
             }

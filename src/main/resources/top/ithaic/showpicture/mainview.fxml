@@ -42,7 +42,7 @@
    <center>
       <Pane prefHeight="559.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <FlowPane layoutY="117.0" prefHeight="534.0" prefWidth="799.0" />
+            <FlowPane fx:id="PictureShower" layoutY="117.0" prefHeight="534.0" prefWidth="799.0" />
             <TextField layoutX="155.0" layoutY="14.0" prefHeight="23.0" prefWidth="484.0" />
             <TextField layoutX="645.0" layoutY="14.0" prefHeight="23.0" prefWidth="149.0" />
             <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="51.0" text="后退" />
