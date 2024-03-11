@@ -16,7 +16,7 @@ public class ShowPicture {
         addListener();
     }
     private void addListener(){
-        this.DiskTree.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
+        this.DiskTree.addEventFilter( MouseEvent.MOUSE_CLICKED,mouseEvent -> {
             //鼠标双击选中目录树中的文件
             if(mouseEvent.getClickCount() >= 2 ){
                 TreeItem<ShowDiskTree.MyFile> selectedImage = (TreeItem<ShowDiskTree.MyFile>)DiskTree.getSelectionModel().getSelectedItem();
