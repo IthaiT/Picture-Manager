@@ -6,6 +6,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 
 public class ShowDiskTree {
@@ -84,21 +85,22 @@ public class ShowDiskTree {
 
             //文件过滤器
             private File[] getImageFiles(File dir){
-                return dir.listFiles( pathname ->{
+                return dir.listFiles(pathname->{
                     boolean result = false;
                     if(pathname.isDirectory())
                         result = true;
-//                    else if(pathname.isFile()){
+                    else if(pathname.isFile()){
 //                        String filename = pathname.getName().toLowerCase();
 //                        //显示图片的格式
 //                        String[] formats = {".jpg",".jpeg",".bmp",".gif",".png"};
 //                        for(String format:formats){
-//                            if(filename.endsWith(format)){
+//                            if(filename.contains(format)){
 //                                result = true;
 //                                break;
 //                            }
 //                        }
-//                    }
+                        return false;
+                    }
                     return result;
                 });
             }
@@ -122,14 +124,6 @@ public class ShowDiskTree {
                 }
                 return FXCollections.emptyObservableList();
             }
-
-            // 获取相对于根目录的路径
-/*            private String getRelativePath(File f) {
-                String rootPath = new File("").getAbsolutePath(); // 根目录的绝对路径
-                String absolutePath = f.getAbsolutePath();
-                String relativePath = new File(rootPath).toURI().relativize(new File(absolutePath).toURI()).getPath();
-                return relativePath;
-            }*/
         };
     }
 
