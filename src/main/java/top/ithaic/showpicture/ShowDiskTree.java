@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class ShowDiskTree {
-    public class MyFile {
+    public class MyFile{
         private File file;
         private String filename;
         public MyFile(File file){
