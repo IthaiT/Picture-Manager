@@ -15,7 +15,7 @@ import java.util.ArrayList;
 *    2、加上磁盘图标于文件夹图标
 *
 * */
-public class ShowDiskTree {
+public class DiskTreeShower {
     public class MyFile {
         private File file;
         private String filename;
@@ -48,7 +48,7 @@ public class ShowDiskTree {
         }
     }
 
-    public ShowDiskTree(TreeView disktree){
+    public DiskTreeShower(TreeView disktree){
         //设置树视图的根目录
         disktree.setRoot(new TreeItem(new MyFile(new File("此电脑"))));
         //获取电脑磁盘分区
@@ -58,7 +58,7 @@ public class ShowDiskTree {
             TreeItem<MyFile> item = createNode(partition);
             //将分区添加到“此电脑”根节点
             disktree.getTreeItem(0).getChildren().add(item);
-            System.out.println(partition.toString());
+//            System.out.println(partition.toString());
         }
     }
 
@@ -70,7 +70,7 @@ public class ShowDiskTree {
             return null;
         }
         for(File partition : disks){
-            diskPartitions.add(new MyFile(partition,partition.getPath()));
+            diskPartitions.add(new MyFile(partition, partition.getPath()));
         }
         return diskPartitions;
     }
@@ -99,42 +99,25 @@ public class ShowDiskTree {
                 if(isFirstTimeLeaf){
                     isFirstTimeLeaf = false;
                     MyFile f = getValue();
-                    isLeaf = f.file.isFile() ;
+                    isLeaf = f.getFile().isFile() ;
                 }
                 return isLeaf;
             }
 
             //文件过滤器
             private File[] getImageFiles(File dir){
-                return dir.listFiles(pathname->{
-                    boolean result = false;
-                    if(pathname.isDirectory())
-                        result = true;
-                    else if(pathname.isFile()){
-//                        String filename = pathname.getName().toLowerCase();
-//                        //显示图片的格式
-//                        String[] formats = {".jpg",".jpeg",".bmp",".gif",".png"};
-//                        for(String format:formats){
-//                            if(filename.contains(format)){
-//                                result = true;
-//                                break;
-//                            }
-//                        }
-                        return false;
-                    }
-                    return result;
-                });
+                return dir.listFiles(File::isDirectory);
             }
 
             // 递归构建子目录
             private ObservableList<TreeItem<MyFile>> buildChildren(){
-                if(file.file == null){
+                if(file.getFile() == null){
                     return FXCollections.emptyObservableList();
                 }
-                if(file.file.isFile()){
+                if(file.getFile().isFile()){
                     return FXCollections.emptyObservableList();
                 }
-                File[] files = getImageFiles(file.file);
+                File[] files = getImageFiles(file.getFile());
                 if(files != null){
                     ObservableList<TreeItem<MyFile>> children = FXCollections.observableArrayList();
                     for(File f : files){

@@ -13,33 +13,43 @@ package top.ithaic;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import top.ithaic.disktreeview.ShowDiskTree;
-import top.ithaic.imageview.ShowPicture;
+import top.ithaic.disktreeview.DiskTreeShower;
+import top.ithaic.imageview.PictureShower;
+import top.ithaic.pathview.PathShower;
 
 public class mainController {
     @FXML
-    private TreeView disktree;
+    private TreeView<TreeItem<DiskTreeShower.MyFile>> disktree;
     @FXML
     private ScrollPane pictureShower;
     @FXML
     private FlowPane thumbnails;
+    @FXML
+    public TextField pathShower;
 
     @FXML
     private void initialize(){
         initTreeView();
         initPictureShower();
+        initPathShower();
     }
 
     //TODO 初始化磁盘树目录
     private void initTreeView(){
-        new ShowDiskTree(disktree);
+        new DiskTreeShower(disktree);
     }
 
     //TODO 初始化图片预览
     private void initPictureShower(){
-        new ShowPicture(pictureShower,thumbnails, disktree);
+        new PictureShower(pictureShower,thumbnails, disktree);
     }
+
+    //TODO 当前路径
+    private void initPathShower(){new PathShower(disktree,pathShower);}
 
 }
