@@ -18,17 +18,15 @@ import java.util.ArrayList;
 public class ShowDiskTree {
     public class MyFile {
         private File file;
-        // 相对路径的文件名
-        private String relativeFilename;
-        // 绝对路径的文件名
-        private String absoluteFilename;
+        private String filename;
+
         public MyFile(File file){
             this.file = file;
-            this.relativeFilename = file.getName();
+            this.filename = file.getName();
         }
         public MyFile(File file,String relativeFilename){
             this.file = file;
-            this.relativeFilename = relativeFilename;
+            this.filename = relativeFilename;
         }
 
         public File getFile() {
@@ -37,22 +35,16 @@ public class ShowDiskTree {
         public void setFile(File file) {
             this.file = file;
         }
-        public String getRelativeFilename() {
-            return relativeFilename;
+        public String getFilename() {
+            return filename;
         }
-        public void setRelativeFilename(String relativeFilename) {
-            this.relativeFilename = relativeFilename;
-        }
-        public String getAbsoluteFilename() {
-            return file.getAbsoluteFile().toString();
-        }
-        public void setAbsoluteFilename(String absoluteFilename) {
-            this.absoluteFilename = absoluteFilename;
+        public void setFilename(String relativeFilename) {
+            this.filename = relativeFilename;
         }
 
         @Override
         public String toString(){
-            return this.relativeFilename;
+            return this.filename;
         }
     }
 

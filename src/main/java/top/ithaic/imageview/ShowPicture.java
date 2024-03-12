@@ -31,19 +31,22 @@ public class ShowPicture {
                 TreeItem<ShowDiskTree.MyFile> selectedImage = (TreeItem<ShowDiskTree.MyFile>) diskTree.getSelectionModel().getSelectedItem();
                 //处理事件
                 if(selectedImage!=null && selectedImage.getChildren().isEmpty()){
+                    thumbnails.getChildren().clear();
                     System.out.println("选中了"+selectedImage.getValue().toString());//测试
-                    //得到目录下所有文件
 
                     Thread imageLoadingThread = new Thread(()->{
+                        //得到目录下所有文件
                         File[] pictures = selectedImage.getValue().getFile().listFiles();
                         String[] formats = {".jpg",".jpeg",".bmp",".gif",".png"};
                         if (pictures != null) {
+                            //挑选出图片
                             for(File picture : pictures){
                                 boolean isPicture = false;
                                 for(String format :formats){
                                     if(picture.getName().toLowerCase().endsWith(format))
                                         isPicture = true;
                                 }
+                                //如果是图片把它画出来然后添加到flowPane里面
                                 if(isPicture){
                                     System.out.println(picture);
                                     Thumbnail thumbnail = new Thumbnail(picture);
