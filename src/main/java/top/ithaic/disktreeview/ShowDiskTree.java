@@ -1,4 +1,4 @@
-package top.ithaic.showpicture;
+package top.ithaic.disktreeview;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -6,24 +6,53 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.ArrayList;
 
+/*
+*   TODO
+*    还需要修改的地方
+*    1、根目录不要加上展开图标
+*    2、加上磁盘图标于文件夹图标
+*
+* */
 public class ShowDiskTree {
     public class MyFile {
         private File file;
-        private String filename;
+        // 相对路径的文件名
+        private String relativeFilename;
+        // 绝对路径的文件名
+        private String absoluteFilename;
         public MyFile(File file){
             this.file = file;
-            this.filename = file.getName();
+            this.relativeFilename = file.getName();
         }
-        public MyFile(File file,String filename){
+        public MyFile(File file,String relativeFilename){
             this.file = file;
-            this.filename = filename;
+            this.relativeFilename = relativeFilename;
         }
+
+        public File getFile() {
+            return file;
+        }
+        public void setFile(File file) {
+            this.file = file;
+        }
+        public String getRelativeFilename() {
+            return relativeFilename;
+        }
+        public void setRelativeFilename(String relativeFilename) {
+            this.relativeFilename = relativeFilename;
+        }
+        public String getAbsoluteFilename() {
+            return file.getAbsoluteFile().toString();
+        }
+        public void setAbsoluteFilename(String absoluteFilename) {
+            this.absoluteFilename = absoluteFilename;
+        }
+
         @Override
         public String toString(){
-            return this.filename;
+            return this.relativeFilename;
         }
     }
 

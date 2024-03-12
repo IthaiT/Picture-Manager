@@ -4,14 +4,15 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.ithaic.showpicture.mainController">
+<?import javafx.scene.layout.FlowPane?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.ithaic.mainController">
    <left>
       <TreeView fx:id="disktree" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </left>
@@ -42,13 +43,15 @@
    <center>
       <Pane prefHeight="559.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <FlowPane fx:id="PictureShower" layoutY="117.0" prefHeight="534.0" prefWidth="799.0" />
-            <TextField layoutX="155.0" layoutY="14.0" prefHeight="23.0" prefWidth="484.0" />
-            <TextField layoutX="645.0" layoutY="14.0" prefHeight="23.0" prefWidth="149.0" />
-            <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="51.0" text="后退" />
-            <Button layoutX="80.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="51.0" text="前进" />
-            <Slider layoutX="641.0" layoutY="71.0" prefHeight="14.0" prefWidth="102.0" />
-            <Button layoutX="748.0" layoutY="67.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="46.0" text="排序" />
+             <ScrollPane fx:id="pictureShower" layoutY="117.0" prefHeight="534.0" prefWidth="799.0" >
+                     <FlowPane fx:id="thumbnails" layoutY="117.0" prefHeight="534.0" prefWidth="799.0"/>
+             </ScrollPane>
+             <TextField layoutX="155.0" layoutY="14.0" prefHeight="23.0" prefWidth="484.0" />
+             <TextField layoutX="645.0" layoutY="14.0" prefHeight="23.0" prefWidth="149.0" />
+             <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="51.0" text="后退" />
+             <Button layoutX="80.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="51.0" text="前进" />
+             <Slider layoutX="641.0" layoutY="71.0" prefHeight="14.0" prefWidth="102.0" />
+             <Button layoutX="748.0" layoutY="67.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="46.0" text="排序" />
          </children>
       </Pane>
    </center>

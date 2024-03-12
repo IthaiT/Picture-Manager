@@ -60,7 +60,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>top.ithaic.showpicture/top.ithaic.showpicture.HelloApplication</mainClass>
+                            <mainClass>top.ithaic.showpicture/top.ithaic.HelloApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

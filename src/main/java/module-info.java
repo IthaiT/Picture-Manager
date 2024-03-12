@@ -3,6 +3,10 @@ module top.ithaic.showpicture {
     requires javafx.fxml;
 
 
-    opens top.ithaic.showpicture to javafx.fxml;
-    exports top.ithaic.showpicture;
+    opens top.ithaic to javafx.fxml;
+    exports top.ithaic;
+    exports top.ithaic.imageview;
+    opens top.ithaic.imageview to javafx.fxml;
+    exports top.ithaic.disktreeview;
+    opens top.ithaic.disktreeview to javafx.fxml;
 }
