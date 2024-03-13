@@ -33,7 +33,7 @@ public class PictureShower {
             imageLoadThread.terminate();
         }
         //处理事件
-        if(selectedImage!=null && selectedImage.getChildren().isEmpty()){
+        if(selectedImage!=null){
             //加载图片
             imageLoadThread = new ImageLoadThread(selectedImage,thumbnails);
             imageLoadThread.start();

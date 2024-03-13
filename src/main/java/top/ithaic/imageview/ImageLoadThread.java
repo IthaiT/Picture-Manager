@@ -21,6 +21,7 @@ public class ImageLoadThread extends Thread{
     public void run(){
         PictureUtil pictureutil = new PictureUtil();
         File[] files = selectedImage.getValue().getFile().listFiles();
+        System.out.println(selectedImage.getValue());
         if (files == null) return;
         for(File file : files){
             if(this.isTerminal)break;

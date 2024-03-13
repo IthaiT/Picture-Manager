@@ -26,7 +26,8 @@ public class PathShower {
             if(mouseEvent.getClickCount() >= 2){
                 @SuppressWarnings("unchecked")
                 TreeItem<DiskTreeShower.MyFile> selectedPath = (TreeItem<DiskTreeShower.MyFile>) diskTree.getSelectionModel().getSelectedItem();
-                this.pathShower.setText(selectedPath.getValue().getFile().getAbsolutePath());
+                if(selectedPath != null)
+                    this.pathShower.setText(selectedPath.getValue().getFile().getAbsolutePath());
             }
         });
         ChangeListener<Number> anchorPaneSizeListener = ((observableValue, oldSize, newSize) -> {

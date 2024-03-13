@@ -36,6 +36,7 @@ public class mainController {
     @FXML
     private TextField pictureMessage;
 
+
     @FXML
     private void initialize(){
         initTreeView();
