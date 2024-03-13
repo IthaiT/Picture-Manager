@@ -52,12 +52,12 @@
                            <Double fx:value="9.0" />
                         </AnchorPane.rightAnchor>
                    </TextField>
-                   <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="51.0" text="后退">
+                   <Button fx:id="backward" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="51.0" text="后退">
                        <AnchorPane.leftAnchor>
                            <Double fx:value="14.0" />
                        </AnchorPane.leftAnchor>
                    </Button>
-                   <Button layoutX="80.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="51.0" text="前进">
+                   <Button fx:id="forward" layoutX="80.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="51.0" text="前进">
                        <AnchorPane.leftAnchor>
                            <Double fx:value="80.0" />
                        </AnchorPane.leftAnchor>

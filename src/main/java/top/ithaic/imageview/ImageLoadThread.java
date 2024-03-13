@@ -1,27 +1,25 @@
 package top.ithaic.imageview;
 
 import javafx.application.Platform;
-import javafx.scene.control.TreeItem;
 import javafx.scene.layout.FlowPane;
-import top.ithaic.shower.DiskTreeShower;
 import top.ithaic.utils.PictureUtil;
 
 import java.io.File;
 
 public class ImageLoadThread extends Thread{
-    private TreeItem<DiskTreeShower.MyFile> selectedImage;
+    private File selectedPath;
     private FlowPane thumbnails;
     private boolean isTerminal = false;
 
-    public ImageLoadThread(TreeItem<DiskTreeShower.MyFile> selectedImage, FlowPane thumbnails){
-        this.selectedImage = selectedImage;
+    public ImageLoadThread(File selectedPath, FlowPane thumbnails){
+        this.selectedPath = selectedPath;
         this.thumbnails = thumbnails;
     }
     @Override
     public void run(){
         PictureUtil pictureutil = new PictureUtil();
-        File[] files = selectedImage.getValue().getFile().listFiles();
-        System.out.println(selectedImage.getValue());
+        File[] files = selectedPath.listFiles();
+
         if (files == null) return;
         for(File file : files){
             if(this.isTerminal)break;

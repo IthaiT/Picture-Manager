@@ -1,9 +1,13 @@
 package top.ithaic.listener;
 
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import top.ithaic.shower.DiskTreeShower;
 import top.ithaic.shower.PictureMessageShower;
 import top.ithaic.shower.PictureShower;
+
+import java.io.File;
 
 public class DiskTreeListener {
     private static TreeView diskTree;
@@ -12,12 +16,16 @@ public class DiskTreeListener {
          addDiskTreeListener();
     }
     private void addDiskTreeListener(){
-        PictureShower pictureShower = new PictureShower(diskTree);
+        PictureShower pictureShower = new PictureShower();
         PictureMessageShower pictureMessageShower = new PictureMessageShower(diskTree);
         diskTree.addEventFilter( MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             //鼠标双击选中目录树中的文件
+            @SuppressWarnings("unchecked")
+            TreeItem<DiskTreeShower.MyFile> selectedItem = (TreeItem<DiskTreeShower.MyFile>) diskTree.getSelectionModel().getSelectedItem();
+            if(selectedItem == null) return;
+            File selectedPath = selectedItem.getValue().getFile();
             if(mouseEvent.getClickCount() >= 2 ){
-                pictureShower.showPicture();
+                pictureShower.showPicture(selectedPath);
                 pictureMessageShower.updateText();
             }
         });

@@ -12,7 +12,6 @@ public class SliderListener {
         addSizeListener();
     }
 
-
     private void addSizeListener(){
         //首先初始化Slider参数
         sizeChanger.setMin(60);

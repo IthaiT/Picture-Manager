@@ -1,29 +1,37 @@
 package top.ithaic.shower;
 
 import javafx.application.Platform;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.layout.FlowPane;
 import top.ithaic.imageview.ImageLoadThread;
 
+import java.io.File;
+
 public class PictureShower {
+    private static StringProperty currentPathProperty;
+    private static File currentPath;
+    private static File lastPath;
     private static FlowPane thumbnails;
-    private static TreeView diskTree;
     private ImageLoadThread imageLoadThread;
 
+    static {
+        currentPathProperty = new SimpleStringProperty("");
+        currentPath = null;
+        lastPath = null;
+        thumbnails = null;
+    }
     public PictureShower(){}
-    public PictureShower( FlowPane thumbnails){
+    public PictureShower(FlowPane thumbnails){
         PictureShower.thumbnails = thumbnails;
     }
 
-    public PictureShower(TreeView diskTree){
-        PictureShower.diskTree = diskTree;
-    }
-
     //TODO 将当前目录的文件显示出来
-    public void showPicture(){
-        @SuppressWarnings("unchecked")
-        TreeItem<DiskTreeShower.MyFile> selectedImage = (TreeItem<DiskTreeShower.MyFile>) diskTree.getSelectionModel().getSelectedItem();
+    public void showPicture(File selectedPath){
+        if(selectedPath==null) return;
+        lastPath = currentPath;
+        currentPath = selectedPath;
+        currentPathProperty.setValue(currentPath.getAbsolutePath());
         //清除图片
         Platform.runLater(()->{
             thumbnails.getChildren().clear();
@@ -32,11 +40,22 @@ public class PictureShower {
         if(imageLoadThread!=null && imageLoadThread.isAlive()){
             imageLoadThread.terminate();
         }
-        //处理事件
-        if(selectedImage!=null){
-            //加载图片
-            imageLoadThread = new ImageLoadThread(selectedImage,thumbnails);
-            imageLoadThread.start();
-        }
+        //加载图片
+        imageLoadThread = new ImageLoadThread(selectedPath,thumbnails);
+        imageLoadThread.start();
+
+    }
+    public void showPicture(){
+        if(currentPath!=null)this.showPicture(currentPath);
+    }
+
+    public static StringProperty getCurrentPathProperty() {
+        return currentPathProperty;
+    }
+    public static File getCurrentPath() {
+        return currentPath;
+    }
+    public static File getLastPath() {
+        return lastPath;
     }
 }

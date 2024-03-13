@@ -15,14 +15,19 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import top.ithaic.listener.ButtonListener;
 import top.ithaic.listener.DiskTreeListener;
 import top.ithaic.listener.SliderListener;
 import top.ithaic.shower.DiskTreeShower;
+import top.ithaic.shower.PathShower;
 import top.ithaic.shower.PictureMessageShower;
 import top.ithaic.shower.PictureShower;
-import top.ithaic.shower.PathShower;
 
 public class mainController {
+    @FXML
+    public Button backward;
+    @FXML
+    public Button forward;
     @FXML
     private TreeView<TreeItem<DiskTreeShower.MyFile>> disktree;
     @FXML
@@ -39,7 +44,7 @@ public class mainController {
 
     @FXML
     private void initialize(){
-        initTreeView();
+        initDiskTreeShower();
         initPictureShower();
         initPathShower();
         initPictureMessage();
@@ -47,7 +52,7 @@ public class mainController {
     }
 
     //TODO 初始化磁盘树目录
-    private void initTreeView(){
+    private void initDiskTreeShower(){
         new DiskTreeShower(disktree);
     }
 
@@ -56,8 +61,8 @@ public class mainController {
         new PictureShower(thumbnails);
     }
 
-    //TODO 当前路径
-    private void initPathShower(){new PathShower(disktree,pathShower,anchorPane);}
+    //TODO 初始化路径显示
+    private void initPathShower(){new PathShower(pathShower,anchorPane);}
 
     //TODO 初始化图片信息统计
     private void initPictureMessage(){
@@ -67,5 +72,6 @@ public class mainController {
     private void initListener(){
         new DiskTreeListener(disktree);
         new SliderListener(sizeChanger);
+        new ButtonListener(backward,forward);
     }
 }
