@@ -16,6 +16,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import top.ithaic.disktreeview.DiskTreeShower;
@@ -30,7 +31,9 @@ public class mainController {
     @FXML
     private FlowPane thumbnails;
     @FXML
-    public TextField pathShower;
+    private TextField pathShower;
+    @FXML
+    private AnchorPane anchorPane;
 
     @FXML
     private void initialize(){
@@ -50,6 +53,6 @@ public class mainController {
     }
 
     //TODO 当前路径
-    private void initPathShower(){new PathShower(disktree,pathShower);}
+    private void initPathShower(){new PathShower(disktree,pathShower,anchorPane);}
 
 }
