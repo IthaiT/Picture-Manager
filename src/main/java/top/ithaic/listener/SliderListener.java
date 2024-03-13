@@ -11,6 +11,8 @@ public class SliderListener {
         SliderListener.sizeChanger = sizeChanger;
         addSizeListener();
     }
+
+
     private void addSizeListener(){
         //首先初始化Slider参数
         sizeChanger.setMin(60);
@@ -26,5 +28,8 @@ public class SliderListener {
             thumbnail.setThumbnailWidth(newWidth);
             thumbnail.setThumbnailHeight(newHeight);
         }));
+        sizeChanger.setOnScroll(mouseEvent->{
+            sizeChanger.setValue(sizeChanger.getValue()+mouseEvent.getDeltaY()*0.1);
+        });
     }
 }
