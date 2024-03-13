@@ -1,4 +1,4 @@
-package top.ithaic.pathview;
+package top.ithaic.shower;
 
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.TextField;
@@ -6,7 +6,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import top.ithaic.disktreeview.DiskTreeShower;
+import top.ithaic.shower.DiskTreeShower;
 
 
 public class PathShower {

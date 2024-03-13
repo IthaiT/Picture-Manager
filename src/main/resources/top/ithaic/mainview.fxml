@@ -17,9 +17,6 @@
    <left>
       <TreeView fx:id="disktree" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </left>
-   <bottom>
-      <TextField prefHeight="0.0" prefWidth="567.0" BorderPane.alignment="CENTER" />
-   </bottom>
    <top>
       <MenuBar prefHeight="9.0" prefWidth="524.0" BorderPane.alignment="CENTER">
         <menus>
@@ -85,7 +82,9 @@
                </ScrollPane>
            </center>
        </BorderPane>
-
    </center>
+    <bottom>
+        <TextField fx:id="pictureMessage" prefHeight="0.0" prefWidth="567.0" BorderPane.alignment="CENTER" />
+    </bottom>
 
 </BorderPane>
