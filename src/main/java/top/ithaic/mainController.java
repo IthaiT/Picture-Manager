@@ -18,6 +18,7 @@ import javafx.scene.layout.FlowPane;
 import top.ithaic.listener.DiskTreeListener;
 import top.ithaic.listener.SliderListener;
 import top.ithaic.shower.DiskTreeShower;
+import top.ithaic.shower.PictureMessageShower;
 import top.ithaic.shower.PictureShower;
 import top.ithaic.shower.PathShower;
 
@@ -40,6 +41,7 @@ public class mainController {
         initTreeView();
         initPictureShower();
         initPathShower();
+        initPictureMessage();
         initListener();
     }
 
@@ -56,6 +58,10 @@ public class mainController {
     //TODO 当前路径
     private void initPathShower(){new PathShower(disktree,pathShower,anchorPane);}
 
+    //TODO 初始化图片信息统计
+    private void initPictureMessage(){
+        new PictureMessageShower(pictureMessage);
+    }
     //TODO 初始化各种监听器
     private void initListener(){
         new DiskTreeListener(disktree);
