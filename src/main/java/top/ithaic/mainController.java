@@ -12,12 +12,8 @@
 package top.ithaic;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import top.ithaic.disktreeview.DiskTreeShower;
 import top.ithaic.imageview.PictureShower;
@@ -27,13 +23,13 @@ public class mainController {
     @FXML
     private TreeView<TreeItem<DiskTreeShower.MyFile>> disktree;
     @FXML
-    private ScrollPane pictureShower;
-    @FXML
     private FlowPane thumbnails;
     @FXML
     private TextField pathShower;
     @FXML
     private AnchorPane anchorPane;
+    @FXML
+    private Slider sizeChanger;
 
     @FXML
     private void initialize(){
@@ -49,10 +45,13 @@ public class mainController {
 
     //TODO 初始化图片预览
     private void initPictureShower(){
-        new PictureShower(pictureShower,thumbnails, disktree);
+        new PictureShower(thumbnails, disktree, sizeChanger);
     }
 
     //TODO 当前路径
     private void initPathShower(){new PathShower(disktree,pathShower,anchorPane);}
+
+    //TODO 改变图片大小
+
 
 }

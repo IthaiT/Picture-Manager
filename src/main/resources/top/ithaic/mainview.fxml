@@ -65,12 +65,12 @@
                            <Double fx:value="80.0" />
                        </AnchorPane.leftAnchor>
                    </Button>
-                   <Slider layoutX="627.0" layoutY="53.0" prefHeight="14.0" prefWidth="102.0">
+                   <Slider fx:id="sizeChanger" layoutX="627.0" layoutY="53.0" prefHeight="14.0" prefWidth="102.0">
                        <AnchorPane.rightAnchor>
                            <Double fx:value="70.60000000000002" />
                        </AnchorPane.rightAnchor>
                    </Slider>
-                   <Button layoutX="741.0" layoutY="49.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="46.0" text="排序">
+                   <Button  layoutX="741.0" layoutY="49.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="46.0" text="排序">
                        <AnchorPane.rightAnchor>
                            <Double fx:value="12.600000000000023" />
                        </AnchorPane.rightAnchor>
@@ -78,7 +78,7 @@
                </AnchorPane>
            </top>
            <center>
-               <ScrollPane fx:id="pictureShower" fitToHeight="true" fitToWidth="true" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+               <ScrollPane fitToHeight="true" fitToWidth="true" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                    <content>
                        <FlowPane fx:id="thumbnails" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="534.0" prefWidth="799.0" />
                    </content>
