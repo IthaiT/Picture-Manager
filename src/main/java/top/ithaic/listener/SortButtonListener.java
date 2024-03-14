@@ -6,6 +6,8 @@ import javafx.scene.control.ContextMenu;
 import top.ithaic.utils.PictureSorterUtil;
 import top.ithaic.utils.PictureUtil;
 
+import java.io.IOException;
+
 public class SortButtonListener {
     private static Button sortButton;
     private static ContextMenu contextMenu;
@@ -22,7 +24,6 @@ public class SortButtonListener {
         contextMenu.getItems().addAll(sortWithName,sortWithSize,sortWithLastModify);
         sortButton.setContextMenu(contextMenu);
         addListener();
-
     }
 
     private void addListener(){

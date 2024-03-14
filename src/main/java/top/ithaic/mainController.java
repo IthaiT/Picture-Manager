@@ -45,30 +45,22 @@ public class mainController {
 
     @FXML
     private void initialize(){
-        initDiskTreeShower();
-        initPictureShower();
-        initPathShower();
-        initPictureMessage();
+        initShower();
         initListener();
     }
 
-    //TODO 初始化磁盘树目录
-    private void initDiskTreeShower(){
+    //TODO 初始化各种界面节点
+    private void initShower(){
+        //TODO 初始化磁盘树目录
         new DiskTreeShower(disktree);
-    }
-
-    //TODO 初始化图片预览
-    private void initPictureShower(){
+        //TODO 初始化图片预览
         new PictureShower(thumbnails);
-    }
-
-    //TODO 初始化路径显示
-    private void initPathShower(){new PathShower(pathShower,anchorPane);}
-
-    //TODO 初始化图片信息统计
-    private void initPictureMessage(){
+        //TODO 初始化路径显示
+        new PathShower(pathShower,anchorPane);
+        //TODO 初始化图片信息统计
         new PictureMessageShower(pictureMessage);
     }
+
     //TODO 初始化各种监听器
     private void initListener(){
         new DiskTreeListener(disktree);

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 *
 * */
 public class DiskTreeShower {
-    public class MyFile {
+    public class MyFile{
         private File file;
         private String filename;
 
@@ -47,7 +47,7 @@ public class DiskTreeShower {
             return this.filename;
         }
     }
-
+    //TODO 构建目录树
     public DiskTreeShower(TreeView disktree){
         //设置树视图的根目录
         disktree.setRoot(new TreeItem(new MyFile(new File("此电脑"))));
@@ -58,25 +58,26 @@ public class DiskTreeShower {
             TreeItem<MyFile> item = createNode(partition);
             //将分区添加到“此电脑”根节点
             disktree.getTreeItem(0).getChildren().add(item);
-//            System.out.println(partition.toString());
         }
     }
 
     // TODO 获取电脑磁盘分区
     private ArrayList<MyFile> getDiskPartitions(){
         ArrayList<MyFile> diskPartitions = new ArrayList<>();
+        //得到电脑所有磁盘
         File[] disks = File.listRoots();
         if(disks == null){
             return null;
         }
+        //将磁盘添加到线性表中
         for(File partition : disks){
             diskPartitions.add(new MyFile(partition, partition.getPath()));
         }
         return diskPartitions;
     }
 
-    private TreeItem<MyFile> createNode(MyFile file){
-        return new TreeItem<>(file){
+    private TreeItem<MyFile> createNode(MyFile myFile){
+        return new TreeItem<>(myFile){
             private boolean isLeaf;
             /*
             *  以下两个变量保证每次展开目录时不会重复计算
@@ -105,19 +106,20 @@ public class DiskTreeShower {
             }
 
             //文件过滤器
-            private File[] getImageFiles(File dir){
+            private File[] getDirectory(File dir){
                 return dir.listFiles(File::isDirectory);
             }
 
             // 递归构建子目录
             private ObservableList<TreeItem<MyFile>> buildChildren(){
-                if(file.getFile() == null){
+                if(myFile.getFile() == null){
                     return FXCollections.emptyObservableList();
                 }
-                if(file.getFile().isFile()){
+                //如果是文件，返回空列表
+                if(myFile.getFile().isFile()){
                     return FXCollections.emptyObservableList();
                 }
-                File[] files = getImageFiles(file.getFile());
+                File[] files = getDirectory(myFile.getFile());
                 if(files != null){
                     ObservableList<TreeItem<MyFile>> children = FXCollections.observableArrayList();
                     for(File f : files){

@@ -53,4 +53,6 @@ public class PictureMessageShower {
         text += "(" + String.format("%.2f",length) + units[count] +")";
         pictureMessage.setText(text);
     }
+
+
 }
