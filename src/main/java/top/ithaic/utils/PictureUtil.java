@@ -1,5 +1,7 @@
 package top.ithaic.utils;
 
+import javafx.scene.control.Button;
+
 import java.io.File;
 
 public final class  PictureUtil {
