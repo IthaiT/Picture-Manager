@@ -27,7 +27,7 @@ public class ImageSearchUtil {
         return searchResult;
     }
 
-
+    //需要修改为KMP算法
     //匹配文件名
     private boolean match(String fileName,String searchName){
         if(fileName.length() < searchName.length())return false;
