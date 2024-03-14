@@ -6,6 +6,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import top.ithaic.utils.PathUtil;
 
 import java.io.File;
 
@@ -47,11 +48,11 @@ public class PathShower {
     public void bindProperty(){
         PathShower.pathShower.textProperty().bind(new StringBinding() {
             {
-                bind(PictureShower.getCurrentPathProperty());
+                bind(PathUtil.getCurrentPathProperty());
             }
             @Override
             protected String computeValue() {
-                return PictureShower.getCurrentPathProperty().getValue();
+                return PathUtil.getCurrentPathProperty().getValue();
             }
         });
     }

@@ -15,12 +15,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import top.ithaic.listener.ButtonListener;
-import top.ithaic.listener.DiskTreeListener;
-import top.ithaic.listener.SliderListener;
-import top.ithaic.listener.SortButtonListener;
-import top.ithaic.shower.*;
-import top.ithaic.utils.PictureSorterUtil;
+import top.ithaic.listener.*;
+import top.ithaic.shower.DiskTreeShower;
+import top.ithaic.shower.PathShower;
+import top.ithaic.shower.PictureMessageShower;
+import top.ithaic.shower.PictureShower;
 
 public class mainController {
     @FXML
@@ -29,6 +28,8 @@ public class mainController {
     private Button forwardButton;
     @FXML
     private Button sortButton;
+    @FXML
+    private Button searchButton;
     @FXML
     private TreeView<TreeItem<DiskTreeShower.MyFile>> disktree;
     @FXML
@@ -41,6 +42,8 @@ public class mainController {
     private Slider sizeChanger;
     @FXML
     private TextField pictureMessage;
+    @FXML
+    private TextField searchName;
 
 
     @FXML
@@ -67,6 +70,7 @@ public class mainController {
         new SliderListener(sizeChanger);
         new ButtonListener(backwardButton, forwardButton);
         new SortButtonListener(sortButton);
+        new SearchButtonListener(searchName,searchButton);
     }
 
 }

@@ -1,28 +1,17 @@
 package top.ithaic.shower;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.layout.FlowPane;
 import top.ithaic.imageview.Thumbnail;
+import top.ithaic.utils.PathUtil;
 import top.ithaic.utils.PictureUtil;
-import top.ithaic.utils.PictureUtil.*;
 
 import java.io.File;
 
 public class PictureShower {
-    private static StringProperty currentPathProperty;
-    private static File currentPath;
-    private static File lastPath;
     private static FlowPane thumbnails;
     private static PictureShower.ImageLoadThread imageLoadThread;
 
-    static {
-        currentPathProperty = new SimpleStringProperty("");
-        currentPath = null;
-        lastPath = null;
-        thumbnails = null;
-    }
     public PictureShower(){}
     public PictureShower(FlowPane thumbnails){
         PictureShower.thumbnails = thumbnails;
@@ -30,7 +19,9 @@ public class PictureShower {
 
     //TODO 所有的showPicture方法到最后都要调用此方法
     public void showPicture(File[] pictures){
-        currentPathProperty.setValue(currentPath.getAbsolutePath());
+        //维护属性绑定
+        new PathShower().bindProperty();
+        new PictureMessageShower().updateText();
         //清除图片
         Platform.runLater(()->{
             thumbnails.getChildren().clear();
@@ -49,28 +40,13 @@ public class PictureShower {
         if(selectedPath==null) return;
         File[] pictures = PictureUtil.getPicturesInDirectory(selectedPath);
         if(pictures == null)return;
-
-        lastPath = currentPath;
-        currentPath = selectedPath;
-
-        new PathShower().bindProperty();
-        new PictureMessageShower().updateText();
+        //维护路径信息
+        PathUtil.updatePath(selectedPath);
         showPicture(pictures);
     }
     //TODO 显示当前路径图片
     public void showPicture(){
-        if(currentPath!=null)this.showPicture(currentPath);
-    }
-
-
-    public static StringProperty getCurrentPathProperty() {
-        return currentPathProperty;
-    }
-    public static File getCurrentPath() {
-        return currentPath;
-    }
-    public static File getLastPath() {
-        return lastPath;
+        if(PathUtil.getCurrentPath() !=null)this.showPicture(PathUtil.getCurrentPath());
     }
 
     private class ImageLoadThread extends Thread{
@@ -88,8 +64,8 @@ public class PictureShower {
                     if(this.isTerminal)return;
                     thumbnails.getChildren().add(thumbnail);
                 });
-                }
             }
+        }
         public void terminate(){
             this.isTerminal = true;
         }

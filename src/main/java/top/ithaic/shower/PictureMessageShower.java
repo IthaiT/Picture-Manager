@@ -1,6 +1,7 @@
 package top.ithaic.shower;
 
 import javafx.scene.control.TextField;
+import top.ithaic.utils.PathUtil;
 import top.ithaic.utils.PictureUtil;
 
 import java.io.File;
@@ -17,7 +18,7 @@ public class PictureMessageShower {
     private int countPictureNumber(){
         int count = 0;
         PictureUtil pictureUtil = new PictureUtil();
-        File selectedPath = PictureShower.getCurrentPath();
+        File selectedPath = PathUtil.getCurrentPath();
         if(selectedPath == null) return 0;
         File[] files = selectedPath.listFiles();
         if (files == null) return 0;
@@ -30,7 +31,7 @@ public class PictureMessageShower {
     private long countPictureSize(){
         long count = 0;
         PictureUtil pictureUtil = new PictureUtil();
-        File selectedPath = PictureShower.getCurrentPath();
+        File selectedPath = PathUtil.getCurrentPath();
         if(selectedPath == null) return 0;
         File[] files = selectedPath.listFiles();
         if (files == null) return 0;

@@ -3,18 +3,20 @@ package top.ithaic.listener;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import top.ithaic.Myinterface.Listener;
 import top.ithaic.shower.DiskTreeShower;
 import top.ithaic.shower.PictureShower;
 
 import java.io.File;
 
-public class DiskTreeListener {
+public class DiskTreeListener implements Listener {
     private static TreeView diskTree;
      public DiskTreeListener(TreeView diskTree){
          DiskTreeListener.diskTree = diskTree;
-         addDiskTreeListener();
+         Listen();
     }
-    private void addDiskTreeListener(){
+    @Override
+    public void Listen(){
         diskTree.addEventFilter( MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             //鼠标双击选中目录树中的文件
             @SuppressWarnings("unchecked")

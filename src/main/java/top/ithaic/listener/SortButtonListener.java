@@ -3,12 +3,10 @@ package top.ithaic.listener;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
+import top.ithaic.Myinterface.Listener;
 import top.ithaic.utils.PictureSorterUtil;
-import top.ithaic.utils.PictureUtil;
 
-import java.io.IOException;
-
-public class SortButtonListener {
+public class SortButtonListener implements Listener {
     private static Button sortButton;
     private static ContextMenu contextMenu;
     private static CheckMenuItem sortWithName;
@@ -23,10 +21,11 @@ public class SortButtonListener {
         sortWithLastModify = new CheckMenuItem("修改时间");
         contextMenu.getItems().addAll(sortWithName,sortWithSize,sortWithLastModify);
         sortButton.setContextMenu(contextMenu);
-        addListener();
+        Listen();
     }
 
-    private void addListener(){
+    @Override
+    public void Listen(){
         SortButtonListener.sortButton.setOnMouseClicked(mouseEvent->{
             if(mouseEvent.getClickCount() >= 1){
                 //contextMenu显示在sortButton下面

@@ -1,18 +1,20 @@
 package top.ithaic.listener;
 
 import javafx.scene.control.Slider;
+import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureShower;
 
-public class SliderListener {
+public class SliderListener implements Listener {
 
     private static Slider sizeChanger;
     public SliderListener(Slider sizeChanger) {
         SliderListener.sizeChanger = sizeChanger;
-        addSizeListener();
+        Listen();
     }
 
-    private void addSizeListener(){
+    @Override
+    public void Listen(){
         //首先初始化Slider参数
         sizeChanger.setMin(60);
         sizeChanger.setMax(200);

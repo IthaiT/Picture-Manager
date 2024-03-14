@@ -13,12 +13,12 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500" minWidth="800" prefHeight="500" prefWidth="800" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.ithaic.mainController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500" minWidth="800" prefHeight="728.0" prefWidth="1017.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.ithaic.mainController">
    <left>
       <TreeView fx:id="disktree" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </left>
    <top>
-      <MenuBar prefHeight="9.0" prefWidth="524.0" BorderPane.alignment="CENTER">
+      <MenuBar prefHeight="9.0" prefWidth="720.0" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="文件">
             <items>
@@ -42,14 +42,14 @@
        <BorderPane>
            <top>
                <AnchorPane fx:id="anchorPane" prefHeight="85.0" prefWidth="800.0">
-                   <TextField fx:id="pathShower" layoutX="155.0" layoutY="14.0" prefHeight="14.0" prefWidth="400.0">
+                   <TextField fx:id="pathShower" layoutX="155.0" layoutY="14.0" prefHeight="23.0" prefWidth="445.0">
                        <AnchorPane.leftAnchor>
                            <Double fx:value="155.0" />
                        </AnchorPane.leftAnchor>
                    </TextField>
-                   <TextField layoutX="645.0" layoutY="14.0" prefHeight="23.0" prefWidth="233.0">
+                   <TextField fx:id="searchName" layoutX="645.0" layoutY="14.0" prefHeight="23.0" prefWidth="161.0">
                         <AnchorPane.rightAnchor>
-                           <Double fx:value="9.0" />
+                           <Double fx:value="60.0" />
                         </AnchorPane.rightAnchor>
                    </TextField>
                    <Button fx:id="backwardButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="51.0" text="后退">
@@ -71,6 +71,11 @@
                        <AnchorPane.rightAnchor>
                            <Double fx:value="12.600000000000023" />
                        </AnchorPane.rightAnchor>
+                   </Button>
+                   <Button fx:id="searchButton" layoutX="547.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="45.0" text="🔍">
+                           <AnchorPane.rightAnchor>
+                               <Double fx:value="12.600000000000023" />
+                           </AnchorPane.rightAnchor>
                    </Button>
                </AnchorPane>
            </top>
