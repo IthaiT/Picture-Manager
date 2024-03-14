@@ -28,7 +28,7 @@ public class SliderListener {
             thumbnail.setThumbnailHeight(newHeight);
         }));
         sizeChanger.setOnScroll(mouseEvent->{
-            sizeChanger.setValue(sizeChanger.getValue()+mouseEvent.getDeltaY()*0.1);
+            sizeChanger.setValue(sizeChanger.getValue()+mouseEvent.getDeltaY()*0.2);
         });
     }
 }

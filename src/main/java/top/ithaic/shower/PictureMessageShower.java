@@ -1,34 +1,25 @@
 package top.ithaic.shower;
 
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import top.ithaic.utils.PictureUtil;
 
 import java.io.File;
 
 public class PictureMessageShower {
     private static TextField pictureMessage;
-    private static TreeView diskTree;
+
     public PictureMessageShower(){
     }
     public PictureMessageShower(TextField pictureMessage){
         PictureMessageShower.pictureMessage = pictureMessage;
     }
 
-    public PictureMessageShower(TreeView diskTree){
-        PictureMessageShower.diskTree = diskTree;
-
-        pictureMessage.setEditable(false);
-
-    }
     private int countPictureNumber(){
         int count = 0;
         PictureUtil pictureUtil = new PictureUtil();
-        @SuppressWarnings("unchecked")
-        TreeItem<DiskTreeShower.MyFile> selectedPath = (TreeItem<DiskTreeShower.MyFile>) diskTree.getSelectionModel().getSelectedItem();
+        File selectedPath = PictureShower.getCurrentPath();
         if(selectedPath == null) return 0;
-        File[] files = selectedPath.getValue().getFile().listFiles();
+        File[] files = selectedPath.listFiles();
         if (files == null) return 0;
         for(File file : files){
             if(pictureUtil.isPicture(file))
@@ -39,10 +30,9 @@ public class PictureMessageShower {
     private long countPictureSize(){
         long count = 0;
         PictureUtil pictureUtil = new PictureUtil();
-        @SuppressWarnings("unchecked")
-        TreeItem<DiskTreeShower.MyFile> selectedPath = (TreeItem<DiskTreeShower.MyFile>) diskTree.getSelectionModel().getSelectedItem();
+        File selectedPath = PictureShower.getCurrentPath();
         if(selectedPath == null) return 0;
-        File[] files = selectedPath.getValue().getFile().listFiles();
+        File[] files = selectedPath.listFiles();
         if (files == null) return 0;
         for(File file : files){
             if(pictureUtil.isPicture(file))

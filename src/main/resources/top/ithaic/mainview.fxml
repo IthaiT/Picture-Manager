@@ -20,17 +20,17 @@
    <top>
       <MenuBar prefHeight="9.0" prefWidth="524.0" BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="文件">
             <items>
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" text="编辑">
             <items>
               <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" text="帮助">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />
             </items>
@@ -42,7 +42,7 @@
        <BorderPane>
            <top>
                <AnchorPane fx:id="anchorPane" prefHeight="85.0" prefWidth="800.0">
-                   <TextField fx:id="pathShower" layoutX="155.0" layoutY="14.0" prefHeight="14.0" prefWidth="400.0" >
+                   <TextField fx:id="pathShower" layoutX="155.0" layoutY="14.0" prefHeight="14.0" prefWidth="400.0">
                        <AnchorPane.leftAnchor>
                            <Double fx:value="155.0" />
                        </AnchorPane.leftAnchor>
@@ -67,7 +67,7 @@
                            <Double fx:value="70.60000000000002" />
                        </AnchorPane.rightAnchor>
                    </Slider>
-                   <Button  layoutX="741.0" layoutY="49.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="46.0" text="排序">
+                   <Button layoutX="741.0" layoutY="49.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="46.0" text="排序">
                        <AnchorPane.rightAnchor>
                            <Double fx:value="12.600000000000023" />
                        </AnchorPane.rightAnchor>

@@ -15,10 +15,12 @@ public class ButtonListener {
 
     public void addButtonListener(){
         PictureShower pictureShower = new PictureShower();
+
         ButtonListener.backward.setOnMouseClicked(mouseEvent -> {
             if(PictureShower.getCurrentPath()!=null)
                 pictureShower.showPicture(PictureShower.getCurrentPath().getParentFile());
         });
+
         ButtonListener.forward.setOnMouseClicked(mouseEvent -> {
             if(PictureShower.getLastPath()!=null)
                 pictureShower.showPicture(PictureShower.getLastPath());

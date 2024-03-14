@@ -13,7 +13,7 @@ public class PictureShower {
     private static File currentPath;
     private static File lastPath;
     private static FlowPane thumbnails;
-    private ImageLoadThread imageLoadThread;
+    private static ImageLoadThread imageLoadThread;
 
     static {
         currentPathProperty = new SimpleStringProperty("");
@@ -29,8 +29,13 @@ public class PictureShower {
     //TODO 将当前目录的文件显示出来
     public void showPicture(File selectedPath){
         if(selectedPath==null) return;
+
         lastPath = currentPath;
         currentPath = selectedPath;
+
+        new PathShower().bindProperty();
+        new PictureMessageShower().updateText();
+
         currentPathProperty.setValue(currentPath.getAbsolutePath());
         //清除图片
         Platform.runLater(()->{
