@@ -16,7 +16,6 @@ import static javafx.scene.paint.Color.rgb;
 public class Thumbnail extends BorderPane {
     private static double thumbnailWidth = 140;
     private static double thumbnailHeight = 100;
-    private boolean isClicked = false;
     private StackPane stackPane;
     private Label label;
     public Thumbnail(){}
@@ -45,23 +44,6 @@ public class Thumbnail extends BorderPane {
 
         stackPane.getStyleClass().add("thumbnail-default");
 
-        this.setOnMouseClicked(mouseEvent ->{
-            if(mouseEvent.getClickCount() == 1){
-                //如果没有被点击过，那么设置为被选中样式
-                if(!isClicked){
-                    isClicked = true;
-                    setSelectedStyle();
-                }else{
-                    isClicked = false;
-                    setUnSelectedStyle();
-                }
-
-            }
-            else if(mouseEvent.getClickCount() >= 2){
-                new SliderShower(imageFile);
-
-            }
-        });
     }
 
 
@@ -77,10 +59,7 @@ public class Thumbnail extends BorderPane {
     public void setThumbnailHeight(double thumbnailHeight) {
         Thumbnail.thumbnailHeight = thumbnailHeight;
     }
-    public boolean getIsClicked(){return isClicked;}
-    public boolean setIsClicked(boolean isClicked){
-        return this.isClicked = isClicked;
-    }
+
     public void setSelectedStyle(){
         stackPane.getStyleClass().remove("thumbnail-default");
         stackPane.getStyleClass().add("thumbnail-hover");
@@ -91,6 +70,6 @@ public class Thumbnail extends BorderPane {
     public void setUnSelectedStyle(){
         stackPane.getStyleClass().remove("thumbnail-hover");
         stackPane.getStyleClass().add("thumbnail-default");
-        label.setBackground(new Background(new BackgroundFill(rgb(255,255,255),null,null)));
+        label.setBackground(new Background(new BackgroundFill(rgb(247,247,247),null,null)));
     }
 }
