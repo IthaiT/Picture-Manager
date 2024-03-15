@@ -1,0 +1,40 @@
+/* ScrollPane 样式 */
+ScrollPane {
+    -fx-background-insets: 0; /* 背景内边距为零，即没有额外的空白区域 */
+    -fx-border-width: 1 0 1 0; /* 边框宽度：上 1 像素，右 0 像素，下 1 像素，左 0 像素 */
+    -fx-border-color: gray; /* 边框颜色为灰色 */
+    -fx-control-inner-background: transparent; /* 使内部背景透明 */
+}
+
+/* FlowPane 样式 */
+FlowPane {
+    -fx-padding: 5 10 5 10; /* 内边距：上 5 像素，右 10 像素，下 5 像素，左 10 像素 */
+    -fx-border-width: 0; /* 没有边框 */
+    -fx-background-color: rgb(247,247,247); /* 背景颜色为白色 */
+    -fx-hgap: 10; /* 子元素之间的水平间隔为 10 像素 */
+    -fx-vgap: 10; /* 子元素之间的垂直间隔为 10 像素 */
+}
+
+/* HBox 样式 */
+HBox {
+    -fx-alignment: center-left; /* 子元素在水平方向上居中对齐，垂直方向上不变 */
+    -fx-padding: 5 10 5 10; /* 内边距：上 5 像素，右 10 像素，下 5 像素，左 10 像素 */
+    -fx-spacing: 10; /* 子元素之间的间隔为 10 像素 */
+}
+
+ /* 默认状态下的缩略图样式  */
+.thumbnail-default {
+    -fx-border-width: 2;/* 设置边框的宽度 */
+    -fx-border-color: rgb(222,222,222);
+    -fx-background-color: rgb(255,255,255);
+    -fx-padding: 5;
+}
+
+
+/* 鼠标悬停状态下的缩略图样式 */
+.thumbnail-hover {
+    -fx-border-width: 2;/* 设置边框的宽度 */
+    -fx-border-color: rgb(28,136,203);
+    -fx-padding: 5; /* 内边距为 5 像素 */
+}
+

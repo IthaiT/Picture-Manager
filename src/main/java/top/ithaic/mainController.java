@@ -46,6 +46,7 @@ public class mainController {
     private TextField searchName;
 
 
+
     @FXML
     private void initialize(){
         initShower();
@@ -71,6 +72,7 @@ public class mainController {
         new ButtonListener(backwardButton, forwardButton);
         new SortButtonListener(sortButton);
         new SearchButtonListener(searchName,searchButton);
+        new PictureShowerListener(thumbnails);
     }
 
 }

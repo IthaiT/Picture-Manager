@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500" minWidth="800" prefHeight="728.0" prefWidth="1017.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.ithaic.mainController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500" minWidth="800" prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.ithaic.mainController">
    <left>
       <TreeView fx:id="disktree" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </left>
@@ -80,7 +80,7 @@
                </AnchorPane>
            </top>
            <center>
-               <ScrollPane fitToHeight="true" fitToWidth="true" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+               <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                    <content>
                        <FlowPane fx:id="thumbnails" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="534.0" prefWidth="799.0" />
                    </content>
