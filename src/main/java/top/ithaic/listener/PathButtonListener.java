@@ -5,13 +5,13 @@ import top.ithaic.Myinterface.Listener;
 import top.ithaic.shower.PictureShower;
 import top.ithaic.utils.PathUtil;
 
-public class ButtonListener implements Listener {
+public class PathButtonListener implements Listener {
     private static Button backward;
     private static Button forward;
 
-    public ButtonListener(Button...buttons){
-        ButtonListener.backward = buttons[0];
-        ButtonListener.forward = buttons[1];
+    public PathButtonListener(Button...buttons){
+        PathButtonListener.backward = buttons[0];
+        PathButtonListener.forward = buttons[1];
         Listen();
     }
 
@@ -19,12 +19,12 @@ public class ButtonListener implements Listener {
     public void Listen(){
         PictureShower pictureShower = new PictureShower();
 
-        ButtonListener.backward.setOnMouseClicked(mouseEvent -> {
+        PathButtonListener.backward.setOnMouseClicked(mouseEvent -> {
             if(PathUtil.getCurrentPath() !=null)
                 pictureShower.showPicture(PathUtil.getCurrentPath().getParentFile());
         });
 
-        ButtonListener.forward.setOnMouseClicked(mouseEvent -> {
+        PathButtonListener.forward.setOnMouseClicked(mouseEvent -> {
             if(PathUtil.getLastPath() !=null&&PathUtil.getLastPath().getParentFile()!=null&&PathUtil.getLastPath().getParentFile().compareTo(PathUtil.getCurrentPath())==0)
                 pictureShower.showPicture(PathUtil.getLastPath());
         });

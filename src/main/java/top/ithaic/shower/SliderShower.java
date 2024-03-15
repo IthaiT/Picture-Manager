@@ -19,6 +19,7 @@ public class SliderShower {
         initStage();
     }
 
+
     private void initStage(){
         //初始化控件
         Canvas canvas = new Canvas(slideWidth, slideHeight);

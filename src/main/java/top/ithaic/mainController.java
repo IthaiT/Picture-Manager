@@ -69,7 +69,7 @@ public class mainController {
     private void initListener(){
         new DiskTreeListener(disktree);
         new SliderListener(sizeChanger);
-        new ButtonListener(backwardButton, forwardButton);
+        new PathButtonListener(backwardButton, forwardButton);
         new SortButtonListener(sortButton);
         new SearchButtonListener(searchName,searchButton);
         new PictureShowerListener(thumbnails);

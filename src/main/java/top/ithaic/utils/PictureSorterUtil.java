@@ -17,7 +17,6 @@ public final class PictureSorterUtil {
     //TODO 根据名字进行分类
     public static void sortWithName() {
         pictures = PictureUtil.getPicturesInDirectory(PathUtil.getCurrentFiles());
-        if (pictures == null) return;
         Arrays.sort(pictures, Comparator.comparing(File::getName));
         pictureShower.showPicture(pictures);
     }
@@ -25,7 +24,6 @@ public final class PictureSorterUtil {
     //TODO 根据大小进行分类
     public static void sortWithSize(){
         pictures = PictureUtil.getPicturesInDirectory(PathUtil.getCurrentFiles());
-        if (pictures == null) return;
         Arrays.sort(pictures, Comparator.comparing(File::length));
         pictureShower.showPicture(pictures);
     }
@@ -33,7 +31,6 @@ public final class PictureSorterUtil {
     //TODO 根据上次修改的时间进行分类
     public static void sortWithLastModify(){
         pictures = PictureUtil.getPicturesInDirectory(PathUtil.getCurrentFiles());
-        if (pictures == null) return;
         Arrays.sort(pictures, Comparator.comparing(File::lastModified));
         pictureShower.showPicture(pictures);
     }

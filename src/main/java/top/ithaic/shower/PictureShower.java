@@ -17,7 +17,7 @@ public class PictureShower {
         PictureShower.thumbnails = thumbnails;
     }
 
-    //TODO 所有的showPicture方法到最后都要调用此方法
+    //TODO 传入File[]数组显示图片
     public void showPicture(File[] pictures){
         if(pictures == null)return;
         //维护属性绑定
@@ -36,7 +36,7 @@ public class PictureShower {
         imageLoadThread.start();
     }
 
-    //TODO 传入要显示的路径，显示该路径图片
+    //TODO 传入路径显示图片
     public void showPicture(File selectedPath){
         if(selectedPath==null) return;
         File[] pictures = PictureUtil.getPicturesInDirectory(selectedPath);
@@ -45,7 +45,7 @@ public class PictureShower {
         PathUtil.updatePath(selectedPath);
         showPicture(pictures);
     }
-    //TODO 显示当前路径图片
+    //TODO 无参显示当前图片
     public void showPicture(){
         if(PathUtil.getCurrentFiles()!=null)this.showPicture(PathUtil.getCurrentFiles());
     }

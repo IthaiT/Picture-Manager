@@ -35,13 +35,6 @@ public class DiskTreeShower {
         public void setFile(File file) {
             this.file = file;
         }
-        public String getFilename() {
-            return filename;
-        }
-        public void setFilename(String relativeFilename) {
-            this.filename = relativeFilename;
-        }
-
         @Override
         public String toString(){
             return this.filename;
@@ -50,14 +43,16 @@ public class DiskTreeShower {
     //TODO 构建目录树
     public DiskTreeShower(TreeView disktree){
         //设置树视图的根目录
-        disktree.setRoot(new TreeItem(new MyFile(new File("此电脑"))));
+        disktree.setRoot(new TreeItem<MyFile>(new MyFile(new File("此电脑"))));
         //获取电脑磁盘分区
         ArrayList<MyFile> diskPartitions = getDiskPartitions();
-        for(MyFile partition : diskPartitions){
-            //递归获取每一个分区的目录
-            TreeItem<MyFile> item = createNode(partition);
-            //将分区添加到“此电脑”根节点
-            disktree.getTreeItem(0).getChildren().add(item);
+        if (diskPartitions != null) {
+            for(MyFile partition : diskPartitions){
+                //递归获取每一个分区的目录
+                TreeItem<MyFile> item = createNode(partition);
+                //将分区添加到“此电脑”根节点
+                disktree.getTreeItem(0).getChildren().add(item);
+            }
         }
     }
 

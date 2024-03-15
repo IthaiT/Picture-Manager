@@ -5,7 +5,7 @@ import javafx.beans.property.StringProperty;
 
 import java.io.File;
 
-public class PathUtil {
+public final class PathUtil {
     private static File[] currentFiles;
     private static StringProperty currentPathProperty;
     private static File currentPath;

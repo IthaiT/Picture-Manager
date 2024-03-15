@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import static java.lang.Math.max;
 
-public class ImageSearchUtil {
+public final class ImageSearchUtil {
     public ImageSearchUtil(){}
 
     //供外部调用
