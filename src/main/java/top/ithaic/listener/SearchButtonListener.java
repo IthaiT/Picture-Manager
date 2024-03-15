@@ -4,7 +4,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import top.ithaic.Myinterface.Listener;
-import top.ithaic.shower.PictureShower;
 import top.ithaic.utils.ImageSearchUtil;
 import top.ithaic.utils.PathUtil;
 
@@ -27,14 +26,11 @@ public class SearchButtonListener implements Listener {
             //创建ImageSearchUtil对象搜索
             System.out.println("搜索文件名为:"+this.searchName.getText());
             File[] searchResult;
+
             try {
-                searchResult = new ImageSearchUtil().search(PathUtil.getCurrentPath(),this.searchName.getText());
+                new ImageSearchUtil().search(PathUtil.getCurrentPath(),this.searchName.getText());
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
-            }
-            if(searchResult!=null){
-                PathUtil.updateFiles(searchResult);
-                new PictureShower().showPicture();
             }
         });
     }

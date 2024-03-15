@@ -19,6 +19,7 @@ public class PictureShower {
 
     //TODO 所有的showPicture方法到最后都要调用此方法
     public void showPicture(File[] pictures){
+        if(pictures == null)return;
         //维护属性绑定
         new PathShower().bindProperty();
         new PictureMessageShower().updateText();
