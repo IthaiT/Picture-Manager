@@ -65,7 +65,7 @@ public class ImageSearchUtil {
         //递归搜索文件
         private void searchImage(File currentFile,String searchName){
             if(currentFile.isFile()&&!isTerminal){
-                if(isPicture(currentFile) && match(currentFile.getName(),searchName)){
+                if(PictureUtil.isPicture(currentFile) && match(currentFile.getName(),searchName)){
                     System.out.println("匹配成功:"+currentFile.getName());
                     tempResult.add(currentFile);
                 }
@@ -81,16 +81,6 @@ public class ImageSearchUtil {
             }
         }
 
-        //判断是否为照片
-        public boolean isPicture(File file){
-            String[] formats = {".jpg",".jpeg",".bmp",".gif",".png"};
-            boolean judge = false;
-            for(String format :formats){
-                if(file.getName().toLowerCase().endsWith(format))
-                    judge = true;
-            }
-            return judge;
-        }
 
     }
 }

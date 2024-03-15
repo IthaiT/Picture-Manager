@@ -6,6 +6,7 @@ import javafx.beans.property.StringProperty;
 import java.io.File;
 
 public class PathUtil {
+    private static File[] currentFiles;
     private static StringProperty currentPathProperty;
     private static File currentPath;
     private static File lastPath;
@@ -14,6 +15,7 @@ public class PathUtil {
         currentPathProperty = new SimpleStringProperty("");
         currentPath = null;
         lastPath = null;
+        currentFiles = null;
     }
     public static void updatePath(File newPath){
         //路径相同 无需更新
@@ -22,11 +24,18 @@ public class PathUtil {
         currentPathProperty.setValue(newPath.getAbsolutePath());
         lastPath = currentPath;
         currentPath = newPath;
+        currentFiles = currentPath.listFiles();
+    }
+    public static void updateFiles(File[] currentFiles) {
+        //更新当前文件
+        PathUtil.currentFiles = currentFiles;
+    }
+    public static File[] getCurrentFiles() {
+        return currentFiles;
     }
     public static File getCurrentPath() {
         return currentPath;
     }
-
     public static File getLastPath() {
         return lastPath;
     }

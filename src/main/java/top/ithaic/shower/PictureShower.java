@@ -46,7 +46,7 @@ public class PictureShower {
     }
     //TODO 显示当前路径图片
     public void showPicture(){
-        if(PathUtil.getCurrentPath() !=null)this.showPicture(PathUtil.getCurrentPath());
+        if(PathUtil.getCurrentFiles()!=null)this.showPicture(PathUtil.getCurrentFiles());
     }
 
     private class ImageLoadThread extends Thread{

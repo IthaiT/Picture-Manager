@@ -32,7 +32,10 @@ public class SearchButtonListener implements Listener {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            if(searchResult!=null)new PictureShower().showPicture(searchResult);
+            if(searchResult!=null){
+                PathUtil.updateFiles(searchResult);
+                new PictureShower().showPicture();
+            }
         });
     }
 }
