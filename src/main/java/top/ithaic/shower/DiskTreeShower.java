@@ -4,9 +4,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /*
 *   TODO
@@ -40,6 +43,14 @@ public class DiskTreeShower {
             return this.filename;
         }
     }
+    private ImageView getDiskIcon(){
+        ImageView folderIcon = new ImageView();
+        Image folderImage = new Image(getClass().getResourceAsStream("/top/ithaic/47.png"));
+        folderIcon.setImage(folderImage);
+        folderIcon.setFitWidth(10);
+        folderIcon.setFitHeight(10);
+        return folderIcon;
+    }
     //TODO 构建目录树
     public DiskTreeShower(TreeView disktree){
         //设置树视图的根目录
@@ -50,6 +61,7 @@ public class DiskTreeShower {
             for(MyFile partition : diskPartitions){
                 //递归获取每一个分区的目录
                 TreeItem<MyFile> item = createNode(partition);
+                item.setGraphic(getDiskIcon());
                 //将分区添加到“此电脑”根节点
                 disktree.getTreeItem(0).getChildren().add(item);
             }
@@ -72,7 +84,7 @@ public class DiskTreeShower {
     }
 
     private TreeItem<MyFile> createNode(MyFile myFile){
-        return new TreeItem<>(myFile){
+        return new TreeItem<>(myFile,getDiskIcon()){
             private boolean isLeaf;
             /*
             *  以下两个变量保证每次展开目录时不会重复计算
