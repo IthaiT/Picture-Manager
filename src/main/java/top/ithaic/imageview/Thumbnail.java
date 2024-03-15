@@ -16,10 +16,12 @@ import static javafx.scene.paint.Color.rgb;
 public class Thumbnail extends BorderPane {
     private static double thumbnailWidth = 140;
     private static double thumbnailHeight = 100;
+    private static File imageFile;
     private StackPane stackPane;
     private Label label;
     public Thumbnail(){}
     public Thumbnail(File imageFile){
+        Thumbnail.imageFile = imageFile;
         Canvas canvas = new Canvas(thumbnailWidth, thumbnailHeight);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
@@ -58,6 +60,12 @@ public class Thumbnail extends BorderPane {
     }
     public void setThumbnailHeight(double thumbnailHeight) {
         Thumbnail.thumbnailHeight = thumbnailHeight;
+    }
+    public File getImageFile(){
+        return Thumbnail.imageFile;
+    }
+    public void setImageFile(File imageFile){
+        Thumbnail.imageFile  = imageFile;
     }
 
     public void setSelectedStyle(){
