@@ -1,5 +1,6 @@
 package top.ithaic.listener;
 
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
@@ -8,12 +9,13 @@ import javafx.scene.shape.Rectangle;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureMessageShower;
+import top.ithaic.shower.PictureShower;
 import top.ithaic.shower.SlideShower;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 
 public class PictureShowerListener implements Listener {
@@ -21,8 +23,12 @@ public class PictureShowerListener implements Listener {
     private static ArrayList<Thumbnail> thumbnailArrayList = new ArrayList<>();
     private Timer timer = new Timer();
     boolean isSingleClick = false;
-    boolean isBlankArea = true;
     private Rectangle rectangle;
+
+    private double startX,startY;
+    private final PictureMessageShower pms = new PictureMessageShower();
+    private EventHandler<MouseEvent> mouseReleasedEventHandler;
+    private EventHandler<MouseEvent> mouseClick;
 
     public PictureShowerListener( FlowPane thumbnnails){
         PictureShowerListener.thumbnnails = thumbnnails;
@@ -35,26 +41,24 @@ public class PictureShowerListener implements Listener {
     }
     @Override
     public void Listen() {
-        PictureMessageShower pms = new PictureMessageShower();
-        PictureShowerListener.thumbnnails.setOnMouseClicked(mouseEvent -> {
-            isBlankArea = true;
+        mouseClick = mouseEvent -> {
             double mouseX = mouseEvent.getX();
             double mouseY = mouseEvent.getY();
             /*
-            * 1、ctrl+鼠标单击
-            * （1）选中图片：若已经被选中图片，取消选中，若未被选中，设置为选中
-            * （2）若无ctrl+鼠标单击事件，将界面中被选中的图片全部清除
-            * 2、鼠标点击
-            * （1）点击时会等待100ms看看会不会有下一次点击
-            * （2）如果没有
-            *       当这次选中图片与上次相同时，取消选中
-            *       当这次选中图片与上次不同时，取消上次选中，选中这次点击的图片
-            * （3）如果双击
-            *       将点击的图片设置为选中，不管上次是否被选中，取消未被选中图片，显示幻灯片
-            *       通过singalClick变量忽略单击事件
-            * 3、点中空白区域
-            *   将所有选中图片的取消
-            * */
+             * 1、ctrl+鼠标单击
+             * （1）选中图片：若已经被选中图片，取消选中，若未被选中，设置为选中
+             * （2）若无ctrl+鼠标单击事件，将界面中被选中的图片全部清除
+             * 2、鼠标点击
+             * （1）点击时会等待100ms看看会不会有下一次点击
+             * （2）如果没有
+             *       当这次选中图片与上次相同时，取消选中
+             *       当这次选中图片与上次不同时，取消上次选中，选中这次点击的图片
+             * （3）如果双击
+             *       将点击的图片设置为选中，不管上次是否被选中，取消未被选中图片，显示幻灯片
+             *       通过singalClick变量忽略单击事件
+             * 3、点中空白区域
+             *   将所有选中图片的取消
+             * */
 
             //TODO ctrl按下选中多张图片
             if(mouseEvent.isControlDown()){
@@ -62,7 +66,6 @@ public class PictureShowerListener implements Listener {
                 Thumbnail thumbnail;
                 for (Node node : ((FlowPane) mouseEvent.getSource()).getChildren()) {
                     if ((node instanceof Thumbnail) && (node.getBoundsInParent().contains(mouseX, mouseY))) {
-                        isBlankArea = false;
                         thumbnail = (Thumbnail) node;
                         //如果曾经被选中，设置为未选中
                         if(thumbnail.getIsClicked()){
@@ -95,7 +98,6 @@ public class PictureShowerListener implements Listener {
                 Thumbnail thumbnail;
                 for (Node node : ((FlowPane) mouseEvent.getSource()).getChildren()) {
                     if ((node instanceof Thumbnail) && (node.getBoundsInParent().contains(mouseX, mouseY))) {
-                        isBlankArea = false;
                         thumbnail = (Thumbnail)node;
                         if(!thumbnailArrayList.isEmpty()){
                             //如果上次选中的跟这次选中的相同，清除后返回
@@ -135,7 +137,6 @@ public class PictureShowerListener implements Listener {
                 Thumbnail thumbnail;
                 for (Node node : ((FlowPane) mouseEvent.getSource()).getChildren()) {
                     if ((node instanceof Thumbnail) && (node.getBoundsInParent().contains(mouseX, mouseY))) {
-                        isBlankArea = false;
                         thumbnail = (Thumbnail)node;
                         if(!thumbnailArrayList.isEmpty()){
                             //如果这次与上次双击的图片相同，创建幻灯片后返回
@@ -162,43 +163,78 @@ public class PictureShowerListener implements Listener {
                 }
             }
 
-            if(isBlankArea){
-                pms.updateText(0);
-                if(thumbnailArrayList.isEmpty())return;
-                for(Thumbnail thumbnail : thumbnailArrayList){
-                    thumbnail.setUnSelectedStyle();
-                    thumbnail.setIsClicked(false);
-                }
-                thumbnailArrayList.clear();
+            if(isClickBlankArea(mouseEvent)){
+                clearSelected();
             }
-        });
+        };
 
+        PictureShowerListener.thumbnnails.setOnMousePressed(this::handleMousePressed);
+        PictureShowerListener.thumbnnails.setOnMouseDragged(this::handleMouseDragged);
+        mouseReleasedEventHandler = this::handleMouseReleased;
 
-//        PictureShowerListener.thumbnnails.setOnMousePressed(mouseEvent -> {
-//            System.out.println("鼠标按下");
-//            System.out.println(mouseEvent.getX());
-//            System.out.println(mouseEvent.getY());
-//            rectangle.setX(mouseEvent.getX());
-//            rectangle.setY(mouseEvent.getY());
-//            System.out.println(rectangle.getX());
-//            System.out.println(rectangle.getY());
-//            rectangle.setWidth(100);
-//            rectangle.setHeight(100);
-//            rectangle.setVisible(true);
-//        });
-//        PictureShowerListener.thumbnnails.setOnMouseDragged(mouseEvent -> {
-//            System.out.println("鼠标拖动");
-//            double width = mouseEvent.getX() - rectangle.getWidth();
-//            double height = mouseEvent.getY() - rectangle.getHeight();
-//            rectangle.setWidth(Math.abs(width));
-//            rectangle.setHeight(Math.abs(height));
-//            System.out.println(rectangle.getWidth());
-//            thumbnnails.getChildren().add(rectangle);
-//        });
-//        PictureShowerListener.thumbnnails.setOnMouseReleased(mouseEvent -> {
-//            System.out.println("鼠标松开");
-//
-//            rectangle.setVisible(false);
-//        });
+    }
+    private void handleMousePressed(MouseEvent mouseEvent){
+        if(isClickBlankArea(mouseEvent)) {
+            clearSelected();
+            thumbnnails.removeEventHandler(MouseEvent.MOUSE_CLICKED,mouseClick);
+            thumbnnails.addEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedEventHandler);
+        }else{
+            thumbnnails.addEventHandler(MouseEvent.MOUSE_CLICKED,mouseClick);
+            thumbnnails.removeEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedEventHandler);
+        }
+        startX = mouseEvent.getX();
+        startY = mouseEvent.getY();
+        rectangle.setX(startX);
+        rectangle.setY(startY);
+        rectangle.setWidth(0);
+        rectangle.setHeight(0);
+        rectangle.setVisible(true);
+        System.out.println("矩形初始化");
+    }
+    private void handleMouseDragged(MouseEvent mouseEvent){
+        double endX = mouseEvent.getX();
+        double endY = mouseEvent.getY();
+        double width = endX - startX;
+        double height = endY - startY;
+        rectangle.setWidth(Math.abs(width));
+        rectangle.setHeight(Math.abs(height));
+        rectangle.setX(width < 0 ? endX : startX);
+        rectangle.setY(height < 0 ? endY : startY);
+
+    }
+    private void handleMouseReleased(MouseEvent mouseEvent){
+        System.out.println("鼠标松开");
+        Thumbnail thumbnail;
+        for (Node node : ((FlowPane) mouseEvent.getSource()).getChildren()) {
+            System.out.println(node.toString());
+            if ((node instanceof Thumbnail) && (node.getBoundsInParent().intersects(rectangle.getBoundsInLocal()))) {
+                System.out.println("good");
+                thumbnail = (Thumbnail) node;
+                thumbnail.setSelectedStyle();
+                thumbnail.setIsClicked(true);
+                thumbnailArrayList.add(thumbnail);
+            }
+        }
+        rectangle.setVisible(false);
+    }
+
+    private boolean isClickBlankArea(MouseEvent mouseEvent){
+        double mouseX = mouseEvent.getX();
+        double mouseY = mouseEvent.getY();
+        for (Node node : ((FlowPane) mouseEvent.getSource()).getChildren()) {
+            if ((node instanceof Thumbnail) && (node.getBoundsInParent().contains(mouseX, mouseY))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private void clearSelected(){
+        pms.updateText(0);
+        if(thumbnailArrayList.isEmpty())return;
+        for(Thumbnail thumbnail : thumbnailArrayList){
+            thumbnail.setUnSelectedStyle();
+            thumbnail.setIsClicked(false);
+        }
+        thumbnailArrayList.clear();
     }
 }
