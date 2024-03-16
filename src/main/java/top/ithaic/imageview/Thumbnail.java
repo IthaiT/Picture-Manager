@@ -7,21 +7,23 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import top.ithaic.shower.SliderShower;
+import top.ithaic.Myinterface.Listener;
+import top.ithaic.shower.SlideShower;
 
 import java.io.File;
 
 import static javafx.scene.paint.Color.rgb;
 
-public class Thumbnail extends BorderPane {
+public class Thumbnail extends BorderPane  {
     private static double thumbnailWidth = 140;
     private static double thumbnailHeight = 100;
-    private static File imageFile;
+//    private boolean isClicked = false;
+    private File imageFile;
     private StackPane stackPane;
     private Label label;
     public Thumbnail(){}
     public Thumbnail(File imageFile){
-        Thumbnail.imageFile = imageFile;
+        this.imageFile = imageFile;
         Canvas canvas = new Canvas(thumbnailWidth, thumbnailHeight);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
@@ -46,6 +48,7 @@ public class Thumbnail extends BorderPane {
 
         stackPane.getStyleClass().add("thumbnail-default");
 
+//        Listen();
     }
 
 
@@ -62,11 +65,18 @@ public class Thumbnail extends BorderPane {
         Thumbnail.thumbnailHeight = thumbnailHeight;
     }
     public File getImageFile(){
-        return Thumbnail.imageFile;
+        return this.imageFile;
     }
     public void setImageFile(File imageFile){
-        Thumbnail.imageFile  = imageFile;
+        this.imageFile  = imageFile;
     }
+
+//    public boolean getIsClicked(){
+//        return this.isClicked;
+//    }
+//    public void setIsClicked(boolean isClicked){
+//        this.isClicked = isClicked;
+//    }
 
     public void setSelectedStyle(){
         stackPane.getStyleClass().remove("thumbnail-default");
@@ -80,4 +90,25 @@ public class Thumbnail extends BorderPane {
         stackPane.getStyleClass().add("thumbnail-default");
         label.setBackground(new Background(new BackgroundFill(rgb(247,247,247),null,null)));
     }
+
+//    @Override
+//    public void Listen() {
+//        //设置鼠标点击事件
+//        this.setOnMouseClicked(mouseEvent -> {
+//            if(mouseEvent.getClickCount() == 1){
+//                //如果没有被点击
+//                if(!isClicked){
+//                    isClicked = true;
+//                    setSelectedStyle();
+//                }
+//                else{
+//                    isClicked = false;
+//                    setUnSelectedStyle();
+//                }
+//            }
+//            if(mouseEvent.getClickCount() >= 2){
+//                new SlideShower(imageFile);
+//            }
+//        });
+//    }
 }

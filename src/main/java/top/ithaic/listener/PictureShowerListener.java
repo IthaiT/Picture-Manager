@@ -1,13 +1,10 @@
 package top.ithaic.listener;
 
 import javafx.scene.Node;
-import javafx.scene.effect.Light;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.Thumbnail;
-import top.ithaic.shower.SliderShower;
+import top.ithaic.shower.SlideShower;
 
 
 public class PictureShowerListener implements Listener {
@@ -61,11 +58,12 @@ public class PictureShowerListener implements Listener {
                     ((Thumbnail) selectedNode).setUnSelectedStyle();
                 }
             }
-            if(mouseEvent.getClickCount() >= 2){
+            //TODO 点击图片有bug
+            if(mouseEvent.getClickCount() >= 2 && !isBlankArea){
                 if(selectedNode == null) return;
-                new SliderShower(((Thumbnail)selectedNode).getImageFile());
+                new SlideShower(((Thumbnail)selectedNode).getImageFile());
             }
-
+            isBlankArea = true;
 
         });
         PictureShowerListener.thumbnnails.setOnMousePressed(mouseEvent -> {

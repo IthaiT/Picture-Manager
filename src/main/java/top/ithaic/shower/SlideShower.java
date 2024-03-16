@@ -9,13 +9,13 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
-public class SliderShower {
+public class SlideShower {
     private static double slideWidth = 700;
     private static double slideHeight = 500;
     private static File picture;
 
-    public SliderShower(File picture){
-        SliderShower.picture = picture;
+    public SlideShower(File picture){
+        SlideShower.picture = picture;
         initStage();
     }
 
