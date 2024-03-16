@@ -14,10 +14,10 @@ import java.io.File;
 
 import static javafx.scene.paint.Color.rgb;
 
-public class Thumbnail extends BorderPane  {
+public class Thumbnail extends BorderPane {
     private static double thumbnailWidth = 140;
     private static double thumbnailHeight = 100;
-//    private boolean isClicked = false;
+    private boolean isClicked = false;
     private File imageFile;
     private StackPane stackPane;
     private Label label;
@@ -71,12 +71,12 @@ public class Thumbnail extends BorderPane  {
         this.imageFile  = imageFile;
     }
 
-//    public boolean getIsClicked(){
-//        return this.isClicked;
-//    }
-//    public void setIsClicked(boolean isClicked){
-//        this.isClicked = isClicked;
-//    }
+    public boolean getIsClicked(){
+        return this.isClicked;
+    }
+    public void setIsClicked(boolean isClicked){
+        this.isClicked = isClicked;
+    }
 
     public void setSelectedStyle(){
         stackPane.getStyleClass().remove("thumbnail-default");
