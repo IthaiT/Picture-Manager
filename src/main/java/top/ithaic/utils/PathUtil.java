@@ -29,7 +29,7 @@ public final class PathUtil {
         lastPath = currentPath;
         //历史路径更新
         if(historyPath!=null && historyPath.size() >= 10)historyPath.remove(0);
-        if (historyPath!= null)historyPath.add(newPath.getAbsolutePath());
+        if (historyPath!= null && !historyPath.contains(newPath.getAbsolutePath()))historyPath.add(newPath.getAbsolutePath());
 
         currentPath = newPath;
         currentFiles = currentPath.listFiles();
