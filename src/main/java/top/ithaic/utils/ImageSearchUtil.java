@@ -4,21 +4,30 @@ import top.ithaic.shower.PictureShower;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.concurrent.CountDownLatch;
 
 import static java.lang.Math.max;
 
 public final class ImageSearchUtil {
-    public ImageSearchUtil(){}
-
-    //供外部调用
-    public void search(File searchPath,String searchName) throws InterruptedException {
-        if(searchPath==null)return;
-
-        SearchThread searchThread = new SearchThread(searchPath,searchName);
-        WaitThread waitThread = new WaitThread(searchThread);
-        waitThread.start();
-
+    private HashSet<File> isfindFiles;
+    private CountDownLatch countDownLatch;
+    private ArrayList<File> tempResult;
+    public ImageSearchUtil(){
+        this.tempResult = new ArrayList<>();
+        this.isfindFiles = new HashSet<>();
     }
+
+    //供外部调用,支持多线程搜索
+    public void search(File searchPath,String searchName,int threadNumber) throws InterruptedException {
+        if(searchPath==null)return;
+        countDownLatch = new CountDownLatch(threadNumber);
+        WaitThread waitThread = new WaitThread(searchPath,searchName,threadNumber);
+        waitThread.start();
+    }
+
+    //默认单线程搜索
+    public void search(File searchPath,String searchName) throws InterruptedException {this.search(searchPath,searchName,1);}
 
     //需要修改为KMP算法
     //匹配文件名
@@ -42,24 +51,29 @@ public final class ImageSearchUtil {
 
     //等待线程
     private class WaitThread extends Thread{
+        private File searchPath;
+        private String searchName;
+        private int threadNumber;
         private File[] searchResult;
-        private SearchThread searchThread;
-        public WaitThread(SearchThread searchThread){
-            this.searchThread = searchThread;
+        public WaitThread(File searchPath,String searchName,int threadNumber){
+            this.searchPath = searchPath;
+            this.searchName = searchName;
+            this.threadNumber = threadNumber;
         }
         @Override
         public void run() {
-            this.searchThread.start();
-            //阻塞waitThread
+            for(int i=1;i<=threadNumber;i++){
+                new SearchThread(searchPath,searchName).start();
+            }
             try {
-                this.searchThread.join();
+                countDownLatch.await();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
             //返回结果
-            this.searchResult = new File[searchThread.getTempResult().size()];
-            for(int i=0;i<searchThread.getTempResult().size();i++){
-                searchResult[i] = searchThread.getTempResult().get(i);
+            this.searchResult = new File[tempResult.size()];
+            for(int i=0;i<tempResult.size();i++){
+                searchResult[i] = tempResult.get(i);
             }
             //显示图片
             PathUtil.updateFiles(searchResult);
@@ -69,32 +83,28 @@ public final class ImageSearchUtil {
 
 
     private class SearchThread extends Thread{
-        private ArrayList<File> tempResult;
         private final String searchName;
         private final File searchRoot;
         public SearchThread(File searchRoot,String searchName){
             this.searchRoot = searchRoot;
             this.searchName = searchName;
-            this.tempResult = new ArrayList<>();
         }
         @Override
         public void run(){
             searchImage(searchRoot,searchName);
+            countDownLatch.countDown();
         }
 
-        public ArrayList<File> getTempResult(){
-            return this.tempResult;
-        }
         //递归搜索文件
         private void searchImage(File currentFile,String searchName){
-            if(currentFile.isFile()){
-                if(PictureUtil.isPicture(currentFile) && match(currentFile.getName(),searchName)){
+            if(currentFile.isFile()&&!isfindFiles.contains(currentFile)){
+                if(PictureUtil.isPicture(currentFile) && match(currentFile.getName().toLowerCase(),searchName)){
                     System.out.println("匹配成功:"+currentFile.getName());
-                    tempResult.add(currentFile);
+                    if(!tempResult.contains(currentFile))tempResult.add(currentFile);
                 }
                 return;
             }
-            if(currentFile.isDirectory()){
+            if(currentFile.isDirectory()&&!isfindFiles.contains(currentFile)){
                 File[] files = currentFile.listFiles();
                 if(files!=null){
                     for(File file : files){
@@ -102,6 +112,7 @@ public final class ImageSearchUtil {
                     }
                 }
             }
+            isfindFiles.add(currentFile);
         }
 
 
