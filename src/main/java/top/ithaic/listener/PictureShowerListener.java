@@ -149,13 +149,11 @@ public class PictureShowerListener implements Listener {
 
         });
 
-<<<<<<< HEAD
 
 //        PictureShowerListener.thumbnnails.setOnMousePressed(mouseEvent -> {
 //
 //        });
-=======
-        });
->>>>>>> 20aef56b1cd40ecc53015a93fbb800bfcd773ffb
+
+
     }
 }
