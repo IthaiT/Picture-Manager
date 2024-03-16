@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.Thumbnail;
+import top.ithaic.shower.PictureMessageShower;
 import top.ithaic.shower.SlideShower;
 
 import java.util.ArrayList;
@@ -25,40 +26,53 @@ public class PictureShowerListener implements Listener {
     }
     @Override
     public void Listen() {
-
+        PictureMessageShower pms = new PictureMessageShower();
         PictureShowerListener.thumbnnails.setOnMouseClicked(mouseEvent -> {
             isBlankArea = true;
             double mouseX = mouseEvent.getX();
             double mouseY = mouseEvent.getY();
             /*
-            * 逻辑上的优先级顺序：
-            * ctrl+鼠标单击优先级最高
-            * 如果ctrl+点击事件没有触发，将当前界面上所有图片选中清除
-            * 再将当前点击的图片设置为选中
+            * 1、ctrl+鼠标单击
+            * （1）选中图片：若已经被选中图片，取消选中，若未被选中，设置为选中
+            * （2）若无ctrl+鼠标单击事件，将界面中被选中的图片全部清除
+            * 2、鼠标点击
+            * （1）点击时会等待100ms看看会不会有下一次点击
+            * （2）如果没有
+            *       当这次选中图片与上次相同时，取消选中
+            *       当这次选中图片与上次不同时，取消上次选中，选中这次点击的图片
+            * （3）如果双击
+            *       将点击的图片设置为选中，不管上次是否被选中，取消未被选中图片，显示幻灯片
+            *       通过singalClick变量忽略单击事件
+            * 3、点中空白区域
+            *   将所有选中图片的取消
             * */
 
             //TODO ctrl按下选中多张图片
             if(mouseEvent.isControlDown()){
+
                 Thumbnail thumbnail;
                 for (Node node : ((FlowPane) mouseEvent.getSource()).getChildren()) {
                     if ((node instanceof Thumbnail) && (node.getBoundsInParent().contains(mouseX, mouseY))) {
                         isBlankArea = false;
                         thumbnail = (Thumbnail) node;
-                        thumbnailArrayList.add(thumbnail);
                         //如果曾经被选中，设置为未选中
                         if(thumbnail.getIsClicked()){
                             thumbnail.setUnSelectedStyle();
                             thumbnail.setIsClicked(false);
+                            thumbnailArrayList.remove(thumbnail);
+                            pms.updateText(thumbnailArrayList.size());//更新被选中的图片
                             continue;
                         }
+                        thumbnailArrayList.add(thumbnail);
                         thumbnail.setSelectedStyle();
                         thumbnail.setIsClicked(true);
                     }
                 }
+                pms.updateText(thumbnailArrayList.size());
                 return;//下面的代码都不需要执行
             }
 
-            //如果被选中的图片大于1，清空列表
+            //TODO 如果被选中的图片大于1，清空列表
             if(!thumbnailArrayList.isEmpty()&&(thumbnailArrayList.size() != 1)){
                 for (Thumbnail thumbnail : thumbnailArrayList){
                     thumbnail.setUnSelectedStyle();
@@ -88,7 +102,7 @@ public class PictureShowerListener implements Listener {
                                         }
                                         isSingleClick = false;
                                     }
-                                },200);
+                                },100);
                                 return;
                             }
                             //如果不同，直接清除，不返回
@@ -101,6 +115,7 @@ public class PictureShowerListener implements Listener {
                         thumbnailArrayList.add(thumbnail);
                         thumbnail.setIsClicked(true);
                         thumbnail.setSelectedStyle();
+                        pms.updateText(thumbnailArrayList.size());
                         return;
                     }
                 }
@@ -132,12 +147,14 @@ public class PictureShowerListener implements Listener {
                         thumbnail.setIsClicked(true);
                         thumbnail.setSelectedStyle();
                         new SlideShower(thumbnailArrayList.get(0).getImageFile());
+                        pms.updateText(thumbnailArrayList.size());
                         return;
                     }
                 }
             }
 
             if(isBlankArea){
+                pms.updateText(0);
                 if(thumbnailArrayList.isEmpty())return;
                 for(Thumbnail thumbnail : thumbnailArrayList){
                     thumbnail.setUnSelectedStyle();
@@ -145,14 +162,12 @@ public class PictureShowerListener implements Listener {
                 }
                 thumbnailArrayList.clear();
             }
-
-
         });
 
 
-//        PictureShowerListener.thumbnnails.setOnMousePressed(mouseEvent -> {
-//
-//        });
+        PictureShowerListener.thumbnnails.setOnMousePressed(mouseEvent -> {
+
+        });
 
 
     }

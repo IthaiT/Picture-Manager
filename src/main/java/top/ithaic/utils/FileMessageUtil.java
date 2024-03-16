@@ -1,6 +1,9 @@
 package top.ithaic.utils;
 
+import top.ithaic.imageview.Thumbnail;
+
 import java.io.File;
+import java.util.ArrayList;
 
 public final class FileMessageUtil {
 
