@@ -1,6 +1,8 @@
 package top.ithaic.shower;
 
 import javafx.beans.binding.StringBinding;
+import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
@@ -37,11 +39,24 @@ public class PathShower {
 
                 for(String path:PathUtil.getHistoryPath()){
                     MenuItem menuItem = new MenuItem(path);
+                    //设置样式 与路径栏齐平
+                    menuItem.setStyle("-fx-pref-width: " + (pathShower.getWidth()-5) + "px;");
+                    menuItem.setOnAction(actionEvent -> {
+                        pathShower.setText(menuItem.getText());
+                        new PictureShower().showPicture(new File(menuItem.getText()));
+                    });
                     PathShower.historyPath.getItems().add(menuItem);
                 }
-                double screenX = pathShower.getScene().getWindow().getX() + pathShower.getLayoutBounds().getWidth();
-                double screenY = pathShower.getScene().getWindow().getY() + pathShower.getLayoutBounds().getHeight();
-                PathShower.historyPath.show(PathShower.pathShower.getScene().getWindow(),screenX,screenY);
+                //历史路径设置在路径栏下方
+                Node node = pathShower;
+                double screenX = pathShower.getScene().getWindow().getX();
+                double screenY = pathShower.getScene().getWindow().getY() + pathShower.getHeight()*2;
+                while(node.getParent()!=null){
+                    screenX+=node.getLayoutX();
+                    screenY+=node.getLayoutY();
+                    node = node.getParent();
+                }
+                PathShower.historyPath.show(pathShower.getScene().getWindow(),screenX,screenY);
             }
         });
 
@@ -64,8 +79,6 @@ public class PathShower {
             double newWidth = PathShower.anchorPane.getWidth();
             PathShower.pathShower.setPrefWidth(newWidth - 400);
         });
-
-
     }
 
     public void bindProperty(){
