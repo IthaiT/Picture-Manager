@@ -23,6 +23,8 @@ import top.ithaic.shower.PictureShower;
 
 public class mainController {
     @FXML
+    public ContextMenu historyPath;
+    @FXML
     private Button backwardButton;
     @FXML
     private Button forwardButton;
@@ -60,7 +62,7 @@ public class mainController {
         //TODO 初始化图片预览
         new PictureShower(thumbnails);
         //TODO 初始化路径显示
-        new PathShower(pathShower,anchorPane);
+        new PathShower(pathShower,anchorPane,historyPath);
         //TODO 初始化图片信息统计
         new PictureMessageShower(pictureMessage);
     }

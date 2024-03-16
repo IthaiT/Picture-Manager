@@ -68,7 +68,6 @@ public class PictureShowerListener implements Listener {
         });
         PictureShowerListener.thumbnnails.setOnMousePressed(mouseEvent -> {
 
-
         });
     }
 }
