@@ -18,8 +18,8 @@ import java.util.ArrayList;
 *
 * */
 public class DiskTreeShower {
-    private static final Image DISK_IMAGE = new Image(DiskTreeShower.class.getResourceAsStream("/top/ithaic/3.png"));
-    private static final Image FOLDER_IMAGE = new Image(DiskTreeShower.class.getResourceAsStream("/top/ithaic/47.png"));
+    private static final Image DISK_IMAGE = new Image(DiskTreeShower.class.getResourceAsStream("/top/ithaic/partition.png"));
+    private static final Image FOLDER_IMAGE = new Image(DiskTreeShower.class.getResourceAsStream("/top/ithaic/directory.png"));
 
     private ImageView getIcon(Image image){
         ImageView imageView = new ImageView(image);
