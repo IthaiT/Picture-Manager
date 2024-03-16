@@ -9,13 +9,11 @@ import javafx.scene.shape.Rectangle;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureMessageShower;
-import top.ithaic.shower.PictureShower;
 import top.ithaic.shower.SlideShower;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.function.Consumer;
 
 
 public class PictureShowerListener implements Listener {
@@ -28,6 +26,7 @@ public class PictureShowerListener implements Listener {
     private double startX,startY;
     private final PictureMessageShower pms = new PictureMessageShower();
     private EventHandler<MouseEvent> mouseReleasedEventHandler;
+    private EventHandler<MouseEvent> mouseDraggedEventHandler;
     private EventHandler<MouseEvent> mouseClick;
 
     public PictureShowerListener( FlowPane thumbnnails){
@@ -169,17 +168,21 @@ public class PictureShowerListener implements Listener {
         };
 
         PictureShowerListener.thumbnnails.setOnMousePressed(this::handleMousePressed);
-        PictureShowerListener.thumbnnails.setOnMouseDragged(this::handleMouseDragged);
+        mouseDraggedEventHandler = this::handleMouseDragged;
         mouseReleasedEventHandler = this::handleMouseReleased;
 
     }
     private void handleMousePressed(MouseEvent mouseEvent){
+        isSingleClick = false;//防止对点击造成影响
+        thumbnnails.addEventHandler(MouseEvent.MOUSE_CLICKED,mouseClick);
         if(isClickBlankArea(mouseEvent)) {
             clearSelected();
             thumbnnails.removeEventHandler(MouseEvent.MOUSE_CLICKED,mouseClick);
+            thumbnnails.addEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDraggedEventHandler);
             thumbnnails.addEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedEventHandler);
-        }else{
-            thumbnnails.addEventHandler(MouseEvent.MOUSE_CLICKED,mouseClick);
+        }
+        else{
+            thumbnnails.removeEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDraggedEventHandler);
             thumbnnails.removeEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedEventHandler);
         }
         startX = mouseEvent.getX();
@@ -200,24 +203,26 @@ public class PictureShowerListener implements Listener {
         rectangle.setHeight(Math.abs(height));
         rectangle.setX(width < 0 ? endX : startX);
         rectangle.setY(height < 0 ? endY : startY);
-
-    }
-    private void handleMouseReleased(MouseEvent mouseEvent){
-        System.out.println("鼠标松开");
         Thumbnail thumbnail;
         for (Node node : ((FlowPane) mouseEvent.getSource()).getChildren()) {
-            System.out.println(node.toString());
+            thumbnail = (Thumbnail) node;
+            if(thumbnail.getIsClicked()) {
+                thumbnail.setUnSelectedStyle();
+                thumbnail.setIsClicked(false);
+                thumbnailArrayList.remove(thumbnail);
+            }
             if ((node instanceof Thumbnail) && (node.getBoundsInParent().intersects(rectangle.getBoundsInLocal()))) {
-                System.out.println("good");
-                thumbnail = (Thumbnail) node;
                 thumbnail.setSelectedStyle();
                 thumbnail.setIsClicked(true);
                 thumbnailArrayList.add(thumbnail);
             }
         }
+        if(thumbnailArrayList!=null) pms.updateText(thumbnailArrayList.size());//更新选中图片的信息
+    }
+    private void handleMouseReleased(MouseEvent mouseEvent){
+        System.out.println("鼠标松开");
         rectangle.setVisible(false);
     }
-
     private boolean isClickBlankArea(MouseEvent mouseEvent){
         double mouseX = mouseEvent.getX();
         double mouseY = mouseEvent.getY();
