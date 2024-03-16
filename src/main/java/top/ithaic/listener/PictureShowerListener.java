@@ -1,7 +1,10 @@
 package top.ithaic.listener;
 
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureMessageShower;
@@ -19,9 +22,15 @@ public class PictureShowerListener implements Listener {
     private Timer timer = new Timer();
     boolean isSingleClick = false;
     boolean isBlankArea = true;
+    private Rectangle rectangle;
 
     public PictureShowerListener( FlowPane thumbnnails){
         PictureShowerListener.thumbnnails = thumbnnails;
+        rectangle = new Rectangle();
+        rectangle.setFill(Color.TRANSPARENT);
+        rectangle.setStroke(Color.BLUE);
+        rectangle.setStrokeWidth(2);
+        rectangle.setVisible(false);
         Listen();
     }
     @Override
@@ -165,10 +174,31 @@ public class PictureShowerListener implements Listener {
         });
 
 
-        PictureShowerListener.thumbnnails.setOnMousePressed(mouseEvent -> {
-
-        });
-
-
+//        PictureShowerListener.thumbnnails.setOnMousePressed(mouseEvent -> {
+//            System.out.println("鼠标按下");
+//            System.out.println(mouseEvent.getX());
+//            System.out.println(mouseEvent.getY());
+//            rectangle.setX(mouseEvent.getX());
+//            rectangle.setY(mouseEvent.getY());
+//            System.out.println(rectangle.getX());
+//            System.out.println(rectangle.getY());
+//            rectangle.setWidth(100);
+//            rectangle.setHeight(100);
+//            rectangle.setVisible(true);
+//        });
+//        PictureShowerListener.thumbnnails.setOnMouseDragged(mouseEvent -> {
+//            System.out.println("鼠标拖动");
+//            double width = mouseEvent.getX() - rectangle.getWidth();
+//            double height = mouseEvent.getY() - rectangle.getHeight();
+//            rectangle.setWidth(Math.abs(width));
+//            rectangle.setHeight(Math.abs(height));
+//            System.out.println(rectangle.getWidth());
+//            thumbnnails.getChildren().add(rectangle);
+//        });
+//        PictureShowerListener.thumbnnails.setOnMouseReleased(mouseEvent -> {
+//            System.out.println("鼠标松开");
+//
+//            rectangle.setVisible(false);
+//        });
     }
 }
