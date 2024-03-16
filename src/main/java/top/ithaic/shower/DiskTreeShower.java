@@ -9,7 +9,6 @@ import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Objects;
 
 /*
 *   TODO
@@ -19,6 +18,16 @@ import java.util.Objects;
 *
 * */
 public class DiskTreeShower {
+    private static final Image DISK_IMAGE = new Image(DiskTreeShower.class.getResourceAsStream("/top/ithaic/3.png"));
+    private static final Image FOLDER_IMAGE = new Image(DiskTreeShower.class.getResourceAsStream("/top/ithaic/47.png"));
+
+    private ImageView getIcon(Image image){
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(16);
+        imageView.setFitHeight(16);
+        return imageView;
+    }
+
     public class MyFile{
         private File file;
         private String filename;
@@ -43,14 +52,6 @@ public class DiskTreeShower {
             return this.filename;
         }
     }
-    private ImageView getDiskIcon(){
-        ImageView folderIcon = new ImageView();
-        Image folderImage = new Image(getClass().getResourceAsStream("/top/ithaic/47.png"));
-        folderIcon.setImage(folderImage);
-        folderIcon.setFitWidth(10);
-        folderIcon.setFitHeight(10);
-        return folderIcon;
-    }
     //TODO 构建目录树
     public DiskTreeShower(TreeView disktree){
         //设置树视图的根目录
@@ -61,7 +62,7 @@ public class DiskTreeShower {
             for(MyFile partition : diskPartitions){
                 //递归获取每一个分区的目录
                 TreeItem<MyFile> item = createNode(partition);
-                item.setGraphic(getDiskIcon());
+                item.setGraphic(getIcon(DISK_IMAGE));
                 //将分区添加到“此电脑”根节点
                 disktree.getTreeItem(0).getChildren().add(item);
             }
@@ -84,7 +85,7 @@ public class DiskTreeShower {
     }
 
     private TreeItem<MyFile> createNode(MyFile myFile){
-        return new TreeItem<>(myFile,getDiskIcon()){
+        return new TreeItem<>(myFile,getIcon(FOLDER_IMAGE)){
             private boolean isLeaf;
             /*
             *  以下两个变量保证每次展开目录时不会重复计算
