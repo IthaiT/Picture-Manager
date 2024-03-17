@@ -42,6 +42,7 @@ public class PictureShowerListener implements Listener {
         PictureShowerListener.scrollPane = scrollPane;
         PictureShowerListener.thumbnnails = thumbnnails;
         PictureShowerListener.scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         rectangle = new Rectangle();
         rectangle.setFill(Color.TRANSPARENT);
         rectangle.setStroke(Color.BLACK);
@@ -67,10 +68,15 @@ public class PictureShowerListener implements Listener {
             thumbnnails.removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
             //创建一个anchorPane
             AnchorPane anchorPane = new AnchorPane();
-            thumbnnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(30));
+            anchorPane.setPrefWidth(scrollPane.getWidth());
+            thumbnnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(10));
             anchorPane.getChildren().add(thumbnnails);
             anchorPane.getChildren().add(rectangle);
+            anchorPane.setPrefWidth(scrollPane.getWidth());
             scrollPane.setContent(anchorPane);
+            System.out.println("scrollPane width" + scrollPane.getWidth());
+            System.out.println("anchorPane width" + anchorPane.getPrefWidth());
+            System.out.println("thumbPane width" + thumbnnails.getWidth());
             //添加事件处理器
             thumbnnails.addEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDraggedEventHandler);
             thumbnnails.addEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedEventHandler);

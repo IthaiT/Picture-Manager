@@ -10,7 +10,7 @@ ScrollPane {
 FlowPane {
     -fx-padding: 5 10 5 10; /* 内边距：上 5 像素，右 10 像素，下 5 像素，左 10 像素 */
     -fx-border-width: 0; /* 没有边框 */
-    -fx-background-color: rgb(247,247,247); /* 背景颜色为白色 */
+    -fx-background-color:  rgb(247,247,247); /* 背景颜色为白色 */
     -fx-hgap: 10; /* 子元素之间的水平间隔为 10 像素 */
     -fx-vgap: 10; /* 子元素之间的垂直间隔为 10 像素 */
 }
