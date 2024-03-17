@@ -10,11 +10,12 @@ public class SlideController {
     private Pane pictureShower;
     @FXML
     private Button lastPicture;
+    @FXML
     private Button nextPicture;
 
     @FXML
     private void initialize(){
-        new SlideShower(pictureShower);
+        new SlideShower(pictureShower,lastPicture,nextPicture);
     }
 
 }

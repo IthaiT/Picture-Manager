@@ -3,14 +3,14 @@ package top.ithaic.shower.SlideShower;
 import java.io.File;
 
 public final class SlideFileManager{
-    private static File picture;
+    private static File currentPicture;
     private static File[] pictures;
-    public SlideFileManager(File picture){
-        SlideFileManager.picture = picture;
+    public SlideFileManager(File currentPicture){
+        SlideFileManager.currentPicture = currentPicture;
     }
     public SlideFileManager(File[] pictures){SlideFileManager.pictures = pictures;}
 
-    public static File getPicture() {
-        return picture;
+    public static File getCurrentPicture() {
+        return currentPicture;
     }
 }
