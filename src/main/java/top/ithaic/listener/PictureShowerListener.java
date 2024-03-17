@@ -1,9 +1,14 @@
 package top.ithaic.listener;
 
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import top.ithaic.Myinterface.Listener;
@@ -18,6 +23,7 @@ import java.util.TimerTask;
 
 public class PictureShowerListener implements Listener {
     private static FlowPane thumbnnails;
+    private static ScrollPane scrollPane;
     private static ArrayList<Thumbnail> thumbnailArrayList = new ArrayList<>();
     private Timer timer = new Timer();
     boolean isSingleClick = false;
@@ -31,11 +37,14 @@ public class PictureShowerListener implements Listener {
 
     private EventHandler<MouseEvent> mouseClickEventHandler;
 
-    public PictureShowerListener( FlowPane thumbnnails){
+    public PictureShowerListener(FlowPane thumbnnails, ScrollPane scrollPane){
+        PictureShowerListener.scrollPane = scrollPane;
         PictureShowerListener.thumbnnails = thumbnnails;
+        PictureShowerListener.scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         rectangle = new Rectangle();
         rectangle.setFill(Color.TRANSPARENT);
-        rectangle.setStroke(Color.BLUE);
+        rectangle.setStroke(Color.BLACK);
+        rectangle.getStrokeDashArray().addAll(4d,4d);
         rectangle.setStrokeWidth(2);
         rectangle.setVisible(false);
         Listen();
@@ -54,6 +63,12 @@ public class PictureShowerListener implements Listener {
         if(isClickBlankArea(mouseEvent)) {
             clearSelected();
             thumbnnails.removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
+            AnchorPane anchorPane = new AnchorPane();
+            anchorPane.getPrefWidth();
+            anchorPane.getChildren().add(thumbnnails);
+            anchorPane.getChildren().add(rectangle);
+            scrollPane.setContent(anchorPane);
+
             thumbnnails.addEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDraggedEventHandler);
             thumbnnails.addEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedEventHandler);
         }
@@ -97,6 +112,7 @@ public class PictureShowerListener implements Listener {
     }
     private void handleMouseReleased(MouseEvent mouseEvent){
         System.out.println("鼠标松开");
+        scrollPane.setContent(thumbnnails);
         rectangle.setVisible(false);
     }
     private void handleMouseClicked(MouseEvent mouseEvent){

@@ -35,6 +35,8 @@ public class mainController {
     @FXML
     private TreeView<TreeItem<DiskTreeShower.MyFile>> disktree;
     @FXML
+    private ScrollPane scrollPane;
+    @FXML
     private FlowPane thumbnails;
     @FXML
     private TextField pathShower;
@@ -74,7 +76,7 @@ public class mainController {
         new PathButtonListener(backwardButton, forwardButton);
         new SortButtonListener(sortButton);
         new SearchButtonListener(searchName,searchButton);
-        new PictureShowerListener(thumbnails);
+        new PictureShowerListener(thumbnails,scrollPane);
     }
 
 }
