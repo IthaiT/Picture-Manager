@@ -7,8 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import top.ithaic.Myinterface.Listener;
-import top.ithaic.shower.SlideShower;
 
 import java.io.File;
 

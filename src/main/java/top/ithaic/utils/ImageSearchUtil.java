@@ -6,13 +6,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.CountDownLatch;
+import java.util.stream.StreamSupport;
 
 import static java.lang.Math.max;
 
 public final class ImageSearchUtil {
-    private HashSet<File> isfindFiles;
+    private final HashSet<File> isfindFiles;
     private CountDownLatch countDownLatch;
-    private ArrayList<File> tempResult;
+    private final ArrayList<File> tempResult;
     public ImageSearchUtil(){
         this.tempResult = new ArrayList<>();
         this.isfindFiles = new HashSet<>();
@@ -62,6 +63,7 @@ public final class ImageSearchUtil {
         }
         @Override
         public void run() {
+            long start = System.currentTimeMillis();
             for(int i=1;i<=threadNumber;i++){
                 new SearchThread(searchPath,searchName).start();
             }
@@ -70,6 +72,8 @@ public final class ImageSearchUtil {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            long end = System.currentTimeMillis();
+            System.out.println("本次搜索耗时:"+(end-start)+"ms");
             //返回结果
             this.searchResult = new File[tempResult.size()];
             for(int i=0;i<tempResult.size();i++){
@@ -100,7 +104,9 @@ public final class ImageSearchUtil {
             if(currentFile.isFile()&&!isfindFiles.contains(currentFile)){
                 if(PictureUtil.isPicture(currentFile) && match(currentFile.getName().toLowerCase(),searchName)){
                     System.out.println("匹配成功:"+currentFile.getName());
-                    if(!tempResult.contains(currentFile))tempResult.add(currentFile);
+                    synchronized (tempResult) {
+                        if (!tempResult.contains(currentFile)) tempResult.add(currentFile);
+                    }
                 }
                 return;
             }
@@ -112,9 +118,10 @@ public final class ImageSearchUtil {
                     }
                 }
             }
-            isfindFiles.add(currentFile);
+            synchronized (isfindFiles) {
+                isfindFiles.add(currentFile);
+            }
         }
-
 
 
     }

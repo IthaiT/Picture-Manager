@@ -23,7 +23,7 @@ import top.ithaic.shower.PictureShower;
 
 public class mainController {
     @FXML
-    public ContextMenu historyPath;
+    private ContextMenu historyPath;
     @FXML
     private Button backwardButton;
     @FXML

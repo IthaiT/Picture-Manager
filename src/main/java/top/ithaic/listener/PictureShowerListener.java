@@ -1,8 +1,6 @@
 package top.ithaic.listener;
 
-import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
@@ -14,7 +12,7 @@ import javafx.scene.shape.Rectangle;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureMessageShower;
-import top.ithaic.shower.SlideShower;
+import top.ithaic.shower.SlideShower.SlideWindow;
 
 
 import java.util.ArrayList;
@@ -224,7 +222,7 @@ public class PictureShowerListener implements Listener {
                         //如果这次与上次双击的图片相同，创建幻灯片后返回
                         if(thumbnailArrayList.get(0).equals(thumbnail)){
                             System.out.println("点击了相同的文件");
-                            new SlideShower(thumbnailArrayList.get(0).getImageFile());
+                            new SlideWindow(thumbnailArrayList.get(0).getImageFile());
                             return;
                         }
                         //否则把选中的图片取消
@@ -238,7 +236,7 @@ public class PictureShowerListener implements Listener {
                     thumbnailArrayList.add(thumbnail);
                     thumbnail.setIsClicked(true);
                     thumbnail.setSelectedStyle();
-                    new SlideShower(thumbnailArrayList.get(0).getImageFile());
+                    new SlideWindow(thumbnailArrayList.get(0).getImageFile());
                     pms.updateText(thumbnailArrayList.size());
                     return;
                 }
