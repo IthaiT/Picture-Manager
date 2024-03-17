@@ -1,5 +1,6 @@
 package top.ithaic.listener;
 
+import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -7,14 +8,14 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureMessageShower;
 import top.ithaic.shower.SlideShower;
+
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -34,8 +35,8 @@ public class PictureShowerListener implements Listener {
     private EventHandler<MouseEvent> mousePressEventHandler;
     private EventHandler<MouseEvent> mouseDraggedEventHandler;
     private EventHandler<MouseEvent> mouseReleasedEventHandler;
-
     private EventHandler<MouseEvent> mouseClickEventHandler;
+    private EventHandler<MouseEvent> autoScrollTimer;//当鼠标到底部时触发滚动
 
     public PictureShowerListener(FlowPane thumbnnails, ScrollPane scrollPane){
         PictureShowerListener.scrollPane = scrollPane;
@@ -55,6 +56,7 @@ public class PictureShowerListener implements Listener {
         mouseDraggedEventHandler = this::handleMouseDragged;
         mouseReleasedEventHandler = this::handleMouseReleased;
         mouseClickEventHandler = this::handleMouseClicked;
+        autoScrollTimer = this::handleScrollSlide;
         PictureShowerListener.thumbnnails.addEventHandler(MouseEvent.MOUSE_PRESSED,mousePressEventHandler);
     }
     private void handleMousePressed(MouseEvent mouseEvent){
@@ -63,12 +65,13 @@ public class PictureShowerListener implements Listener {
         if(isClickBlankArea(mouseEvent)) {
             clearSelected();
             thumbnnails.removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
+            //创建一个anchorPane
             AnchorPane anchorPane = new AnchorPane();
-            anchorPane.getPrefWidth();
+            thumbnnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(30));
             anchorPane.getChildren().add(thumbnnails);
             anchorPane.getChildren().add(rectangle);
             scrollPane.setContent(anchorPane);
-
+            //添加事件处理器
             thumbnnails.addEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDraggedEventHandler);
             thumbnnails.addEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedEventHandler);
         }
@@ -83,9 +86,9 @@ public class PictureShowerListener implements Listener {
         rectangle.setWidth(0);
         rectangle.setHeight(0);
         rectangle.setVisible(true);
-        System.out.println("矩形初始化");
     }
     private void handleMouseDragged(MouseEvent mouseEvent){
+        handleScrollSlide(mouseEvent);
         double endX = mouseEvent.getX();
         double endY = mouseEvent.getY();
         double width = endX - startX;
@@ -111,7 +114,6 @@ public class PictureShowerListener implements Listener {
         if(thumbnailArrayList!=null) pms.updateText(thumbnailArrayList.size());//更新选中图片的信息
     }
     private void handleMouseReleased(MouseEvent mouseEvent){
-        System.out.println("鼠标松开");
         scrollPane.setContent(thumbnnails);
         rectangle.setVisible(false);
     }
@@ -239,6 +241,21 @@ public class PictureShowerListener implements Listener {
 
         if(isClickBlankArea(mouseEvent)){
             clearSelected();
+        }
+    }
+    private void handleScrollSlide(MouseEvent mouseEvent){
+        double scrollEdgeThreshold = 50;
+        double scrollDelta = 0.01;
+        double sceneY = mouseEvent.getSceneY();
+        System.out.println(mouseEvent.getY());
+        if(mouseEvent.getY() > thumbnnails.getHeight())return;//当鼠标位置超过图片显示区域时，直接返回
+        if(sceneY < scrollEdgeThreshold){
+            double newVvalue = scrollPane.getVvalue()- scrollDelta;
+            scrollPane.setVvalue(newVvalue);
+        }
+        else if(sceneY > scrollPane.getHeight() - scrollEdgeThreshold){
+            double newVvalue = scrollPane.getVvalue() + scrollDelta;
+            scrollPane.setVvalue(newVvalue);
         }
     }
     private boolean isClickBlankArea(MouseEvent mouseEvent){
