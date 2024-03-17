@@ -36,9 +36,9 @@ public class PictureShowerListener implements Listener {
     private EventHandler<MouseEvent> mouseClickEventHandler;
     private EventHandler<MouseEvent> autoScrollTimer;//当鼠标到底部时触发滚动
 
-    public PictureShowerListener(FlowPane thumbnnails, ScrollPane scrollPane){
+    public PictureShowerListener(FlowPane thumbnails, ScrollPane scrollPane){
         PictureShowerListener.scrollPane = scrollPane;
-        PictureShowerListener.thumbnails = thumbnnails;
+        PictureShowerListener.thumbnails = thumbnails;
         PictureShowerListener.scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         rectangle = new Rectangle();
