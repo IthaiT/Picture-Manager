@@ -21,9 +21,9 @@ public class PathShower {
     private  static TextField pathShower;
     private  static AnchorPane anchorPane;
     public PathShower(){}
-    public PathShower(TextField pathShower, AnchorPane father, ContextMenu historyPath){
+    public PathShower(TextField pathShower, AnchorPane parent, ContextMenu historyPath){
         PathShower.pathShower = pathShower;
-        PathShower.anchorPane = father;
+        PathShower.anchorPane = parent;
         PathShower.historyPath = historyPath;
         bindProperty();
         addListener();

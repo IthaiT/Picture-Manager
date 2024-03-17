@@ -21,7 +21,7 @@ import java.util.TimerTask;
 
 
 public class PictureShowerListener implements Listener {
-    private static FlowPane thumbnnails;
+    private static FlowPane thumbnails;
     private static ScrollPane scrollPane;
     private static ArrayList<Thumbnail> thumbnailArrayList = new ArrayList<>();
     private Timer timer = new Timer();
@@ -38,7 +38,7 @@ public class PictureShowerListener implements Listener {
 
     public PictureShowerListener(FlowPane thumbnnails, ScrollPane scrollPane){
         PictureShowerListener.scrollPane = scrollPane;
-        PictureShowerListener.thumbnnails = thumbnnails;
+        PictureShowerListener.thumbnails = thumbnnails;
         PictureShowerListener.scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         rectangle = new Rectangle();
@@ -56,32 +56,32 @@ public class PictureShowerListener implements Listener {
         mouseReleasedEventHandler = this::handleMouseReleased;
         mouseClickEventHandler = this::handleMouseClicked;
         autoScrollTimer = this::handleScrollSlide;
-        PictureShowerListener.thumbnnails.addEventHandler(MouseEvent.MOUSE_PRESSED,mousePressEventHandler);
+        PictureShowerListener.thumbnails.addEventHandler(MouseEvent.MOUSE_PRESSED,mousePressEventHandler);
     }
     private void handleMousePressed(MouseEvent mouseEvent){
         isSingleClick = false;//防止对点击造成影响
-        thumbnnails.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
+        thumbnails.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
         if(isClickBlankArea(mouseEvent)) {
             clearSelected();
-            thumbnnails.removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
+            thumbnails.removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
             //创建一个anchorPane
             AnchorPane anchorPane = new AnchorPane();
             anchorPane.setPrefWidth(scrollPane.getWidth());
-            thumbnnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(10));
-            anchorPane.getChildren().add(thumbnnails);
+            thumbnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(10));
+            anchorPane.getChildren().add(thumbnails);
             anchorPane.getChildren().add(rectangle);
             anchorPane.setPrefWidth(scrollPane.getWidth());
             scrollPane.setContent(anchorPane);
             System.out.println("scrollPane width" + scrollPane.getWidth());
             System.out.println("anchorPane width" + anchorPane.getPrefWidth());
-            System.out.println("thumbPane width" + thumbnnails.getWidth());
+            System.out.println("thumbPane width" + thumbnails.getWidth());
             //添加事件处理器
-            thumbnnails.addEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDraggedEventHandler);
-            thumbnnails.addEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedEventHandler);
+            thumbnails.addEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDraggedEventHandler);
+            thumbnails.addEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedEventHandler);
         }
         else{
-            thumbnnails.removeEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDraggedEventHandler);
-            thumbnnails.removeEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedEventHandler);
+            thumbnails.removeEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDraggedEventHandler);
+            thumbnails.removeEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedEventHandler);
         }
         startX = mouseEvent.getX();
         startY = mouseEvent.getY();
@@ -118,7 +118,7 @@ public class PictureShowerListener implements Listener {
         if(thumbnailArrayList!=null) pms.updateText(thumbnailArrayList.size());//更新选中图片的信息
     }
     private void handleMouseReleased(MouseEvent mouseEvent){
-        scrollPane.setContent(thumbnnails);
+        scrollPane.setContent(thumbnails);
         rectangle.setVisible(false);
     }
     private void handleMouseClicked(MouseEvent mouseEvent){
@@ -252,7 +252,7 @@ public class PictureShowerListener implements Listener {
         double scrollDelta = 0.01;
         double sceneY = mouseEvent.getSceneY();
         System.out.println(mouseEvent.getY());
-        if(mouseEvent.getY() > thumbnnails.getHeight())return;//当鼠标位置超过图片显示区域时，直接返回
+        if(mouseEvent.getY() > thumbnails.getHeight())return;//当鼠标位置超过图片显示区域时，直接返回
         if(sceneY < scrollEdgeThreshold){
             double newVvalue = scrollPane.getVvalue()- scrollDelta;
             scrollPane.setVvalue(newVvalue);
