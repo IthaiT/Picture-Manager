@@ -5,6 +5,8 @@ import javafx.scene.control.MenuItem;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.utils.PictureOperationUtil;
 
+import java.io.IOException;
+
 public class PictureOperateListener implements Listener {
     private static ContextMenu contextMenuT;//On Thumbnail
     private static ContextMenu contextMenuP;//On Pane
@@ -31,10 +33,18 @@ public class PictureOperateListener implements Listener {
             PictureOperationUtil.renamePictures();
         });
         deleteItem.setOnAction(actionEvent -> {
-            PictureOperationUtil.deletePictures();
+            try {
+                PictureOperationUtil.deletePictures();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
         pasteItem.setOnAction(actionEvent -> {
-            PictureOperationUtil.pastePictures();
+            try {
+                PictureOperationUtil.pastePictures();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 }

@@ -48,8 +48,6 @@ public class PictureShowerListener implements Listener {
         //初始化右键点击菜单
         contextMenuT = new ContextMenu();
         contextMenuP = new ContextMenu();
-        contextMenuT.setStyle(" -fx-background-color: white");
-        contextMenuP.setStyle(" -fx-background-color: white");
         new PictureOperateListener(contextMenuT,contextMenuP);
         //创建鼠标拖动矩形
         rectangle = new Rectangle();
@@ -82,15 +80,14 @@ public class PictureShowerListener implements Listener {
             }
             clearSelected();
             //创建一个anchorPane
-            if(isClickBlankArea(mouseEvent)) System.out.println("test1");
             thumbnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(10));
+            thumbnails.prefHeightProperty().bind(scrollPane.heightProperty().subtract(5));
             AnchorPane anchorPane = new AnchorPane();
             anchorPane.setPrefWidth(scrollPane.getWidth());
             anchorPane.getChildren().add(thumbnails);
             anchorPane.getChildren().add(rectangle);
             anchorPane.setPrefWidth(scrollPane.getWidth());
             scrollPane.setContent(anchorPane);
-            if(isClickBlankArea(mouseEvent)) System.out.println("test2");
             //添加事件处理器
 
             thumbnails.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedEventHandler);
@@ -270,7 +267,6 @@ public class PictureShowerListener implements Listener {
                     if (!thumbnailArrayList.isEmpty()) {
                         //如果这次与上次双击的图片相同，创建幻灯片后返回
                         if (thumbnailArrayList.get(0).equals(thumbnail)) {
-                            System.out.println("点击了相同的文件");
                             new SlideWindow(PathUtil.getCurrentFiles());
                             return;
                         }
@@ -343,7 +339,7 @@ public class PictureShowerListener implements Listener {
         }
         return null;
     }
-    public static ArrayList<Thumbnail> getThumbnailArrayList(){
+    public static ArrayList<Thumbnail> getsThumbnailArrayList(){
         return thumbnailArrayList;
     }
 }
