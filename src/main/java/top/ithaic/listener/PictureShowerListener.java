@@ -177,6 +177,31 @@ public class PictureShowerListener implements Listener {
             return;//下面的代码都不需要执行
         }
 
+        //判断是不是右击事件
+        if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+            if(thumbnailArrayList.size()>=2){
+                for(Thumbnail thumbnail : thumbnailArrayList){
+                    thumbnail.setIsClicked(false);
+                    if(thumbnail.getBoundsInParent().contains(mouseX,mouseY)){
+                        contextMenu.show(thumbnail,mouseEvent.getScreenX(),mouseEvent.getScreenY());
+                        return;
+                    }
+                }
+            }
+            Thumbnail thumbnail = getClickedThumbnail(mouseEvent);
+            if(!thumbnailArrayList.isEmpty()){
+                clearSelected();
+            }
+            if(thumbnail==null)return;
+            contextMenu.show(thumbnail,mouseEvent.getScreenX(),mouseEvent.getScreenY());
+            thumbnail.setSelectedStyle();
+            thumbnail.setIsClicked(true);
+            thumbnailArrayList.add(thumbnail);
+            pms.updateText(thumbnailArrayList.size());
+            return;
+        }
+
+        contextMenu.hide();
         //TODO 如果被选中的图片大于1，清空列表
         if (!thumbnailArrayList.isEmpty() && (thumbnailArrayList.size() != 1)) {
             for (Thumbnail thumbnail : thumbnailArrayList) {
@@ -186,27 +211,10 @@ public class PictureShowerListener implements Listener {
             thumbnailArrayList.clear();
         }
 
+
         //TODO 单击选中图片
         if (mouseEvent.getClickCount() == 1) {
             Thumbnail thumbnail;
-            //判断是不是右击事件
-            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                thumbnail = getClickedThumbnail(mouseEvent);
-                if(!thumbnailArrayList.isEmpty()) {
-                    thumbnailArrayList.get(0).setIsClicked(false);
-                    thumbnailArrayList.get(0).setUnSelectedStyle();
-                    thumbnailArrayList.clear();
-                }
-                if(thumbnail==null)return;
-                contextMenu.show(thumbnail,mouseEvent.getScreenX(),mouseEvent.getScreenY());
-                thumbnail.setSelectedStyle();
-                thumbnail.setIsClicked(true);
-                thumbnailArrayList.add(thumbnail);
-                pms.updateText(thumbnailArrayList.size());
-                return;
-            }
-
-            contextMenu.hide();
             //鼠标左击事件
             for (Node node : ((FlowPane) mouseEvent.getSource()).getChildren()) {
                 if ((node instanceof Thumbnail) && (node.getBoundsInParent().contains(mouseX, mouseY))) {
