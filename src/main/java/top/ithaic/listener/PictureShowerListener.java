@@ -2,7 +2,9 @@ package top.ithaic.listener;
 
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -29,8 +31,9 @@ public class PictureShowerListener implements Listener {
     private static FlowPane thumbnails;
     private static ScrollPane scrollPane;
     private static ArrayList<Thumbnail> thumbnailArrayList = new ArrayList<>();
+    private static ContextMenu contextMenu;
     private final Timer timer = new Timer();
-    private final Rectangle rectangle;
+    private Rectangle rectangle;
     boolean isSingleClick = false;
 
 
@@ -103,6 +106,11 @@ public class PictureShowerListener implements Listener {
         Thumbnail thumbnail;
         for (Node node : ((FlowPane) mouseEvent.getSource()).getChildren()) {
             thumbnail = (Thumbnail) node;
+            if(thumbnail.getIsClicked()){
+                thumbnail.setIsClicked(false);
+                thumbnail.setUnSelectedStyle();
+                thumbnailArrayList.remove(thumbnail);
+            }
             if ((node instanceof Thumbnail) && (node.getBoundsInParent().intersects(rectangle.getBoundsInLocal()))) {
                 thumbnail.setSelectedStyle();
                 thumbnail.setIsClicked(true);
@@ -168,6 +176,12 @@ public class PictureShowerListener implements Listener {
 
         //TODO 单击选中图片
         if(mouseEvent.getClickCount() == 1){
+            //判断是不是右击事件
+            if(mouseEvent.getButton() == MouseButton.SECONDARY) {
+
+                return;
+            }
+
             Thumbnail thumbnail;
             for (Node node : ((FlowPane) mouseEvent.getSource()).getChildren()) {
                 if ((node instanceof Thumbnail) && (node.getBoundsInParent().contains(mouseX, mouseY))) {
