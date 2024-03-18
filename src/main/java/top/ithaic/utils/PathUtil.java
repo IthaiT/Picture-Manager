@@ -32,15 +32,16 @@ public final class PathUtil {
         if (historyPath!= null && !historyPath.contains(newPath.getAbsolutePath()))historyPath.add(newPath.getAbsolutePath());
 
         currentPath = newPath;
-        currentFiles = PictureUtil.getPicturesInDirectory(currentPath.listFiles());
+        currentFiles = PictureUtil.getPicturesInDirectory(currentPath);
     }
     public static void updateFiles(File[] currentFiles) {
         //更新当前文件
         PathUtil.currentFiles = currentFiles;
     }
-    public static File[] getCurrentFiles() {
-        return currentFiles;
+    public static void updateFiles(){
+        PathUtil.currentFiles = PictureUtil.getPicturesInDirectory(currentPath);
     }
+    public static File[] getCurrentFiles() {return currentFiles;}
     public static File getCurrentPath() {
         return currentPath;
     }

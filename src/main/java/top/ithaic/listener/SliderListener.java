@@ -4,6 +4,7 @@ import javafx.scene.control.Slider;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureShower;
+import top.ithaic.utils.PathUtil;
 
 public class SliderListener implements Listener {
 
@@ -22,6 +23,7 @@ public class SliderListener implements Listener {
         PictureShower pictureShower = new PictureShower();
         //监听Slider的改变
         sizeChanger.valueProperty().addListener(((observableValue, oldValue, newValue) -> {
+            PathUtil.updateFiles();
             pictureShower.showPicture();
             Thumbnail thumbnail = new Thumbnail();
             double newWidth = thumbnail.getThumbnailWidth() * ((newValue.doubleValue())/ oldValue.doubleValue());

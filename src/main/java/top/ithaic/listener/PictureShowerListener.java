@@ -85,7 +85,6 @@ public class PictureShowerListener implements Listener {
             //创建一个anchorPane
             if(isClickBlankArea(mouseEvent)) System.out.println("test1");
             thumbnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(10));
-            thumbnails.prefHeightProperty().bind(scrollPane.heightProperty().subtract(5));
             AnchorPane anchorPane = new AnchorPane();
             anchorPane.setPrefWidth(scrollPane.getWidth());
             anchorPane.getChildren().add(thumbnails);
