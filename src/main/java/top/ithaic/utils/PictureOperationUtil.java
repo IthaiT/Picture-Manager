@@ -37,7 +37,7 @@ public class PictureOperationUtil {
         //如果目录里面没有图片，不需要判断，直接添加
         if (imageFiles.isEmpty()) {
             for (Thumbnail thumbnail : thumbnails) {
-                Files.copy(thumbnail.getImageFile().toPath(), Path.of(currentPath.toPath() + thumbnail.getImageFile().getName().toString()));
+                Files.copy(thumbnail.getImageFile().toPath(), Path.of(currentPath.toPath() + "/"+thumbnail.getImageFile().getName().toString()));
             }
         }
         else {
@@ -56,7 +56,7 @@ public class PictureOperationUtil {
                     flag = false;
                     continue;
                 }
-                Files.copy(Path.of(thumbnail.getImageFile().toString()), Path.of(currentPath.toPath() + sourceName));
+                Files.copy(Path.of(thumbnail.getImageFile().toString()), Path.of(currentPath.toPath() +"/"+ sourceName));
             }
         }
         pictureShower.showPicture(currentPath);
@@ -74,7 +74,7 @@ public class PictureOperationUtil {
             Optional<String> result = dialog.showAndWait();
             if(result.isPresent()){
                 String newName = result.get()+suffix;
-                oldFile.renameTo(new File(oldFile.getParentFile()+newName));
+                oldFile.renameTo(new File(oldFile.getParentFile()+"/" +newName));
             }
             pictureShower.showPicture(PathUtil.getCurrentPath());
             return;
@@ -144,7 +144,7 @@ public class PictureOperationUtil {
             String suffix = pictureName.substring(pictureName.lastIndexOf("."));
             long tmp = startCode + i;
             String newName = prefix + String.valueOf(0).repeat(digit-String.valueOf(tmp).length()) + tmp + suffix;
-            oldFile.renameTo(new File(oldFile.getParentFile()+newName));
+            oldFile.renameTo(new File(oldFile.getParentFile()+"/"+newName));
         }
         pictureShower.showPicture(PathUtil.getCurrentPath());
     }
