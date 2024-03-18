@@ -73,7 +73,7 @@ public class PictureOperationUtil {
                 String newName = result.get()+suffix;
                 oldFile.renameTo(new File(oldFile.getParentFile()+newName));
             }
-            pictureShower.showPicture();
+            pictureShower.showPicture(PathUtil.getCurrentPath());
             return;
         }
         //得到前缀
@@ -143,7 +143,7 @@ public class PictureOperationUtil {
             String newName = prefix + String.valueOf(0).repeat(digit-String.valueOf(tmp).length()) + tmp + suffix;
             oldFile.renameTo(new File(oldFile.getParentFile()+newName));
         }
-        pictureShower.showPicture();
+        pictureShower.showPicture(PathUtil.getCurrentPath());
     }
 
 
