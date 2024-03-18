@@ -15,6 +15,7 @@ import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureMessageShower;
 import top.ithaic.shower.SlideShower.SlideWindow;
+import top.ithaic.utils.PathUtil;
 
 
 import java.util.ArrayList;
@@ -270,7 +271,7 @@ public class PictureShowerListener implements Listener {
                         //如果这次与上次双击的图片相同，创建幻灯片后返回
                         if (thumbnailArrayList.get(0).equals(thumbnail)) {
                             System.out.println("点击了相同的文件");
-                            new SlideWindow(thumbnailArrayList.get(0).getImageFile());
+                            new SlideWindow(PathUtil.getCurrentFiles());
                             return;
                         }
                         //否则把选中的图片取消
@@ -284,7 +285,7 @@ public class PictureShowerListener implements Listener {
                     thumbnailArrayList.add(thumbnail);
                     thumbnail.setIsClicked(true);
                     thumbnail.setSelectedStyle();
-                    new SlideWindow(thumbnailArrayList.get(0).getImageFile());
+                    new SlideWindow(PathUtil.getCurrentFiles());
                     pms.updateText(thumbnailArrayList.size());
                     return;
                 }
