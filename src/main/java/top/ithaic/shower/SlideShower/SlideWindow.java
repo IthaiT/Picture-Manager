@@ -8,14 +8,14 @@ import java.io.IOException;
 
 
 public class SlideWindow {
-    public SlideWindow(File[] currentFiles){
-        launch(currentFiles);
+    public SlideWindow(File[] currentFiles,int currentIndex){
+        launch(currentFiles,currentIndex);
     }
 
-    public void launch(File[] currentFiles){
+    public void launch(File[] currentFiles,int currentIndex){
         FXMLLoader fxmlLoader = new FXMLLoader(SlideController.class.getResource("slideShower.fxml"));
         //传入图片即可
-        new SlideFileManager(currentFiles);
+        new SlideFileManager(currentFiles,currentIndex);
 
         Scene scene = null;
         try {

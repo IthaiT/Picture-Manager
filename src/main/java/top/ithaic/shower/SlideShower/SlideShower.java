@@ -4,6 +4,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
@@ -18,7 +20,6 @@ public class SlideShower{
         this.pictureShower = pictureShower;
         this.lastPicture = lastPicture;
         this.nextPicture = nextPicture;
-        SlideFileManager.setCurrentIndex(0);
         showPicture();
     }
 
@@ -45,25 +46,35 @@ public class SlideShower{
         }
         else{
             lastPicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
-                if(SlideFileManager.getCurrentIndex()>0) {
-                    System.out.println(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()-1].getName());
-                    image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()-1].toURI().toString());
-                    SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex()-1);
-                    drawPicture(canvas,image);
-                }
+                lastPicture(canvas);
             });
             nextPicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
-                if(SlideFileManager.getCurrentIndex()<SlideFileManager.getPictures().length-1) {
-                    System.out.println(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()+1].getName());
-                    image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()+1].toURI().toString());
-                    SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex()+1);
-                    drawPicture(canvas,image);
-                }
+                nextPicture(canvas);
+            });
+            this.pictureShower.getParent().addEventFilter(KeyEvent.KEY_PRESSED,keyEvent -> {
+                if(keyEvent.getCode() == KeyCode.LEFT)lastPicture(canvas);
+                if(keyEvent.getCode() == KeyCode.RIGHT)nextPicture(canvas);
             });
         }
 
 
         this.pictureShower.getChildren().add(canvas);
+    }
+
+    private void lastPicture(Canvas canvas){
+        if(SlideFileManager.getCurrentIndex()>0) {
+            image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()-1].toURI().toString());
+            SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex()-1);
+            drawPicture(canvas,image);
+        }
+    }
+
+    private void nextPicture(Canvas canvas){
+        if(SlideFileManager.getCurrentIndex()<SlideFileManager.getPictures().length-1) {
+            image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()+1].toURI().toString());
+            SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex()+1);
+            drawPicture(canvas,image);
+        }
     }
 
     private void drawPicture(Canvas canvas,Image image){
