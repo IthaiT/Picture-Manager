@@ -6,49 +6,63 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import top.ithaic.listener.PictureShowerListener;
-import top.ithaic.shower.PictureShower;
 
-import java.io.File;
 
 public class SlideShower{
-    private Button lastPicture;
-    private Button nextPicture;
+    private final Button lastPicture;
+    private final Button nextPicture;
     private Pane pictureShower;
+    private static Image image;
 
     public SlideShower(Pane pictureShower,Button lastPicture,Button nextPicture){
         this.pictureShower = pictureShower;
         this.lastPicture = lastPicture;
         this.nextPicture = nextPicture;
         SlideFileManager.setCurrentIndex(0);
-
-        if(SlideFileManager.getPictures().length==1){
-            lastPicture.setVisible(false);
-            nextPicture.setVisible(false);
-            showPicture(SlideFileManager.getPictures()[0]);
-        }
-        else{
-            lastPicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
-                if(SlideFileManager.getCurrentIndex()>0)showPicture(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()-1]);
-            });
-            nextPicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
-                if(SlideFileManager.getCurrentIndex()<SlideFileManager.getPictures().length-1)showPicture(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()+1]);
-            });
-        }
+        showPicture();
     }
 
-    private void showPicture(File picture){
+    private void showPicture(){
         this.pictureShower.getChildren().clear();
         double slideWidth = this.pictureShower.getWidth();
         double slideHeight = this.pictureShower.getHeight();
-        Image image = new Image(picture.toURI().toString());
+
+        image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()].toURI().toString());
+
         //初始化控件
         Canvas canvas = new Canvas(slideWidth, slideHeight);
         canvas.widthProperty().bind(this.pictureShower.widthProperty());
         canvas.heightProperty().bind(this.pictureShower.heightProperty());
 
-        canvas.widthProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas,image)));
-        canvas.heightProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas,image)));
+        //画布监听
+        canvas.widthProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas, image)));
+        canvas.heightProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas, image)));
+
+        //按钮监听
+        if(SlideFileManager.getPictures().length==1){
+            lastPicture.setVisible(false);
+            nextPicture.setVisible(false);
+        }
+        else{
+            lastPicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
+                if(SlideFileManager.getCurrentIndex()>0) {
+                    System.out.println(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()-1].getName());
+                    image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()-1].toURI().toString());
+                    SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex()-1);
+                    drawPicture(canvas,image);
+                }
+            });
+            nextPicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
+                if(SlideFileManager.getCurrentIndex()<SlideFileManager.getPictures().length-1) {
+                    System.out.println(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()+1].getName());
+                    image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()+1].toURI().toString());
+                    SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex()+1);
+                    drawPicture(canvas,image);
+                }
+            });
+        }
+
+
         this.pictureShower.getChildren().add(canvas);
     }
 

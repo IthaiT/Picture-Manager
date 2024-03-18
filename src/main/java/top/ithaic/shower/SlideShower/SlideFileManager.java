@@ -9,13 +9,8 @@ public final class SlideFileManager{
     private static int currentIndex;
     private static File[] pictures;
     public SlideFileManager(File[] pictures){SlideFileManager.pictures = pictures;}
-    public SlideFileManager(ArrayList<Thumbnail> thumbnailArrayList){
-        this(thumbnailArrayList.stream().map(Thumbnail::getImageFile).toArray(File[]::new));
-    }
 
-    public static File[] getPictures() {
-        return pictures;
-    }
+    public static File[] getPictures() {return pictures;}
     public static int getCurrentIndex() {
         return currentIndex;
     }

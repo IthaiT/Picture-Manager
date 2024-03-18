@@ -3,19 +3,19 @@ package top.ithaic.shower.SlideShower;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import top.ithaic.imageview.Thumbnail;
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+
 
 public class SlideWindow {
-    public SlideWindow(ArrayList<Thumbnail> thumbnailArrayList){
-        launch(thumbnailArrayList);
+    public SlideWindow(File[] currentFiles){
+        launch(currentFiles);
     }
 
-    public void launch(ArrayList<Thumbnail> thumbnailArrayList){
+    public void launch(File[] currentFiles){
         FXMLLoader fxmlLoader = new FXMLLoader(SlideController.class.getResource("slideShower.fxml"));
         //传入图片即可
-        new SlideFileManager(thumbnailArrayList);
+        new SlideFileManager(currentFiles);
 
         Scene scene = null;
         try {
