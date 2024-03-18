@@ -14,6 +14,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.awt.Desktop;
+
+
 
 public class PictureOperationUtil {
     private static ArrayList<Thumbnail> thumbnails = new ArrayList<>();
@@ -154,7 +157,7 @@ public class PictureOperationUtil {
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
             for (Thumbnail thumbnail : tmp){
-                thumbnail.getImageFile().delete();
+                Desktop.getDesktop().moveToTrash(thumbnail.getImageFile());
             }
         }
         pictureShower.showPicture(PathUtil.getCurrentPath());
