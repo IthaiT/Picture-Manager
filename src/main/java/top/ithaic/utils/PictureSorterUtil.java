@@ -8,7 +8,6 @@ import java.util.Comparator;
 
 
 public final class PictureSorterUtil {
-    private static  File currentPath;
 
     private static  File[] pictures;
 

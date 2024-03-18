@@ -23,7 +23,6 @@ public class SliderListener implements Listener {
         PictureShower pictureShower = new PictureShower();
         //监听Slider的改变
         sizeChanger.valueProperty().addListener(((observableValue, oldValue, newValue) -> {
-            PathUtil.updateFiles();
             pictureShower.showPicture();
             Thumbnail thumbnail = new Thumbnail();
             double newWidth = thumbnail.getThumbnailWidth() * ((newValue.doubleValue())/ oldValue.doubleValue());
