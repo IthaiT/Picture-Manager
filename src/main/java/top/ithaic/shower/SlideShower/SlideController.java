@@ -16,6 +16,7 @@ public class SlideController {
     @FXML
     private void initialize(){
         new SlideShower(pictureShower,lastPicture,nextPicture);
+        new SlideListener(pictureShower);
     }
 
 }
