@@ -3,8 +3,6 @@ package top.ithaic.listener;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -33,7 +31,8 @@ public class PictureShowerListener implements Listener {
     private static FlowPane thumbnails;
     private static ScrollPane scrollPane;
     private static ArrayList<Thumbnail> thumbnailArrayList;
-    private static ContextMenu contextMenu;
+    private static ContextMenu contextMenuT;//On Thumbnail
+    private static ContextMenu contextMenuP;//On Pane
     private final Timer timer = new Timer();
     private Rectangle rectangle;
     boolean isSingleClick = false;
@@ -46,13 +45,11 @@ public class PictureShowerListener implements Listener {
         PictureShowerListener.thumbnails = thumbnails;
         thumbnailArrayList = new ArrayList<>();
         //初始化右键点击菜单
-        contextMenu = new ContextMenu();
-        MenuItem copyItem = new MenuItem("复制");
-        MenuItem pasteItem = new MenuItem("粘贴");
-        MenuItem renameItem = new MenuItem("重命名");
-        MenuItem deleteItem = new MenuItem("删除");
-        contextMenu.getItems().addAll(copyItem, pasteItem, renameItem, deleteItem);
-        contextMenu.setStyle(" -fx-background-color: white");
+        contextMenuT = new ContextMenu();
+        contextMenuP = new ContextMenu();
+        contextMenuT.setStyle(" -fx-background-color: white");
+        contextMenuP.setStyle(" -fx-background-color: white");
+        new PictureOperateListener(contextMenuT,contextMenuP);
         //创建鼠标拖动矩形
         rectangle = new Rectangle();
         rectangle.setFill(Color.TRANSPARENT);
@@ -70,16 +67,21 @@ public class PictureShowerListener implements Listener {
         mouseReleasedEventHandler = this::handleMouseReleased;
         mouseClickEventHandler = this::handleMouseClicked;
         autoScrollTimer = this::handleScrollSlide;
-        //启动两个基本的鼠标事件
+        //启动基本的鼠标事件
         thumbnails.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressEventHandler);
     }
 
     private void handleMousePressed(MouseEvent mouseEvent) {
+        contextMenuP.hide();
         isSingleClick = false;//防止对鼠标点击事件造成影响
         thumbnails.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
         if (isClickBlankArea(mouseEvent)) {
+            if(mouseEvent.getButton() == MouseButton.SECONDARY){
+                contextMenuP.show(scrollPane,mouseEvent.getScreenX(),mouseEvent.getScreenY());
+            }
             clearSelected();
             //创建一个anchorPane
+            if(isClickBlankArea(mouseEvent)) System.out.println("test1");
             thumbnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(10));
             AnchorPane anchorPane = new AnchorPane();
             anchorPane.setPrefWidth(scrollPane.getWidth());
@@ -87,8 +89,9 @@ public class PictureShowerListener implements Listener {
             anchorPane.getChildren().add(rectangle);
             anchorPane.setPrefWidth(scrollPane.getWidth());
             scrollPane.setContent(anchorPane);
+            if(isClickBlankArea(mouseEvent)) System.out.println("test2");
             //添加事件处理器
-            thumbnails.removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
+
             thumbnails.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedEventHandler);
             thumbnails.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedEventHandler);
         } else {
@@ -105,6 +108,7 @@ public class PictureShowerListener implements Listener {
     }
 
     private void handleMouseDragged(MouseEvent mouseEvent) {
+        if(mouseEvent.getButton() == MouseButton.SECONDARY)return;
         thumbnails.addEventHandler(MouseEvent.MOUSE_DRAGGED, autoScrollTimer);
         double endX = mouseEvent.getX();
         double endY = mouseEvent.getY();
@@ -132,6 +136,9 @@ public class PictureShowerListener implements Listener {
     }
 
     private void handleMouseReleased(MouseEvent mouseEvent) {
+        if(mouseEvent.getButton() == MouseButton.SECONDARY){
+            thumbnails.removeEventHandler(MouseEvent.MOUSE_CLICKED,mouseClickEventHandler);
+        }
         scrollPane.setContent(thumbnails);
         rectangle.setVisible(false);
     }
@@ -183,7 +190,7 @@ public class PictureShowerListener implements Listener {
                 for(Thumbnail thumbnail : thumbnailArrayList){
                     thumbnail.setIsClicked(false);
                     if(thumbnail.getBoundsInParent().contains(mouseX,mouseY)){
-                        contextMenu.show(thumbnail,mouseEvent.getScreenX(),mouseEvent.getScreenY());
+                        contextMenuT.show(thumbnail,mouseEvent.getScreenX(),mouseEvent.getScreenY());
                         return;
                     }
                 }
@@ -193,7 +200,7 @@ public class PictureShowerListener implements Listener {
                 clearSelected();
             }
             if(thumbnail==null)return;
-            contextMenu.show(thumbnail,mouseEvent.getScreenX(),mouseEvent.getScreenY());
+            contextMenuT.show(thumbnail,mouseEvent.getScreenX(),mouseEvent.getScreenY());
             thumbnail.setSelectedStyle();
             thumbnail.setIsClicked(true);
             thumbnailArrayList.add(thumbnail);
@@ -201,7 +208,7 @@ public class PictureShowerListener implements Listener {
             return;
         }
 
-        contextMenu.hide();
+        contextMenuT.hide();
         //TODO 如果被选中的图片大于1，清空列表
         if (!thumbnailArrayList.isEmpty() && (thumbnailArrayList.size() != 1)) {
             for (Thumbnail thumbnail : thumbnailArrayList) {
@@ -314,6 +321,7 @@ public class PictureShowerListener implements Listener {
         return true;
     }
 
+
     private void clearSelected() {
         pms.updateText(0);
         if (thumbnailArrayList.isEmpty()) return;
@@ -333,5 +341,8 @@ public class PictureShowerListener implements Listener {
             }
         }
         return null;
+    }
+    public static ArrayList<Thumbnail> getThumbnailArrayList(){
+        return thumbnailArrayList;
     }
 }
