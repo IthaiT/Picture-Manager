@@ -32,7 +32,7 @@ public final class PathUtil {
         if (historyPath!= null && !historyPath.contains(newPath.getAbsolutePath()))historyPath.add(newPath.getAbsolutePath());
 
         currentPath = newPath;
-        currentFiles = currentPath.listFiles();
+        currentFiles = PictureUtil.getPicturesInDirectory(currentPath.listFiles());
     }
     public static void updateFiles(File[] currentFiles) {
         //更新当前文件

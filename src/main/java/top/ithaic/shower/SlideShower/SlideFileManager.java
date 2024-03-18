@@ -8,7 +8,10 @@ import java.util.ArrayList;
 public final class SlideFileManager{
     private static int currentIndex;
     private static File[] pictures;
-    public SlideFileManager(File[] pictures){SlideFileManager.pictures = pictures;}
+    public SlideFileManager(File[] pictures,int currentIndex){
+        SlideFileManager.pictures = pictures;
+        SlideFileManager.currentIndex = currentIndex;
+    }
 
     public static File[] getPictures() {return pictures;}
     public static int getCurrentIndex() {

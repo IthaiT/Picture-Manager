@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -23,4 +25,14 @@
    <center>
       <Pane fx:id="pictureShower" prefHeight="516.0" prefWidth="637.0" BorderPane.alignment="CENTER" />
    </center>
+   <bottom>
+      <ToolBar prefHeight="50.0" prefWidth="747.0" BorderPane.alignment="CENTER">
+        <items>
+            <Label prefHeight="15.0" prefWidth="216.0" text=" " />
+          <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="79.0" text="幻灯片播放" />
+            <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="88.0" text="放大" />
+            <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="105.0" text="缩小" />
+        </items>
+      </ToolBar>
+   </bottom>
 </BorderPane>
