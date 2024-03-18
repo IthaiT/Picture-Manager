@@ -20,6 +20,8 @@ public class PictureShower {
     //TODO 传入File[]数组显示图片
     public void showPicture(File[] pictures){
         if(pictures == null)return;
+        //维护工具类属性
+        PathUtil.updateFiles(pictures);
         //维护属性绑定
         new PathShower().bindProperty();
         new PictureMessageShower().updateText();
