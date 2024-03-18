@@ -39,6 +39,9 @@ public final class PathUtil {
         //更新当前文件
         PathUtil.currentFiles = currentFiles;
     }
+    public static void updateFiles(){
+        PathUtil.currentFiles = PictureUtil.getPicturesInDirectory(currentPath);
+    }
 
     public static File[] getCurrentFiles() {return currentFiles;}
     public static File getCurrentPath() {

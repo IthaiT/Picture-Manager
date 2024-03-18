@@ -40,9 +40,8 @@ public class PictureShower {
 
     //TODO 传入路径显示图片
     public void showPicture(File selectedPath){
-        if(selectedPath==null) return;
+        if(selectedPath==null) return;;
         File[] pictures = PictureUtil.getPicturesInDirectory(selectedPath);
-        if(pictures == null)return;
         //维护路径信息
         PathUtil.updatePath(selectedPath);
         showPicture(pictures);

@@ -3,20 +3,22 @@ package top.ithaic.shower.SlideShower;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import top.ithaic.Myinterface.Listener;
+import top.ithaic.shower.PictureShower;
+import top.ithaic.utils.PathUtil;
 import top.ithaic.utils.PictureOperationUtil;
 
 import java.io.IOException;
 
 public class ContextMenuListener implements Listener {
-    private static ContextMenu contextMenu;
+    private ContextMenu contextMenu;
     private static final MenuItem copyItem = new MenuItem("复制");
     private static final MenuItem renameItem = new MenuItem("重命名");
     private static final MenuItem deleteItem = new MenuItem("删除");
 
     public ContextMenuListener(ContextMenu contextMenu){
-        ContextMenuListener.contextMenu = contextMenu;
-        ContextMenuListener.contextMenu.getItems().addAll(copyItem,renameItem,deleteItem);
-        ContextMenuListener.contextMenu.setStyle(" -fx-background-color: white");
+        this.contextMenu = contextMenu;
+        this.contextMenu.getItems().addAll(copyItem,renameItem,deleteItem);
+        this.contextMenu.setStyle(" -fx-background-color: white");
         Listen();
     }
 
@@ -24,9 +26,15 @@ public class ContextMenuListener implements Listener {
     public void Listen() {
         copyItem.setOnAction(actionEvent -> {
             PictureOperationUtil.copyPictures();
+            PathUtil.updateFiles();
+            SlideFileManager.setPictures(PathUtil.getCurrentFiles());
+            new SlideShower().drawPicture();
         });
         renameItem.setOnAction(actionEvent -> {
             PictureOperationUtil.renamePictures();
+            PathUtil.updateFiles();
+            SlideFileManager.setPictures(PathUtil.getCurrentFiles());
+            new SlideShower().drawPicture();
         });
         deleteItem.setOnAction(actionEvent -> {
             try {
@@ -34,6 +42,10 @@ public class ContextMenuListener implements Listener {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            PathUtil.updateFiles();
+            SlideFileManager.setPictures(PathUtil.getCurrentFiles());
+            SlideFileManager.setCurrentIndex((SlideFileManager.getCurrentIndex()-1)>=0?SlideFileManager.getCurrentIndex()-1:SlideFileManager.getCurrentIndex());
+            new SlideShower().drawPicture();
         });
     }
 }

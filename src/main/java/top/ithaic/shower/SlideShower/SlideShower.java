@@ -12,29 +12,32 @@ import javafx.scene.layout.Pane;
 
 
 public class SlideShower{
-    private final Button lastPicture;
-    private final Button nextPicture;
-    private Pane pictureShower;
+    private static Button lastPicture;
+    private static Button nextPicture;
+    private static Pane pictureShower;
+    private static Canvas canvas;
     private static Image image;
 
+    public SlideShower(){}
+
     public SlideShower(Pane pictureShower,Button lastPicture,Button nextPicture){
-        this.pictureShower = pictureShower;
-        this.lastPicture = lastPicture;
-        this.nextPicture = nextPicture;
+        SlideShower.pictureShower = pictureShower;
+        SlideShower.lastPicture = lastPicture;
+        SlideShower.nextPicture = nextPicture;
         showPicture();
     }
 
     private void showPicture(){
-        this.pictureShower.getChildren().clear();
-        double slideWidth = this.pictureShower.getWidth();
-        double slideHeight = this.pictureShower.getHeight();
+        pictureShower.getChildren().clear();
+        double slideWidth = pictureShower.getWidth();
+        double slideHeight = pictureShower.getHeight();
 
         image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()].toURI().toString());
 
         //初始化控件
-        Canvas canvas = new Canvas(slideWidth, slideHeight);
-        canvas.widthProperty().bind(this.pictureShower.widthProperty());
-        canvas.heightProperty().bind(this.pictureShower.heightProperty());
+        canvas = new Canvas(slideWidth, slideHeight);
+        canvas.widthProperty().bind(pictureShower.widthProperty());
+        canvas.heightProperty().bind(pictureShower.heightProperty());
 
         //画布监听
         canvas.widthProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas, image)));
@@ -52,14 +55,14 @@ public class SlideShower{
             nextPicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
                 nextPicture(canvas);
             });
-            this.pictureShower.getParent().addEventFilter(KeyEvent.KEY_PRESSED,keyEvent -> {
+            pictureShower.getParent().addEventFilter(KeyEvent.KEY_PRESSED,keyEvent -> {
                 if(keyEvent.getCode() == KeyCode.LEFT)lastPicture(canvas);
                 if(keyEvent.getCode() == KeyCode.RIGHT)nextPicture(canvas);
             });
         }
 
 
-        this.pictureShower.getChildren().add(canvas);
+        pictureShower.getChildren().add(canvas);
     }
 
     private void lastPicture(Canvas canvas){
@@ -95,5 +98,13 @@ public class SlideShower{
                 (canvasWidth - scaledWidth) / 2, (canvasHeight - scaledHeight) / 2,
                 scaledWidth, scaledHeight);
     }
+
+    public void drawPicture(){
+        image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()].toURI().toString());
+        this.drawPicture(canvas,image);
+    }
+    
+
+
 }
 

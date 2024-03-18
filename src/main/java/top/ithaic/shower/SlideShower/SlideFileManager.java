@@ -14,6 +14,9 @@ public final class SlideFileManager{
     }
 
     public static File[] getPictures() {return pictures;}
+    public static void setPictures(File[] pictures) {
+        SlideFileManager.pictures = pictures;
+    }
     public static int getCurrentIndex() {
         return currentIndex;
     }

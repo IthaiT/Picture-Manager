@@ -14,7 +14,7 @@ public class SlideWindow {
 
     public void launch(File[] currentFiles,int currentIndex){
         FXMLLoader fxmlLoader = new FXMLLoader(SlideController.class.getResource("slideShower.fxml"));
-        //传入图片即可
+        //幻灯片窗口文件管理
         new SlideFileManager(currentFiles,currentIndex);
 
         Scene scene = null;
