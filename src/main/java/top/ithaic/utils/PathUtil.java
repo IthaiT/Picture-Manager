@@ -6,6 +6,7 @@ import javafx.beans.property.StringProperty;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public final class PathUtil {
     private static List<String> historyPath;

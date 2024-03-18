@@ -4,6 +4,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import top.ithaic.Myinterface.Listener;
+import top.ithaic.utils.PathUtil;
 import top.ithaic.utils.PictureSorterUtil;
 
 public class SortButtonListener implements Listener {
@@ -33,6 +34,11 @@ public class SortButtonListener implements Listener {
                         sortButton.localToScreen(sortButton.getBoundsInLocal()).getMaxY());
             }
         });
+        PathUtil.getCurrentPathProperty().addListener(((observableValue, s, t1) -> {
+            sortWithName.setSelected(false);
+            sortWithSize.setSelected(false);
+            sortWithLastModify.setSelected(false);
+        }));
         //实现三个按钮互斥效果并且相应点击
         sortWithName.setOnAction(actionEvent -> {
             if(sortWithName.isSelected()){
