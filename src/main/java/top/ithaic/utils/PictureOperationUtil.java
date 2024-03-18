@@ -20,7 +20,7 @@ public class PictureOperationUtil {
     private static PictureShower pictureShower = new PictureShower();
     public static void copyPictures(){
         thumbnails.clear();
-        thumbnails.addAll(PictureShowerListener.getsThumbnailArrayList());
+        thumbnails.addAll(PictureShowerListener.getThumbnailArrayList());
         for (Thumbnail thumbnail :  thumbnails){
             System.out.println(thumbnail.getImageFile().toString());
         }
@@ -60,9 +60,9 @@ public class PictureOperationUtil {
     }
 
     public static void renamePictures(){
-        ArrayList<Thumbnail> thumbnailArrayList = PictureShowerListener.getsThumbnailArrayList();
+        ArrayList<Thumbnail> thumbnailArrayList = PictureShowerListener.getThumbnailArrayList();
         if(thumbnailArrayList.size() == 1){
-            File oldFile = thumbnails.get(0).getImageFile();
+            File oldFile = thumbnailArrayList.get(0).getImageFile();
             String pictureName = oldFile.getName();
             String suffix = pictureName.substring(pictureName.lastIndexOf("."));
             TextInputDialog dialog = new TextInputDialog("defalut");
@@ -148,7 +148,7 @@ public class PictureOperationUtil {
 
 
     public static void deletePictures() throws IOException {
-        ArrayList<Thumbnail> tmp = PictureShowerListener.getsThumbnailArrayList();
+        ArrayList<Thumbnail> tmp = PictureShowerListener.getThumbnailArrayList();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("确认删除？");
         Optional<ButtonType> result = alert.showAndWait();
