@@ -21,26 +21,27 @@ import java.util.TimerTask;
 
 
 public class PictureShowerListener implements Listener {
-    private static FlowPane thumbnails;
-    private static ScrollPane scrollPane;
-    private static ArrayList<Thumbnail> thumbnailArrayList = new ArrayList<>();
-    private Timer timer = new Timer();
-    boolean isSingleClick = false;
-    private Rectangle rectangle;
-
-    private double startX,startY;
-    private final PictureMessageShower pms = new PictureMessageShower();
     private EventHandler<MouseEvent> mousePressEventHandler;
     private EventHandler<MouseEvent> mouseDraggedEventHandler;
     private EventHandler<MouseEvent> mouseReleasedEventHandler;
     private EventHandler<MouseEvent> mouseClickEventHandler;
     private EventHandler<MouseEvent> autoScrollTimer;//当鼠标到底部时触发滚动
+    private static FlowPane thumbnails;
+    private static ScrollPane scrollPane;
+    private static ArrayList<Thumbnail> thumbnailArrayList = new ArrayList<>();
+    private final Timer timer = new Timer();
+    private final Rectangle rectangle;
+    boolean isSingleClick = false;
+
+
+    private double startX,startY;
+    private final PictureMessageShower pms = new PictureMessageShower();
+
 
     public PictureShowerListener(FlowPane thumbnails, ScrollPane scrollPane){
         PictureShowerListener.scrollPane = scrollPane;
         PictureShowerListener.thumbnails = thumbnails;
-        PictureShowerListener.scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        //创建鼠标拖动矩形
         rectangle = new Rectangle();
         rectangle.setFill(Color.TRANSPARENT);
         rectangle.setStroke(Color.BLACK);
@@ -56,26 +57,24 @@ public class PictureShowerListener implements Listener {
         mouseReleasedEventHandler = this::handleMouseReleased;
         mouseClickEventHandler = this::handleMouseClicked;
         autoScrollTimer = this::handleScrollSlide;
-        PictureShowerListener.thumbnails.addEventHandler(MouseEvent.MOUSE_PRESSED,mousePressEventHandler);
+        //启动两个基本的鼠标事件
+        thumbnails.addEventHandler(MouseEvent.MOUSE_PRESSED,mousePressEventHandler);
     }
     private void handleMousePressed(MouseEvent mouseEvent){
-        isSingleClick = false;//防止对点击造成影响
+        isSingleClick = false;//防止对鼠标点击事件造成影响
         thumbnails.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
         if(isClickBlankArea(mouseEvent)) {
             clearSelected();
-            thumbnails.removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
             //创建一个anchorPane
+            thumbnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(10));
             AnchorPane anchorPane = new AnchorPane();
             anchorPane.setPrefWidth(scrollPane.getWidth());
-            thumbnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(10));
             anchorPane.getChildren().add(thumbnails);
             anchorPane.getChildren().add(rectangle);
             anchorPane.setPrefWidth(scrollPane.getWidth());
             scrollPane.setContent(anchorPane);
-            System.out.println("scrollPane width" + scrollPane.getWidth());
-            System.out.println("anchorPane width" + anchorPane.getPrefWidth());
-            System.out.println("thumbPane width" + thumbnails.getWidth());
             //添加事件处理器
+            thumbnails.removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
             thumbnails.addEventHandler(MouseEvent.MOUSE_DRAGGED,mouseDraggedEventHandler);
             thumbnails.addEventHandler(MouseEvent.MOUSE_RELEASED,mouseReleasedEventHandler);
         }
@@ -92,7 +91,7 @@ public class PictureShowerListener implements Listener {
         rectangle.setVisible(true);
     }
     private void handleMouseDragged(MouseEvent mouseEvent){
-        handleScrollSlide(mouseEvent);
+        thumbnails.addEventHandler(MouseEvent.MOUSE_DRAGGED,autoScrollTimer);
         double endX = mouseEvent.getX();
         double endY = mouseEvent.getY();
         double width = endX - startX;
@@ -104,11 +103,6 @@ public class PictureShowerListener implements Listener {
         Thumbnail thumbnail;
         for (Node node : ((FlowPane) mouseEvent.getSource()).getChildren()) {
             thumbnail = (Thumbnail) node;
-            if(thumbnail.getIsClicked()) {
-                thumbnail.setUnSelectedStyle();
-                thumbnail.setIsClicked(false);
-                thumbnailArrayList.remove(thumbnail);
-            }
             if ((node instanceof Thumbnail) && (node.getBoundsInParent().intersects(rectangle.getBoundsInLocal()))) {
                 thumbnail.setSelectedStyle();
                 thumbnail.setIsClicked(true);
@@ -142,7 +136,6 @@ public class PictureShowerListener implements Listener {
 
         //TODO ctrl按下选中多张图片
         if(mouseEvent.isControlDown()){
-
             Thumbnail thumbnail;
             for (Node node : ((FlowPane) mouseEvent.getSource()).getChildren()) {
                 if ((node instanceof Thumbnail) && (node.getBoundsInParent().contains(mouseX, mouseY))) {
@@ -250,8 +243,7 @@ public class PictureShowerListener implements Listener {
     private void handleScrollSlide(MouseEvent mouseEvent){
         double scrollEdgeThreshold = 50;
         double scrollDelta = 0.01;
-        double sceneY = mouseEvent.getSceneY();
-        System.out.println(mouseEvent.getY());
+        double sceneY = mouseEvent.getSceneY() - 117.0;//得到鼠标在scrollPane中的位置
         if(mouseEvent.getY() > thumbnails.getHeight())return;//当鼠标位置超过图片显示区域时，直接返回
         if(sceneY < scrollEdgeThreshold){
             double newVvalue = scrollPane.getVvalue()- scrollDelta;

@@ -89,7 +89,7 @@
                </AnchorPane>
            </top>
            <center>
-               <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+               <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" hbarPolicy="NEVER" vbarPolicy="ALWAYS">
                    <content>
                        <FlowPane fx:id="thumbnails" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"/>
                    </content>
