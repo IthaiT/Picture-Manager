@@ -4,7 +4,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import top.ithaic.listener.PictureShowerListener;
+import top.ithaic.shower.PictureShower;
 
 import java.io.File;
 
@@ -17,8 +20,21 @@ public class SlideShower{
         this.pictureShower = pictureShower;
         this.lastPicture = lastPicture;
         this.nextPicture = nextPicture;
+        SlideFileManager.setCurrentIndex(0);
 
-        showPicture(SlideFileManager.getCurrentPicture());
+        if(SlideFileManager.getPictures().length==1){
+            lastPicture.setVisible(false);
+            nextPicture.setVisible(false);
+            showPicture(SlideFileManager.getPictures()[0]);
+        }
+        else{
+            lastPicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
+                if(SlideFileManager.getCurrentIndex()>0)showPicture(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()-1]);
+            });
+            nextPicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
+                if(SlideFileManager.getCurrentIndex()<SlideFileManager.getPictures().length-1)showPicture(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()+1]);
+            });
+        }
     }
 
     private void showPicture(File picture){
