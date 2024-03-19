@@ -10,15 +10,15 @@ import top.ithaic.utils.PictureOperationUtil;
 import java.io.IOException;
 
 public class ContextMenuListener implements Listener {
-    private ContextMenu contextMenu;
-    private static final MenuItem copyItem = new MenuItem("复制");
-    private static final MenuItem renameItem = new MenuItem("重命名");
-    private static final MenuItem deleteItem = new MenuItem("删除");
+    private static ContextMenu contextMenu;
+    private final MenuItem copyItem = new MenuItem("复制");
+    private final MenuItem renameItem = new MenuItem("重命名");
+    private final MenuItem deleteItem = new MenuItem("删除");
 
     public ContextMenuListener(ContextMenu contextMenu){
-        this.contextMenu = contextMenu;
-        this.contextMenu.getItems().addAll(copyItem,renameItem,deleteItem);
-        this.contextMenu.setStyle(" -fx-background-color: white");
+        ContextMenuListener.contextMenu = contextMenu;
+        ContextMenuListener.contextMenu.getItems().addAll(copyItem,renameItem,deleteItem);
+        ContextMenuListener.contextMenu.setStyle(" -fx-background-color: white");
         Listen();
     }
 
@@ -38,7 +38,7 @@ public class ContextMenuListener implements Listener {
         });
         deleteItem.setOnAction(actionEvent -> {
             try {
-                PictureOperationUtil.deletePictures();
+                PictureOperationUtil.deletePictures(SlideFileManager.getCurrentIndex());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

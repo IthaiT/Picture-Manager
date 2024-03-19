@@ -36,6 +36,7 @@ public class PictureShowerListener implements Listener {
     private static ArrayList<Thumbnail> thumbnailArrayList;
     private static ContextMenu contextMenuT;//On Thumbnail
     private static ContextMenu contextMenuP;//On Pane
+    private static SlideWindow slideWindow;
     private final Timer timer = new Timer();
     private Rectangle rectangle;
     boolean isSingleClick = false;
@@ -207,6 +208,7 @@ public class PictureShowerListener implements Listener {
             thumbnail.setSelectedStyle();
             thumbnail.setIsClicked(true);
             thumbnailArrayList.add(thumbnail);
+            System.out.println("右键了"+thumbnailArrayList.get(0).getImageFile().getName());
             pms.updateText(thumbnailArrayList.size());
             return;
         }
@@ -272,8 +274,8 @@ public class PictureShowerListener implements Listener {
                     if (!thumbnailArrayList.isEmpty()) {
                         //如果这次与上次双击的图片相同，创建幻灯片后返回
                         if (thumbnailArrayList.get(0).equals(thumbnail)) {
-                            System.out.println("点击了相同的文件");
-                            new SlideWindow(PathUtil.getCurrentFiles(), PictureUtil.getPictureIndex(thumbnailArrayList.get(0).getImageFile()));
+                            System.out.println("点击了相同的文件"+thumbnailArrayList.get(0).getImageFile().getName());
+                            if(slideWindow==null)slideWindow = new SlideWindow(PathUtil.getCurrentFiles(), PictureUtil.getPictureIndex(thumbnailArrayList.get(0).getImageFile()));
                             return;
                         }
                         //否则把选中的图片取消
@@ -287,7 +289,6 @@ public class PictureShowerListener implements Listener {
                     thumbnailArrayList.add(thumbnail);
                     thumbnail.setIsClicked(true);
                     thumbnail.setSelectedStyle();
-                    new SlideWindow(PathUtil.getCurrentFiles(), PictureUtil.getPictureIndex(thumbnailArrayList.get(0).getImageFile()));
                     pms.updateText(thumbnailArrayList.size());
                     return;
                 }
@@ -347,5 +348,9 @@ public class PictureShowerListener implements Listener {
     }
     public static ArrayList<Thumbnail> getThumbnailArrayList(){
         return thumbnailArrayList;
+    }
+
+    public static void setSlideWindow(SlideWindow slideWindow) {
+        PictureShowerListener.slideWindow = slideWindow;
     }
 }

@@ -7,6 +7,7 @@ import top.ithaic.imageview.Thumbnail;
 import top.ithaic.listener.PictureOperateListener;
 import top.ithaic.listener.PictureShowerListener;
 import top.ithaic.shower.PictureShower;
+import top.ithaic.shower.SlideShower.SlideFileManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -159,6 +160,17 @@ public class PictureOperationUtil {
             for (Thumbnail thumbnail : tmp){
                 Desktop.getDesktop().moveToTrash(thumbnail.getImageFile());
             }
+        }
+        pictureShower.showPicture(PathUtil.getCurrentPath());
+    }
+
+    public static void deletePictures(int currentIndex) throws IOException{
+        if(currentIndex<0 || currentIndex > SlideFileManager.getPictures().length)return;
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("确认删除？");
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.isPresent() && result.get() == ButtonType.OK){
+            Desktop.getDesktop().moveToTrash(SlideFileManager.getPictures()[currentIndex]);
         }
         pictureShower.showPicture(PathUtil.getCurrentPath());
     }

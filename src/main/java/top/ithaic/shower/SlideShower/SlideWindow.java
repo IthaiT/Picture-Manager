@@ -3,6 +3,8 @@ package top.ithaic.shower.SlideShower;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import top.ithaic.listener.PictureShowerListener;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -29,5 +31,6 @@ public class SlideWindow {
         stage.setMinHeight(600);
         stage.setScene(scene);
         stage.show();
+        stage.setOnCloseRequest(windowEvent -> PictureShowerListener.setSlideWindow(null));
     }
 }
