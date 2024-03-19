@@ -2,6 +2,7 @@ package top.ithaic.listener;
 
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.shower.slidePlay.SlidePlay;
@@ -15,13 +16,14 @@ public class PictureOperateListener implements Listener {
     private static final MenuItem copyItem = new MenuItem("复制");
     private static final MenuItem renameItem = new MenuItem("重命名");
     private static final MenuItem deleteItem = new MenuItem("删除");
+    private static final MenuItem playHere = new MenuItem("幻灯片放映");
     private static final  MenuItem pasteItem = new MenuItem("粘贴");
     private static final MenuItem selectAllItem = new MenuItem("全选");
     private static final MenuItem slidePlay = new MenuItem("播放幻灯片");
     public PictureOperateListener(ContextMenu contextMenuT,ContextMenu contextMenuP){
         PictureOperateListener.contextMenuT = contextMenuT;
         PictureOperateListener.contextMenuP = contextMenuP;
-        contextMenuT.getItems().addAll(copyItem, renameItem, deleteItem);
+        contextMenuT.getItems().addAll(copyItem, renameItem, deleteItem,playHere);
         contextMenuP.getItems().addAll(pasteItem,selectAllItem,slidePlay);
         contextMenuT.setStyle(" -fx-background-color: white");
         contextMenuP.setStyle(" -fx-background-color: white");
@@ -41,6 +43,9 @@ public class PictureOperateListener implements Listener {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        });
+        playHere.setOnAction(actionEvent -> {
+            SlidePlay.playPicture();
         });
         pasteItem.setOnAction(actionEvent -> {
             try {
