@@ -1,5 +1,7 @@
 package top.ithaic.utils;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -24,23 +26,31 @@ public final class PathUtil {
     }
     public static void updatePath(File newPath){
         //路径相同 无需更新
-        if(newPath == currentPath) return;
+        if(newPath == currentPath)
+        {
+            //刷新相同路径，也得更改属性
+            currentPathProperty.setValue(currentPathProperty.getValue()+" ");
+            return;
+        }
+
         //路径更新
         currentPathProperty.setValue(newPath.getAbsolutePath());
         lastPath = currentPath;
+        currentPath = newPath;
+
         //历史路径更新
         if(historyPath!=null && historyPath.size() >= 10)historyPath.remove(0);
         if (historyPath!= null && !historyPath.contains(newPath.getAbsolutePath()))historyPath.add(newPath.getAbsolutePath());
 
-        currentPath = newPath;
-        currentFiles = PictureUtil.getPicturesInDirectory(currentPath);
+        //刷新图片文件数组
+        updateFiles();
     }
     public static void updateFiles(File[] currentFiles) {
         //更新当前文件
         PathUtil.currentFiles = currentFiles;
     }
     public static void updateFiles(){
-        PathUtil.currentFiles = PictureUtil.getPicturesInDirectory(currentPath);
+        PathUtil.updateFiles(PictureUtil.getPicturesInDirectory(currentPath));
     }
 
     public static File[] getCurrentFiles() {return currentFiles;}
@@ -53,7 +63,6 @@ public final class PathUtil {
     public static List<String> getHistoryPath() {
         return historyPath;
     }
-
     public static StringProperty getCurrentPathProperty() {
         return currentPathProperty;
     }
