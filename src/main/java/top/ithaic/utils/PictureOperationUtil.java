@@ -26,11 +26,13 @@ public class PictureOperationUtil {
         thumbnails.clear();
         thumbnails.addAll(PictureShowerListener.getThumbnailArrayList());
         for (Thumbnail thumbnail :  thumbnails){
-            System.out.println(thumbnail.getImageFile().toString());
+            System.out.println("复制了"+thumbnail.getImageFile().toString());
         }
     }
     public static void copyPictures(int currentIndex){
         thumbnails.add(new Thumbnail(SlideFileManager.getPictures()[currentIndex]));
+        System.out.println("复制了"+thumbnails.get(0).getImageFile().toString());
+
     }
     public static void pastePictures() throws IOException {
         File currentPath = PathUtil.getCurrentPath();
