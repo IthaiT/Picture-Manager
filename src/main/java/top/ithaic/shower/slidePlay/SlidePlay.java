@@ -78,12 +78,6 @@ public final class SlidePlay {
         Listen();
     }
 
-    //TODO 为主窗口设计,供外部调用
-//    public static void playPicture(){
-//        initStyle();
-//
-//
-//    }
     private static int i = 0;
     //TODO for主窗口
     public static void playPicture(){
