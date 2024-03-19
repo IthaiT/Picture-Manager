@@ -30,8 +30,8 @@
         <items>
             <Label prefHeight="15.0" prefWidth="216.0" text=" " />
           <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="79.0" text="幻灯片播放" />
-            <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="88.0" text="放大" />
-            <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="105.0" text="缩小" />
+            <Button fx:id="amplifyPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="88.0" text="放大" />
+            <Button fx:id="shrinkPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="105.0" text="缩小" />
         </items>
       </ToolBar>
    </bottom>
