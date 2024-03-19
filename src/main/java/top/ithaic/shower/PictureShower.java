@@ -16,6 +16,9 @@ public class PictureShower {
     public PictureShower(FlowPane thumbnails){
         PictureShower.thumbnails = thumbnails;
     }
+    public static FlowPane getThumbnails() {
+        return thumbnails;
+    }
 
     //TODO 传入File[]数组显示图片
     public void showPicture(File[] pictures){

@@ -4,8 +4,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 
@@ -16,11 +15,12 @@ import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureMessageShower;
 import top.ithaic.shower.SlideShower.SlideWindow;
 import top.ithaic.utils.PathUtil;
+import top.ithaic.utils.PictureOperationUtil;
 import top.ithaic.utils.PictureUtil;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -65,14 +65,17 @@ public class PictureShowerListener implements Listener {
     }
 
     @Override
-    public void Listen() {
+    public void Listen(){
         mousePressEventHandler = this::handleMousePressed;
         mouseDraggedEventHandler = this::handleMouseDragged;
         mouseReleasedEventHandler = this::handleMouseReleased;
         mouseClickEventHandler = this::handleMouseClicked;
         autoScrollTimer = this::handleScrollSlide;
+        EventHandler<KeyEvent> keyCtrlPress = this::handleCtrlPressed;
+
         //启动基本的鼠标事件
         thumbnails.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressEventHandler);
+        scrollPane.addEventHandler(KeyEvent.KEY_PRESSED,keyCtrlPress);
     }
 
     private void handleMousePressed(MouseEvent mouseEvent) {
@@ -313,6 +316,33 @@ public class PictureShowerListener implements Listener {
             scrollPane.setVvalue(newVvalue);
         }
     }
+
+    private void handleCtrlPressed(KeyEvent keyEvent) {
+        KeyCodeCombination keyCodeCombinationC = new KeyCodeCombination(KeyCode.C,KeyCodeCombination.CONTROL_DOWN);
+        KeyCodeCombination keyCodeCombinationV = new KeyCodeCombination(KeyCode.V,KeyCodeCombination.CONTROL_DOWN);
+        KeyCodeCombination keyCodeCombinationA = new KeyCodeCombination(KeyCode.A,KeyCodeCombination.CONTROL_DOWN);
+        if(keyCodeCombinationC.match(keyEvent)){
+            PictureOperationUtil.copyPictures();
+        }
+        if(keyCodeCombinationV.match(keyEvent)){
+            try {
+                PictureOperationUtil.pastePictures();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if(keyEvent.getCode().equals(KeyCode.DELETE)){
+            try {
+                PictureOperationUtil.deletePictures();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if(keyCodeCombinationA.match(keyEvent)){
+            PictureOperationUtil.selectAll();
+        }
+    }
+
 
     private boolean isClickBlankArea(MouseEvent mouseEvent) {
         double mouseX = mouseEvent.getX();

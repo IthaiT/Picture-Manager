@@ -1,8 +1,10 @@
 package top.ithaic.utils;
 
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.FlowPane;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.listener.PictureOperateListener;
 import top.ithaic.listener.PictureShowerListener;
@@ -20,50 +22,50 @@ import java.awt.Desktop;
 
 
 public class PictureOperationUtil {
-    private static ArrayList<Thumbnail> thumbnails = new ArrayList<>();
+    private static ArrayList<Thumbnail> thumbnails = new ArrayList<>();//被复制的图片，存储以方便粘贴
     private static PictureShower pictureShower = new PictureShower();
     public static void copyPictures(){
         thumbnails.clear();
         thumbnails.addAll(PictureShowerListener.getThumbnailArrayList());
-        for (Thumbnail thumbnail :  thumbnails){
-            System.out.println("复制了"+thumbnail.getImageFile().toString());
-        }
     }
     public static void copyPictures(int currentIndex){
+        thumbnails.clear();
         thumbnails.add(new Thumbnail(SlideFileManager.getPictures()[currentIndex]));
-        System.out.println("复制了"+thumbnails.get(0).getImageFile().toString());
-
     }
+
     public static void pastePictures() throws IOException {
         File currentPath = PathUtil.getCurrentPath();
         if (currentPath == null) return;
         if (!currentPath.exists()) return;
-        if (thumbnails.isEmpty()) return;
-        List<File> imageFiles = Arrays.stream(currentPath.listFiles()).filter(file -> PictureUtil.isPicture(file)).toList();
-        //如果目录里面没有图片，不需要判断，直接添加
-        if (imageFiles.isEmpty()) {
-            for (Thumbnail thumbnail : thumbnails) {
-                Files.copy(thumbnail.getImageFile().toPath(), Path.of(currentPath.toPath() + "/"+thumbnail.getImageFile().getName().toString()));
+        if (thumbnails.isEmpty()) return;//如果没有文件被复制，返回
+
+        //判断已经复制的文件有没有被修改（删除或者重命名）
+        for(Thumbnail thumbnail : thumbnails){
+            //如果不存在，发出警告
+            if(!thumbnail.getImageFile().exists()){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText(thumbnail.getImageFile() + "不存在，请确认该项目的位置");
+                alert.show();
+                thumbnails.clear();
             }
         }
-        else {
+
+        //得到当前目录下所有图片，为判断是否文件名冲突
+        List<File> imageFiles = Arrays.stream(currentPath.listFiles()).filter(file -> PictureUtil.isPicture(file)).toList();
+        for (Thumbnail thumbnail : thumbnails) {
             boolean flag = false;
-            for (Thumbnail thumbnail : thumbnails) {
-                String sourceName = thumbnail.getImageFile().getName();
-                while(isNameExit(sourceName,imageFiles)){
-                    sourceName = renameSource(thumbnail.getImageFile().toString());
-                    if(sourceName == null){
-                        flag = true;
-                        break;
-                    }
-                    System.out.println(sourceName);
+            String sourceName = thumbnail.getImageFile().getName();
+            //如果名字冲突，一直要求重命名直到不冲突
+            while(isNameExit(sourceName,imageFiles)){
+                sourceName = renameSource(thumbnail.getImageFile().toString());
+                if(sourceName == null){
+                    flag = true;
+                    break;
                 }
-                if(flag) {
-                    flag = false;
-                    continue;
-                }
-                Files.copy(Path.of(thumbnail.getImageFile().toString()), Path.of(currentPath.toPath() +"/"+ sourceName));
             }
+            //没有输入任何名字，直接跳过这个图片的复制
+            if(flag)continue;
+            Files.copy(Path.of(thumbnail.getImageFile().toString()), Path.of(currentPath.toPath() +"/"+ sourceName));
         }
         pictureShower.showPicture(currentPath);
     }
@@ -169,7 +171,7 @@ public class PictureOperationUtil {
         }
         pictureShower.showPicture(PathUtil.getCurrentPath());
     }
-
+    //TODO 删除图片，为主窗口使用
     public static void deletePictures() throws IOException {
         ArrayList<Thumbnail> tmp = PictureShowerListener.getThumbnailArrayList();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -183,6 +185,7 @@ public class PictureOperationUtil {
         pictureShower.showPicture(PathUtil.getCurrentPath());
     }
 
+    //TODO 删除图片，为幻灯片窗口使用
     public static void deletePictures(int currentIndex) throws IOException{
         if(currentIndex<0 || currentIndex > SlideFileManager.getPictures().length)return;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -194,7 +197,25 @@ public class PictureOperationUtil {
         pictureShower.showPicture(PathUtil.getCurrentPath());
     }
 
-    public static String renameSource(String sourceName){
+    //TODO 选中主窗口所有图片
+    public static void selectAll(){
+        FlowPane flowPane = PictureShower.getThumbnails();
+        ArrayList<Thumbnail> thumbnailArrayList = PictureShowerListener.getThumbnailArrayList();
+        for(Thumbnail thumbnail: thumbnailArrayList){
+            thumbnail.setUnSelectedStyle();
+            thumbnail.setIsClicked(false);
+        }
+        thumbnailArrayList.clear();
+        for(Node node : flowPane.getChildren()){
+            Thumbnail thumbnail = (Thumbnail)node;
+            thumbnail.setSelectedStyle();
+            thumbnail.setIsClicked(true);
+            thumbnailArrayList.add(thumbnail);
+        }
+    }
+
+    //TODO 重命名被粘贴图片的私有函数
+    private static String renameSource(String sourceName){
         //得到图片后缀
         String suffix = sourceName.substring(sourceName.lastIndexOf("."));
         TextInputDialog dialog = new TextInputDialog("default");
@@ -205,7 +226,9 @@ public class PictureOperationUtil {
         return result.map(s -> s + suffix).orElse(null);
     }
 
+    //TODO 判断文件名是否在给定文件中存在
     private static boolean isNameExit(String sourceName,List<File> Dir){
+        if(Dir.isEmpty())return false;
         String destName;
         for(File picture : Dir){
             destName = picture.getName();

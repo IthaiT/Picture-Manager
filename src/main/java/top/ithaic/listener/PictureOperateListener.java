@@ -46,5 +46,8 @@ public class PictureOperateListener implements Listener {
                 throw new RuntimeException(e);
             }
         });
+        selectAllItem.setOnAction(actionEvent -> {
+            PictureOperationUtil.selectAll();
+        });
     }
 }
