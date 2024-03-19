@@ -174,6 +174,7 @@ public class PictureOperationUtil {
     //TODO 删除图片，为主窗口使用
     public static void deletePictures() throws IOException {
         ArrayList<Thumbnail> tmp = PictureShowerListener.getThumbnailArrayList();
+        if(tmp.isEmpty())return;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("确认删除？");
         Optional<ButtonType> result = alert.showAndWait();

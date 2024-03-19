@@ -1,6 +1,7 @@
 package top.ithaic.listener;
 
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.utils.PictureOperationUtil;
