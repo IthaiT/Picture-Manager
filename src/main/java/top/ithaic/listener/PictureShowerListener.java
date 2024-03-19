@@ -13,6 +13,8 @@ import javafx.scene.shape.Rectangle;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureMessageShower;
+import top.ithaic.shower.SlideShower.SlideFileManager;
+import top.ithaic.shower.SlideShower.SlideShower;
 import top.ithaic.shower.SlideShower.SlideWindow;
 import top.ithaic.utils.PathUtil;
 import top.ithaic.utils.PictureOperationUtil;
@@ -278,7 +280,11 @@ public class PictureShowerListener implements Listener {
                         //如果这次与上次双击的图片相同，创建幻灯片后返回
                         if (thumbnailArrayList.get(0).equals(thumbnail)) {
                             System.out.println("点击了相同的文件"+thumbnailArrayList.get(0).getImageFile().getName());
-                            if(slideWindow==null)slideWindow = new SlideWindow(PathUtil.getCurrentFiles(), PictureUtil.getPictureIndex(thumbnailArrayList.get(0).getImageFile()));
+                            if(slideWindow==null) slideWindow = new SlideWindow(PathUtil.getCurrentFiles(), PictureUtil.getPictureIndex(thumbnailArrayList.get(0).getImageFile()));
+                            else{
+                                SlideFileManager.setCurrentIndex(PictureUtil.getPictureIndex(thumbnailArrayList.get(0).getImageFile()));
+                                new SlideShower().drawPicture();
+                            }
                             return;
                         }
                         //否则把选中的图片取消
@@ -380,6 +386,9 @@ public class PictureShowerListener implements Listener {
         return thumbnailArrayList;
     }
 
+    public static SlideWindow getSlideWindow() {
+        return slideWindow;
+    }
     public static void setSlideWindow(SlideWindow slideWindow) {
         PictureShowerListener.slideWindow = slideWindow;
     }

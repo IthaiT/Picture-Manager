@@ -10,6 +10,8 @@ import top.ithaic.listener.PictureOperateListener;
 import top.ithaic.listener.PictureShowerListener;
 import top.ithaic.shower.PictureShower;
 import top.ithaic.shower.SlideShower.SlideFileManager;
+import top.ithaic.shower.SlideShower.SlideShower;
+import top.ithaic.shower.SlideShower.SlideWindow;
 
 import java.io.File;
 import java.io.IOException;
@@ -184,6 +186,13 @@ public class PictureOperationUtil {
             }
         }
         pictureShower.showPicture(PathUtil.getCurrentPath());
+        if(PictureShowerListener.getSlideWindow()!=null){
+            PathUtil.updateFiles();
+            SlideFileManager.setPictures(PathUtil.getCurrentFiles());
+            if(SlideFileManager.getCurrentIndex()==SlideFileManager.getPictures().length)
+                SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex()-1);
+            new SlideShower().drawPicture();
+        }
     }
 
     //TODO 删除图片，为幻灯片窗口使用
