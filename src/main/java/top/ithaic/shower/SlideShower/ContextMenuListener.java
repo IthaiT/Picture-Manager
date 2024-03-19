@@ -25,13 +25,13 @@ public class ContextMenuListener implements Listener {
     @Override
     public void Listen() {
         copyItem.setOnAction(actionEvent -> {
-            PictureOperationUtil.copyPictures();
+            PictureOperationUtil.copyPictures(SlideFileManager.getCurrentIndex());
             PathUtil.updateFiles();
             SlideFileManager.setPictures(PathUtil.getCurrentFiles());
             new SlideShower().drawPicture();
         });
         renameItem.setOnAction(actionEvent -> {
-            PictureOperationUtil.renamePictures();
+            PictureOperationUtil.renamePictures(SlideFileManager.getCurrentIndex());
             PathUtil.updateFiles();
             SlideFileManager.setPictures(PathUtil.getCurrentFiles());
             new SlideShower().drawPicture();

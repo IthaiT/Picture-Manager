@@ -29,6 +29,9 @@ public class PictureOperationUtil {
             System.out.println(thumbnail.getImageFile().toString());
         }
     }
+    public static void copyPictures(int currentIndex){
+        thumbnails.add(new Thumbnail(SlideFileManager.getPictures()[currentIndex]));
+    }
     public static void pastePictures() throws IOException {
         File currentPath = PathUtil.getCurrentPath();
         if (currentPath == null) return;
@@ -150,6 +153,20 @@ public class PictureOperationUtil {
         pictureShower.showPicture(PathUtil.getCurrentPath());
     }
 
+    public static void renamePictures(int currentIndex){
+        File oldFile = SlideFileManager.getPictures()[currentIndex];
+        String pictureName = oldFile.getName();
+        String suffix = pictureName.substring(pictureName.lastIndexOf("."));
+        TextInputDialog dialog = new TextInputDialog("defalut");
+        dialog.setTitle("文件重命名");
+        dialog.setContentText("请输入新的文件名");
+        Optional<String> result = dialog.showAndWait();
+        if(result.isPresent()){
+            String newName = result.get()+suffix;
+            oldFile.renameTo(new File(oldFile.getParentFile()+"/" +newName));
+        }
+        pictureShower.showPicture(PathUtil.getCurrentPath());
+    }
 
     public static void deletePictures() throws IOException {
         ArrayList<Thumbnail> tmp = PictureShowerListener.getThumbnailArrayList();
