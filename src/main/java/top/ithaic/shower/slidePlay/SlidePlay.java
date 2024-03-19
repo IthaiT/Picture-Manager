@@ -85,6 +85,7 @@ public final class SlidePlay {
 //
 //    }
     private static int i = 0;
+    //TODO for主窗口
     public static void playPicture(){
         initStyle();
         FlowPane flowPane = PictureShower.getThumbnails();
@@ -105,8 +106,26 @@ public final class SlidePlay {
             if(i == arrayList.size()){
                 i = 0;//从头开始放映
             }
-            System.out.println("for test");
             Image image = new Image(arrayList.get(i).toString());
+            imageView.setImage(image);
+            i++;
+        }));
+        delay.setCycleCount(Animation.INDEFINITE);
+        delay.play();
+    }
+
+    //TODO for 幻灯片窗口
+    public static void playPicture(File[] pictures,int index){
+        initStyle();
+        i = index;
+        if(pictures.length == 0)return;
+        playStage.show();
+        imageView.setImage(new Image(pictures[i].toString()));i++;
+        delay = new Timeline(new KeyFrame(Duration.seconds(2),event->{
+            if(i == pictures.length){
+                i = 0;//从头开始放映
+            }
+            Image image = new Image(pictures[i].toString());
             imageView.setImage(image);
             i++;
         }));
