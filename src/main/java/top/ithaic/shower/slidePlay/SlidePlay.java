@@ -95,7 +95,14 @@ public final class SlidePlay {
         }
         if(arrayList.isEmpty())return;
         playStage.show();
-        imageView.setImage(new Image(arrayList.get(i).toString()));i++;
+        imageView.setImage(new Image(arrayList.get(i).toString()));
+        imageView.setFitWidth(imageView.getImage().getWidth());
+        imageView.setFitHeight(imageView.getImage().getHeight());
+
+        imageView.setX((subPane.getWidth()-imageView.getFitWidth())/2);
+        imageView.setY((subPane.getHeight()-imageView.getFitHeight())/2);
+
+        imageView.setPreserveRatio(true);i++;
         delay = new Timeline(new KeyFrame(Duration.seconds(2),event->{
             if(i == arrayList.size()){
                 i = 0;//从头开始放映
@@ -114,7 +121,8 @@ public final class SlidePlay {
         i = index;
         if(pictures.length == 0)return;
         playStage.show();
-        imageView.setImage(new Image(pictures[i].toString()));i++;
+        imageView.setImage(new Image(pictures[i].toString()));
+        imageView.setPreserveRatio(true);i++;
         delay = new Timeline(new KeyFrame(Duration.seconds(2),event->{
             if(i == pictures.length){
                 i = 0;//从头开始放映

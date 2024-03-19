@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 
 
 public class SlideShower {
+    private final double FACTORINCREMENT = 0.15;
     private static ScaleTransitionThread scaleTransitionThread;
     private static double factor;
     private static Button shrinkPicture;
@@ -33,6 +34,8 @@ public class SlideShower {
         SlideShower.factor = 0;
         SlideShower.scaleTransitionThread = null;
         showPicture();
+        mouseListen();
+
     }
 
     private void showPicture() {
@@ -63,9 +66,8 @@ public class SlideShower {
                 if (keyEvent.getCode() == KeyCode.RIGHT) nextPicture(canvas);
             });
         }
-        amplifyPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> amplifyPicture(factor));
-        shrinkPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> shrinkPicture(factor));
-
+        amplifyPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> amplifyPicture());
+        shrinkPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> shrinkPicture());
 
         pictureShower.getChildren().add(canvas);
     }
@@ -107,10 +109,21 @@ public class SlideShower {
         double scaledWidth = imageWidth * scale;
         double scaledHeight = imageHeight * scale;
 
+        if(detX !=0 &&  detY!=0) {
+            detX = (detX - (canvasWidth - scaledWidth) / 2 - scaledWidth/2)*2;
+            detY = (detY - (canvasHeight - scaledHeight) / 2 - scaledHeight/2)*2;
+        }
+        System.out.println("DetX:"+detX);
+        System.out.println("DetY:"+detY);
+
+        double x = (imageWidth * factor - imageWidth) / 2;
+        double y = (imageHeight * factor - imageHeight) / 2;
+        double newWidth = imageWidth - (imageWidth * factor - imageWidth);
+        double newHeight = imageHeight - (imageHeight * factor - imageHeight);
+
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvasWidth, canvasHeight);
-        gc.drawImage(image, (imageWidth * factor - imageWidth) / 2 +detX, (imageHeight * factor - imageHeight) / 2+detY,
-                imageWidth - (imageWidth * factor - imageWidth) + +detX, imageHeight - (imageHeight * factor - imageHeight) +detY,
+        gc.drawImage(image, x, y, newWidth, newHeight,
                 (canvasWidth - scaledWidth) / 2, (canvasHeight - scaledHeight) / 2,
                 scaledWidth, scaledHeight);
     }
@@ -120,33 +133,55 @@ public class SlideShower {
         this.drawPicture(canvas, image, 1, 0, 0);
     }
 
-    private void amplifyPicture(double factor) {
+    private void amplifyPicture() {
         if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
-        scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=0.2);
+        scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT,0,0);
         scaleTransitionThread.start();
     }
 
-    private void shrinkPicture(double factor) {
+    private void shrinkPicture() {
         if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
-        scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=0.2);
+        scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT,0,0);
         scaleTransitionThread.start();
+    }
+
+    private void mouseListen(){
+        SlideShower.canvas.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
+            if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
+            if(mouseEvent.isControlDown()){
+                double mouseDetX = mouseEvent.getX();
+                double mouseDetY = mouseEvent.getY();
+                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT,mouseDetX,mouseDetY);
+                scaleTransitionThread1.start();
+            }
+            if(mouseEvent.isAltDown()){
+                double mouseDetX = mouseEvent.getX();
+                double mouseDetY = mouseEvent.getY();
+                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT,mouseDetX,mouseDetY);
+                scaleTransitionThread1.start();
+            }
+        });
     }
 
     private class ScaleTransitionThread extends Thread{
         private double startFactor;
         private final double endFactor;
         private boolean isTerminal;
+        private double detX;
+        private double detY;
 
-        public ScaleTransitionThread(double startFactor,double endFactor){
+        public ScaleTransitionThread(double startFactor,double endFactor,double detX,double detY){
             this.startFactor = startFactor;
             this.endFactor = endFactor;
+            this.detX = detX;
+            this.detY = detY;
         }
         @Override
         public void run(){
             if(endFactor < startFactor){
                 while(Math.abs(startFactor-endFactor) > 1e-5&&!isTerminal){
                     startFactor-=0.01;
-                    drawPicture(canvas,image,1+startFactor,0,0);
+                    drawPicture(canvas,image,1+startFactor,detX,detY);
                     try {
                         sleep(30);
                     } catch (InterruptedException e) {
@@ -157,7 +192,7 @@ public class SlideShower {
             else{
                 while(Math.abs(endFactor-startFactor) > 1e-5&&!isTerminal){
                     startFactor+=0.01;
-                    drawPicture(canvas,image,1+startFactor,0,0);
+                    drawPicture(canvas,image,1+startFactor,detX,detY);
                     try {
                         sleep(30);
                     } catch (InterruptedException e) {
@@ -168,7 +203,7 @@ public class SlideShower {
         }
 
         public void terminal(){
-            this.isTerminal = true;
+                this.isTerminal = true;
         }
     }
 
