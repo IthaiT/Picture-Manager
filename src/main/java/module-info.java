@@ -18,4 +18,6 @@ module top.ithaic.showpicture {
     opens top.ithaic.Myinterface to javafx.fxml;
     exports top.ithaic.shower.SlideShower;
     opens top.ithaic.shower.SlideShower to javafx.fxml;
+    exports top.ithaic.shower.slidePlay;
+    opens top.ithaic.shower.slidePlay to javafx.fxml;
 }
