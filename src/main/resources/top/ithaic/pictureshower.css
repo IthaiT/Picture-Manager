@@ -1,5 +1,11 @@
+BorderPane {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
 /* ScrollPane 样式 */
 ScrollPane {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
     -fx-background-insets: 0; /* 背景内边距为零，即没有额外的空白区域 */
     -fx-border-width: 1 0 1 0; /* 边框宽度：上 1 像素，右 0 像素，下 1 像素，左 0 像素 */
     -fx-border-color: gray; /* 边框颜色为灰色 */
@@ -8,6 +14,8 @@ ScrollPane {
 
 /* FlowPane 样式 */
 FlowPane {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
     -fx-padding: 5 10 5 10; /* 内边距：上 5 像素，右 10 像素，下 5 像素，左 10 像素 */
     -fx-border-width: 0; /* 没有边框 */
     -fx-background-color:  rgb(247,247,247); /* 背景颜色为白色 */
