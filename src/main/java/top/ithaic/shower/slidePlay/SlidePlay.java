@@ -3,6 +3,7 @@ package top.ithaic.shower.slidePlay;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -21,6 +22,7 @@ import java.util.*;
 
 
 public final class SlidePlay {
+    private static Stage previousStage;
     private static Stage playStage;
     private static Scene playScene;
     private static Pane mainPane;
@@ -34,9 +36,13 @@ public final class SlidePlay {
     private static Button exitButton;
     private static Timeline delay;//切换幻灯片的时间延迟
     private static Timer timer;//菜单栏隐藏的时间延迟
+    private static int i = 0;//图片显示index
+    private static int playTime = 2;//默认播放时间
+    private static final ArrayList<File> arrayList = new ArrayList<>();
     public SlidePlay() {
     }
     private static void initStyle(){
+        previousStage =
         playStage = new Stage();
         subPane= new StackPane();
         mainPane = new Pane();
@@ -44,7 +50,7 @@ public final class SlidePlay {
         toolBar = new ToolBar();
         statusButton = new Button("停止播放");
         reduceOneS = new Button("-1s");
-        label = new Label("间隔2秒");
+        label = new Label("间隔"+playTime+"秒");
         addOneS = new Button("+1s");
         exitButton = new Button("退出");
         toolBar.getItems().addAll(statusButton,reduceOneS,label,addOneS,exitButton);
@@ -64,13 +70,12 @@ public final class SlidePlay {
         startTimer();
     }
 
-    private static int i = 0;
-    private static int playTime = 2;
+
+
     //TODO for主窗口
     public static void playPicture(){
         initStyle();
         FlowPane flowPane = PictureShower.getThumbnails();
-        ArrayList<File> arrayList = new ArrayList<>();
         int start = 0;//标记从哪张图片开始放映
         for(Node node : flowPane.getChildren()){
             Thumbnail thumbnail = (Thumbnail)node;
@@ -90,14 +95,7 @@ public final class SlidePlay {
         subPane.setPrefHeight(playStage.getHeight());
 
         imageView.setImage(new Image(arrayList.get(i).toString()));i++;
-        delay = new Timeline(new KeyFrame(Duration.seconds(playTime),event->{
-            if(i == arrayList.size()){
-                i = 0;//从头开始放映
-            }
-            Image image = new Image(arrayList.get(i).toString());
-            imageView.setImage(image);
-            i++;
-        }));
+        delay = new Timeline(new KeyFrame(Duration.seconds(playTime),event->loadImage()));
         delay.setCycleCount(Animation.INDEFINITE);
         delay.play();
     }
@@ -106,6 +104,7 @@ public final class SlidePlay {
     public static void playPicture(File[] pictures,int index){
         initStyle();
         i = index;
+        if(pictures == null)return;
         if(pictures.length == 0)return;
         //显示窗口并使图片放置与中央
         playStage.show();
@@ -113,34 +112,12 @@ public final class SlidePlay {
         imageView.setFitWidth(playStage.getWidth());
         subPane.setPrefWidth(playStage.getWidth());
         subPane.setPrefHeight(playStage.getHeight());
+        arrayList.addAll(Arrays.asList(pictures));//将图片全部放入arraylist中，方便后续loadImage函数调用
 
         imageView.setImage(new Image(pictures[i].toString()));i++;
-        delay = new Timeline(new KeyFrame(Duration.seconds(playTime),event->{
-            if(i == pictures.length){
-                i = 0;//从头开始放映
-            }
-            Image image = new Image(pictures[i].toString());
-            imageView.setImage(image);
-            i++;
-        }));
+        delay = new Timeline(new KeyFrame(Duration.seconds(playTime),event->loadImage()));
         delay.setCycleCount(Animation.INDEFINITE);
         delay.play();
-    }
-
-    public static void startTimer(){
-        timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                Platform.runLater(()->{
-                    System.out.println("测试是否还在执行");
-                    if(!mainPane.getChildren().contains(toolBar))return;
-                    mainPane.getChildren().remove(toolBar);
-
-                });
-            }
-        };
-        timer.schedule(task,0,5000);
     }
 
     public static void Listen(){
@@ -150,7 +127,9 @@ public final class SlidePlay {
                 delay.stop();
                 delay = null;
             }
-            timer.cancel();
+            if(timer != null){
+                timer.cancel();
+            }
             i = 0;
         });
 
@@ -169,10 +148,14 @@ public final class SlidePlay {
             String text = statusButton.getText();
             if(text.equals("停止播放")){
                 statusButton.setText("继续播放");
+                delay.getKeyFrames().clear();
+                delay.getKeyFrames().add(new KeyFrame(Duration.seconds(playTime),event->loadImage()));
                 delay.stop();
             }
             else if(text.equals("继续播放")){
                 statusButton.setText("停止播放");
+                delay.getKeyFrames().clear();
+                delay.getKeyFrames().add(new KeyFrame(Duration.seconds(playTime),event->loadImage()));
                 delay.play();
             }
         });
@@ -181,7 +164,8 @@ public final class SlidePlay {
             if(playTime <= 1) return;
             playTime--;
             delay.stop();
-            delay.setDelay(Duration.seconds(playTime));
+            delay.getKeyFrames().clear();
+            delay.getKeyFrames().add(new KeyFrame(Duration.seconds(playTime),event->loadImage()));
             delay.play();
             label.setText("间隔"+playTime +"秒");
         });
@@ -189,14 +173,47 @@ public final class SlidePlay {
             if(playTime >= 20)return;
             playTime++;
             delay.stop();
-            delay.setDelay(Duration.seconds(playTime));
+            delay.getKeyFrames().clear();
+            delay.getKeyFrames().add(new KeyFrame(Duration.seconds(playTime),event->loadImage()));
             delay.play();
             label.setText("间隔"+playTime +"秒");
         });
         exitButton.setOnMouseClicked((mouseEvent -> {
+            if(delay != null){
+                delay.stop();
+                delay = null;
+            }
+            if(timer != null){
+                timer.cancel();
+            }
+            i = 0;
             playStage.close();
         }));
     }
+    public static void startTimer(){
+        timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(()->{
+                    System.out.println("测试是否还在执行");
+                    if(!mainPane.getChildren().contains(toolBar))return;
+                    mainPane.getChildren().remove(toolBar);
+
+                });
+            }
+        };
+        timer.schedule(task,0,5000);
+    }
+    private static void loadImage(){
+        if(i == arrayList.size()){
+            i = 0;//从头开始放映
+        }
+        Image image = new Image(arrayList.get(i).toString());
+        imageView.setImage(image);
+        i++;
+    }
+
 }
 
 

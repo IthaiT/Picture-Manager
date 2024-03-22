@@ -15,12 +15,15 @@ public class SlideController {
     @FXML
     private Button nextPicture;
     @FXML
+    private Button slidePlay;//幻灯片播放按钮
+    @FXML
     private Pane pictureShower;
+
 
     @FXML
     private void initialize(){
         new SlideShower(pictureShower,lastPicture,nextPicture,amplifyPicture,shrinkPicture);
-        new SlideListener(pictureShower);
+        new SlideListener(pictureShower,slidePlay);//监听pane右键点击与幻灯片播放
     }
 
 }
