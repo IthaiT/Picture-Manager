@@ -68,8 +68,10 @@ public class PictureOperationUtil {
             //没有输入任何名字，直接跳过这个图片的复制
             if(flag)continue;
             Files.copy(Path.of(thumbnail.getImageFile().toString()), Path.of(currentPath.toPath() +"/"+ sourceName));
+            imageFiles = Arrays.stream(currentPath.listFiles()).filter(file -> PictureUtil.isPicture(file)).toList();
+            pictureShower.showPicture(currentPath);
         }
-        pictureShower.showPicture(currentPath);
+        //pictureShower.showPicture(currentPath);
     }
 
     public static void renamePictures(){
@@ -119,6 +121,7 @@ public class PictureOperationUtil {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText("非法输入");
             alert.show();
+            return;
         }
         System.out.println("起始编号" + startCode);
 
@@ -139,6 +142,7 @@ public class PictureOperationUtil {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText("非法输入");
             alert.show();
+            return;
         }
         long baseNumber = (long)Math.pow(10,digit);
         if(thumbnailArrayList.size() > baseNumber - startCode){

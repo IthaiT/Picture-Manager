@@ -173,6 +173,7 @@ public final class SlidePlay {
             if(timer != null){
                 timer.cancel();
             }
+            arrayList.clear();
             i = 0;
             playStage.close();
             StageManager.popStage();
