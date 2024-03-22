@@ -16,13 +16,13 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureShower;
+import top.ithaic.utils.StageManager;
 
 import java.io.File;
 import java.util.*;
 
 
 public final class SlidePlay {
-    private static Stage previousStage;
     private static Stage playStage;
     private static Scene playScene;
     private static Pane mainPane;
@@ -42,7 +42,6 @@ public final class SlidePlay {
     public SlidePlay() {
     }
     private static void initStyle(){
-        previousStage =
         playStage = new Stage();
         subPane= new StackPane();
         mainPane = new Pane();
@@ -89,6 +88,7 @@ public final class SlidePlay {
 
         //显示窗口并使图片放置与中央
         playStage.show();
+        StageManager.pushStage(playStage);
         imageView.setFitHeight(playStage.getHeight());
         imageView.setFitWidth(playStage.getWidth());
         subPane.setPrefWidth(playStage.getWidth());
@@ -108,6 +108,7 @@ public final class SlidePlay {
         if(pictures.length == 0)return;
         //显示窗口并使图片放置与中央
         playStage.show();
+        StageManager.pushStage(playStage);
         imageView.setFitHeight(playStage.getHeight());
         imageView.setFitWidth(playStage.getWidth());
         subPane.setPrefWidth(playStage.getWidth());
@@ -121,19 +122,6 @@ public final class SlidePlay {
     }
 
     public static void Listen(){
-        //TODO 窗口关闭，将时间计数器关闭
-        playStage.setOnCloseRequest(windowEvent -> {
-            if(delay != null){
-                delay.stop();
-                delay = null;
-            }
-            if(timer != null){
-                timer.cancel();
-            }
-            i = 0;
-        });
-
-        //TODO
         playScene.setOnMouseMoved(mouseEvent -> {
             if(mainPane.getChildren().contains(toolBar))return;
             mainPane.getChildren().add(toolBar);
@@ -143,7 +131,6 @@ public final class SlidePlay {
             toolBar.setLayoutY(mainPane.getHeight()-100);
 
         });
-
         statusButton.setOnMouseClicked(mouseEvent -> {
             String text = statusButton.getText();
             if(text.equals("停止播放")){
@@ -188,6 +175,7 @@ public final class SlidePlay {
             }
             i = 0;
             playStage.close();
+            StageManager.popStage();
         }));
     }
     public static void startTimer(){

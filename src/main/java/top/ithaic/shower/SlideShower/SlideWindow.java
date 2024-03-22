@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import top.ithaic.listener.PictureShowerListener;
+import top.ithaic.utils.StageManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +31,11 @@ public class SlideWindow {
         stage.setMinWidth(800);
         stage.setMinHeight(600);
         stage.setScene(scene);
+        StageManager.pushStage(stage);
         stage.show();
-        stage.setOnCloseRequest(windowEvent -> PictureShowerListener.setSlideWindow(null));
+        stage.setOnCloseRequest(windowEvent -> {
+            StageManager.popStage();
+            PictureShowerListener.setSlideWindow(null);
+        });
     }
 }

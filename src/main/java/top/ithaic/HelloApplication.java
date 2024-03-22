@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import top.ithaic.utils.StageManager;
 
 import java.io.IOException;
 
@@ -20,6 +21,7 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         stage.setMinWidth(900);
         stage.setMinHeight(500);
+        StageManager.pushStage(stage);
         stage.show();
     }
 
