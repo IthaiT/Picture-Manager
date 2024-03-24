@@ -1,12 +1,15 @@
 package top.ithaic.shower.SlideShower;
 
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 
@@ -18,14 +21,15 @@ public class SlideShower {
     private static Button amplifyPicture;
     private static Button lastPicture;
     private static Button nextPicture;
+    private static Button slidePlay;
     private static Pane pictureShower;
     private static Canvas canvas;
     private static Image image;
-
+    private static Label blankFiller;
     public SlideShower() {
     }
 
-    public SlideShower(Pane pictureShower, Button lastPicture, Button nextPicture, Button amplifyPicture, Button shrinkPicture) {
+    public SlideShower(Pane pictureShower, Button lastPicture, Button nextPicture, Button amplifyPicture, Button shrinkPicture, Button slidePlay,Label blankFiller) {
         SlideShower.pictureShower = pictureShower;
         SlideShower.lastPicture = lastPicture;
         SlideShower.nextPicture = nextPicture;
@@ -33,9 +37,10 @@ public class SlideShower {
         SlideShower.shrinkPicture = shrinkPicture;
         SlideShower.factor = 0;
         SlideShower.scaleTransitionThread = null;
+        SlideShower.blankFiller = blankFiller;
+        SlideShower.slidePlay = slidePlay;
         showPicture();
         mouseListen();
-
     }
 
     private void showPicture() {
@@ -49,6 +54,12 @@ public class SlideShower {
         canvas = new Canvas(slideWidth, slideHeight);
         canvas.widthProperty().bind(pictureShower.widthProperty());
         canvas.heightProperty().bind(pictureShower.heightProperty());
+
+        //工具栏宽度监听
+        ((BorderPane)pictureShower.getParent()).widthProperty().addListener(((observableValue, number, t1) -> {
+            double buttonWidth = amplifyPicture.getWidth()+shrinkPicture.getWidth()+slidePlay.getWidth();
+            blankFiller.setPrefWidth(((BorderPane)pictureShower.getParent()).getWidth()/2-buttonWidth/2);
+        }));
 
         //画布监听
         canvas.widthProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas, image, 1 + factor, 0, 0)));
@@ -99,33 +110,38 @@ public class SlideShower {
      * @param detY  放缩位置偏移量Y (距中心)
      */
     private void drawPicture(Canvas canvas, Image image, double factor, double detX, double detY) {
-        double canvasWidth = canvas.getWidth();
-        double canvasHeight = canvas.getHeight();
+            double canvasWidth = canvas.getWidth();
+            double canvasHeight = canvas.getHeight();
 
-        // 保持图片宽高比
-        double imageWidth = image.getWidth();
-        double imageHeight = image.getHeight();
-        double scale = Math.min(canvasWidth / imageWidth, canvasHeight / imageHeight);
-        double scaledWidth = imageWidth * scale;
-        double scaledHeight = imageHeight * scale;
+            // 获取图片的原始尺寸
+            double imageWidth = image.getWidth();
+            double imageHeight = image.getHeight();
 
-        if(detX !=0 &&  detY!=0) {
-            detX = (detX - (canvasWidth - scaledWidth) / 2 - scaledWidth/2)*2;
-            detY = (detY - (canvasHeight - scaledHeight) / 2 - scaledHeight/2)*2;
-        }
-        System.out.println("DetX:"+detX);
-        System.out.println("DetY:"+detY);
+            //  适应画布
+            double scaleFactorWidth = canvasWidth / imageWidth;
+            double scaleFactorHeight = canvasHeight / imageHeight;
+            double tmpFactor = Math.min(scaleFactorWidth, scaleFactorHeight); // 选择较小的因子以保持纵横比
+            factor*=tmpFactor;
 
-        double x = (imageWidth * factor - imageWidth) / 2;
-        double y = (imageHeight * factor - imageHeight) / 2;
-        double newWidth = imageWidth - (imageWidth * factor - imageWidth);
-        double newHeight = imageHeight - (imageHeight * factor - imageHeight);
+            // 根据factor计算缩放后的尺寸
+            double scaledWidth = imageWidth * factor;
+            double scaledHeight = imageHeight * factor;
 
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, canvasWidth, canvasHeight);
-        gc.drawImage(image, x, y, newWidth, newHeight,
-                (canvasWidth - scaledWidth) / 2, (canvasHeight - scaledHeight) / 2,
-                scaledWidth, scaledHeight);
+            // 计算图像在Canvas上的位置，使其居中
+            double offsetX = (canvasWidth - scaledWidth) / 2;
+            double offsetY = (canvasHeight - scaledHeight) / 2;
+
+            // 确保图像不会超出Canvas边界
+            offsetX =  Math.min(offsetX, canvasWidth - scaledWidth);
+            offsetY =  Math.min(offsetY, canvasHeight - scaledHeight);
+
+            // 获取GraphicsContext对象并清除Canvas
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            gc.clearRect(0, 0, canvasWidth, canvasHeight);
+
+            // 在Canvas上绘制缩放后的图像
+            gc.drawImage(image, offsetX, offsetY, scaledWidth, scaledHeight);
+
     }
 
     public void drawPicture() {
@@ -163,6 +179,9 @@ public class SlideShower {
         });
     }
 
+
+
+
     private class ScaleTransitionThread extends Thread{
         private double startFactor;
         private final double endFactor;
@@ -178,6 +197,10 @@ public class SlideShower {
         }
         @Override
         public void run(){
+            if(1+endFactor<0){
+                SlideShower.factor+=FACTORINCREMENT;
+                return;
+            }
             if(endFactor < startFactor){
                 while(Math.abs(startFactor-endFactor) > 1e-5&&!isTerminal){
                     startFactor-=0.01;

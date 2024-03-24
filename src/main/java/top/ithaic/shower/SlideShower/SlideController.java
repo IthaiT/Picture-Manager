@@ -2,10 +2,13 @@ package top.ithaic.shower.SlideShower;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 
 public class SlideController {
+    @FXML
+    public Label blankFiller;
     @FXML
     private Button shrinkPicture;
     @FXML
@@ -22,7 +25,7 @@ public class SlideController {
 
     @FXML
     private void initialize(){
-        new SlideShower(pictureShower,lastPicture,nextPicture,amplifyPicture,shrinkPicture);
+        new SlideShower(pictureShower,lastPicture,nextPicture,amplifyPicture,shrinkPicture,slidePlay,blankFiller);
         new SlideListener(pictureShower,slidePlay);//监听pane右键点击与幻灯片播放
     }
 

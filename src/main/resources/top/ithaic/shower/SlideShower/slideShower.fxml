@@ -28,7 +28,7 @@
    <bottom>
       <ToolBar prefHeight="50.0" prefWidth="747.0" BorderPane.alignment="CENTER">
         <items>
-            <Label prefHeight="15.0" prefWidth="216.0" text=" " />
+            <Label fx:id="blankFiller" prefHeight="15.0" prefWidth="216.0" text=" " />
             <Button fx:id="slidePlay" mnemonicParsing="false" prefHeight="23.0" prefWidth="79.0" text="幻灯片播放" />
             <Button fx:id="amplifyPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="88.0" text="放大" />
             <Button fx:id="shrinkPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="105.0" text="缩小" />

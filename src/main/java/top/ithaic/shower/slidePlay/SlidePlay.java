@@ -5,12 +5,15 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -122,6 +125,22 @@ public final class SlidePlay {
     }
 
     public static void Listen(){
+        playScene.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ESCAPE){
+                if(delay != null){
+                    delay.stop();
+                    delay = null;
+                }
+                if(timer != null){
+                    timer.cancel();
+                }
+                arrayList.clear();
+                i = 0;
+                playStage.close();
+                StageManager.popStage();
+            }
+        });
+
         playScene.setOnMouseMoved(mouseEvent -> {
             if(mainPane.getChildren().contains(toolBar))return;
             mainPane.getChildren().add(toolBar);
