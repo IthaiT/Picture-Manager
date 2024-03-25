@@ -1,6 +1,4 @@
 package top.ithaic.shower.SlideShower;
-
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -11,6 +9,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+
+import java.util.Timer;
 
 
 public class SlideShower {
@@ -26,6 +26,14 @@ public class SlideShower {
     private static Canvas canvas;
     private static Image image;
     private static Label blankFiller;
+    private long lastScrollTime;
+    private long lastMouseTime;
+    private double offsetX = 0;
+    private double offsetY = 0;
+    private double lastdx = 0;
+    private double lastdy = 0;
+    private double dx = 0;
+    private double dy = 0;
     public SlideShower() {
     }
 
@@ -41,6 +49,7 @@ public class SlideShower {
         SlideShower.slidePlay = slidePlay;
         showPicture();
         mouseListen();
+        initCanvasEvent();
     }
 
     private void showPicture() {
@@ -140,7 +149,7 @@ public class SlideShower {
             gc.clearRect(0, 0, canvasWidth, canvasHeight);
 
             // 在Canvas上绘制缩放后的图像
-            gc.drawImage(image, offsetX, offsetY, scaledWidth, scaledHeight);
+            gc.drawImage(image, offsetX + detX, offsetY + detY, scaledWidth, scaledHeight);
 
     }
 
@@ -163,23 +172,62 @@ public class SlideShower {
 
     private void mouseListen(){
         SlideShower.canvas.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastScrollTime < 300) {
+                return;
+            }
             if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
             if(mouseEvent.isControlDown()){
-                double mouseDetX = mouseEvent.getX();
-                double mouseDetY = mouseEvent.getY();
-                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT,mouseDetX,mouseDetY);
+                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT,0,0);
                 scaleTransitionThread1.start();
             }
             if(mouseEvent.isAltDown()){
-                double mouseDetX = mouseEvent.getX();
-                double mouseDetY = mouseEvent.getY();
-                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT,mouseDetX,mouseDetY);
+                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT,0,0);
                 scaleTransitionThread1.start();
             }
+            lastMouseTime = currentTime;
+        });
+        SlideShower.canvas.setOnScroll(scrollEvent -> {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastScrollTime < 300) {
+                return;
+            }
+            if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
+            if(scrollEvent.getDeltaY()>0){
+                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT,0,0);
+                scaleTransitionThread1.start();
+            }
+            if(scrollEvent.getDeltaY()<0){
+                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT,0,0);
+                scaleTransitionThread1.start();
+            }
+            lastScrollTime = currentTime;
         });
     }
 
+    private void initCanvasEvent(){
+        // 添加鼠标事件监听器
+        canvas.setOnMousePressed(event -> {
+            if(factor<=0)return;
+            offsetX = event.getX();
+            offsetY = event.getY();
+        });
 
+        canvas.setOnMouseDragged(event -> {
+            if(factor<=0)return;
+            // 更新图片位置
+            dx = event.getX() - offsetX;
+            dy = event.getY() - offsetY;
+            // 重绘图片
+            drawPicture(canvas, image, 1+factor, lastdx+dx, lastdy+dy);
+        });
+
+        canvas.setOnMouseReleased(event->{
+            lastdx = dx;
+            lastdy = dy;
+        });
+
+    }
 
 
     private class ScaleTransitionThread extends Thread{
@@ -197,6 +245,7 @@ public class SlideShower {
         }
         @Override
         public void run(){
+            //倍数为负时，不能缩小，否则异常
             if(1+endFactor<0){
                 SlideShower.factor+=FACTORINCREMENT;
                 return;
@@ -206,7 +255,7 @@ public class SlideShower {
                     startFactor-=0.01;
                     drawPicture(canvas,image,1+startFactor,detX,detY);
                     try {
-                        sleep(30);
+                        sleep(15);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

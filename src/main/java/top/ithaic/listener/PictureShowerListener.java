@@ -4,6 +4,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -90,7 +92,6 @@ public class PictureShowerListener implements Listener {
             }
             clearSelected();
             //创建一个anchorPane
-            if(isClickBlankArea(mouseEvent)) System.out.println("test1");
             thumbnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(10));
             AnchorPane anchorPane = new AnchorPane();
             anchorPane.setPrefWidth(scrollPane.getWidth());
@@ -98,7 +99,6 @@ public class PictureShowerListener implements Listener {
             anchorPane.getChildren().add(rectangle);
             anchorPane.setPrefWidth(scrollPane.getWidth());
             scrollPane.setContent(anchorPane);
-            if(isClickBlankArea(mouseEvent)) System.out.println("test2");
             //添加事件处理器
 
             thumbnails.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedEventHandler);

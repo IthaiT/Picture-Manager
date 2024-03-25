@@ -1,17 +1,19 @@
 package top.ithaic.shower;
 
 import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import top.ithaic.imageview.Thumbnail;
+import top.ithaic.listener.PictureShowerListener;
 import top.ithaic.utils.PathUtil;
 import top.ithaic.utils.PictureUtil;
-
 import java.io.File;
 
 public class PictureShower {
     private static FlowPane thumbnails;
     private static PictureShower.ImageLoadThread imageLoadThread;
-
+//    private Image image = new Image(PictureShower.class.getResourceAsStream("/top/ithaic/noResult.png"));
     public PictureShower(){}
     public PictureShower(FlowPane thumbnails){
         PictureShower.thumbnails = thumbnails;
@@ -23,6 +25,13 @@ public class PictureShower {
     //TODO 传入File[]数组显示图片
     public void showPicture(File[] pictures){
         if(pictures == null)return;
+//        if(pictures.length==0){
+//            ImageView imageView = new ImageView();
+//            imageView.setFitWidth(thumbnails.getWidth());
+//            imageView.setFitHeight(thumbnails.getHeight());
+//            imageView.setImage(image);
+//            thumbnails.getChildren().add(imageView);
+//        }
         //维护工具类属性
         PathUtil.updateFiles(pictures);
         //维护属性绑定
