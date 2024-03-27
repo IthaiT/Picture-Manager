@@ -15,18 +15,20 @@ public class PictureOperateListener implements Listener {
     private static final MenuItem renameItem = new MenuItem("重命名");
     private static final MenuItem deleteItem = new MenuItem("删除");
     private static final MenuItem playHere = new MenuItem("幻灯片放映");
-    private static final  MenuItem pasteItem = new MenuItem("粘贴");
+    private static final MenuItem pasteItem = new MenuItem("粘贴");
     private static final MenuItem selectAllItem = new MenuItem("全选");
     private static final MenuItem slidePlay = new MenuItem("播放幻灯片");
-    public PictureOperateListener(ContextMenu contextMenuT,ContextMenu contextMenuP){
+
+    public PictureOperateListener(ContextMenu contextMenuT, ContextMenu contextMenuP) {
         PictureOperateListener.contextMenuT = contextMenuT;
         PictureOperateListener.contextMenuP = contextMenuP;
-        contextMenuT.getItems().addAll(copyItem, renameItem, deleteItem,playHere);
-        contextMenuP.getItems().addAll(pasteItem,selectAllItem,slidePlay);
+        contextMenuT.getItems().addAll(copyItem, renameItem, deleteItem, playHere);
+        contextMenuP.getItems().addAll(pasteItem, selectAllItem, slidePlay);
         contextMenuT.setStyle(" -fx-background-color: white");
         contextMenuP.setStyle(" -fx-background-color: white");
         Listen();
     }
+
     @Override
     public void Listen() {
         copyItem.setOnAction(actionEvent -> {

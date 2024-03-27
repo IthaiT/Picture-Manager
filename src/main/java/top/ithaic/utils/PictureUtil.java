@@ -9,7 +9,6 @@ public final class  PictureUtil {
 
     public static int getPictureIndex(File picture){
         int index = 0;
-        PathUtil.updateFiles();
         for(File file:PathUtil.getCurrentFiles()){
             if(file.equals(picture))return index;
             index++;

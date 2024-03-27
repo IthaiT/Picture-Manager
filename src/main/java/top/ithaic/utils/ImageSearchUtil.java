@@ -30,7 +30,6 @@ public final class ImageSearchUtil {
     //默认单线程搜索
     public void search(File searchPath,String searchName) throws InterruptedException {this.search(searchPath,searchName,1);}
 
-    //需要修改为KMP算法
     //匹配文件名
     private boolean match(String fileName,String searchName){
         if(fileName.length() < searchName.length())return false;
