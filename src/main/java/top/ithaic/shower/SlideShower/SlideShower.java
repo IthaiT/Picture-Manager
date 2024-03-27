@@ -10,8 +10,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
-import java.util.Timer;
-
 
 public class SlideShower {
     private final double FACTORINCREMENT = 0.15;
@@ -30,8 +28,8 @@ public class SlideShower {
     private long lastMouseTime;
     private double offsetX = 0;
     private double offsetY = 0;
-    private double lastdx = 0;
-    private double lastdy = 0;
+    private double lastDetX = 0;
+    private double lastDetY = 0;
     private double dx = 0;
     private double dy = 0;
     public SlideShower() {
@@ -47,12 +45,12 @@ public class SlideShower {
         SlideShower.scaleTransitionThread = null;
         SlideShower.blankFiller = blankFiller;
         SlideShower.slidePlay = slidePlay;
-        showPicture();
-        mouseListen();
+        initPicture();
+        initMouseListen();
         initCanvasEvent();
     }
 
-    private void showPicture() {
+    private void initPicture() {
         pictureShower.getChildren().clear();
         double slideWidth = pictureShower.getWidth();
         double slideHeight = pictureShower.getHeight();
@@ -74,20 +72,6 @@ public class SlideShower {
         canvas.widthProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas, image, 1 + factor, 0, 0)));
         canvas.heightProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas, image, 1 + factor, 0, 0)));
 
-        //按钮监听
-        if (SlideFileManager.getPictures().length == 1) {
-            lastPicture.setVisible(false);
-            nextPicture.setVisible(false);
-        } else {
-            lastPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> lastPicture(canvas));
-            nextPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> nextPicture(canvas));
-            pictureShower.getParent().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
-                if (keyEvent.getCode() == KeyCode.LEFT) lastPicture(canvas);
-                if (keyEvent.getCode() == KeyCode.RIGHT) nextPicture(canvas);
-            });
-        }
-        amplifyPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> amplifyPicture());
-        shrinkPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> shrinkPicture());
 
         pictureShower.getChildren().add(canvas);
     }
@@ -95,6 +79,8 @@ public class SlideShower {
     private void lastPicture(Canvas canvas) {
         if (SlideFileManager.getCurrentIndex() > 0) {
             factor = 0;
+            lastDetX = 0;
+            lastDetY = 0;
             image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex() - 1].toURI().toString());
             SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex() - 1);
             drawPicture(canvas, image, 1 + factor, 0, 0);
@@ -104,6 +90,8 @@ public class SlideShower {
     private void nextPicture(Canvas canvas) {
         if (SlideFileManager.getCurrentIndex() < SlideFileManager.getPictures().length - 1) {
             factor = 0;
+            lastDetX = 0;
+            lastDetY = 0;
             image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex() + 1].toURI().toString());
             SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex() + 1);
             drawPicture(canvas, image, 1, 0, 0);
@@ -115,8 +103,8 @@ public class SlideShower {
      * @param canvas 画布
      * @param image  图片
      * @param factor 放缩因子
-     * @param detX  放缩位置偏移量X (距中心)
-     * @param detY  放缩位置偏移量Y (距中心)
+     * @param detX  放缩位置偏移量X
+     * @param detY  放缩位置偏移量Y
      */
     private void drawPicture(Canvas canvas, Image image, double factor, double detX, double detY) {
             double canvasWidth = canvas.getWidth();
@@ -149,8 +137,12 @@ public class SlideShower {
             gc.clearRect(0, 0, canvasWidth, canvasHeight);
 
             // 在Canvas上绘制缩放后的图像
-            gc.drawImage(image, offsetX + detX, offsetY + detY, scaledWidth, scaledHeight);
+            gc.drawImage(image, offsetX + detX + lastDetX, offsetY + detY + lastDetY, scaledWidth, scaledHeight);
+            System.out.println("DetX:"+detX);
+            System.out.println("DetY:"+detY+"\n");
 
+            System.out.println("lastDetX:"+lastDetX);
+            System.out.println("lastDetY:"+lastDetY+"\n");
     }
 
     public void drawPicture() {
@@ -170,7 +162,23 @@ public class SlideShower {
         scaleTransitionThread.start();
     }
 
-    private void mouseListen(){
+    private void initMouseListen(){
+        //按钮监听
+        if (SlideFileManager.getPictures().length == 1) {
+            lastPicture.setVisible(false);
+            nextPicture.setVisible(false);
+        } else {
+            lastPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> lastPicture(canvas));
+            nextPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> nextPicture(canvas));
+            pictureShower.getParent().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.LEFT) lastPicture(canvas);
+                if (keyEvent.getCode() == KeyCode.RIGHT) nextPicture(canvas);
+            });
+        }
+        amplifyPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> amplifyPicture());
+        shrinkPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> shrinkPicture());
+
+
         SlideShower.canvas.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastScrollTime < 300) {
@@ -208,23 +216,23 @@ public class SlideShower {
     private void initCanvasEvent(){
         // 添加鼠标事件监听器
         canvas.setOnMousePressed(event -> {
-            if(factor<=0)return;
+//            if(factor<=0)return;
             offsetX = event.getX();
             offsetY = event.getY();
         });
 
         canvas.setOnMouseDragged(event -> {
-            if(factor<=0)return;
+//            if(factor<=0)return;
             // 更新图片位置
             dx = event.getX() - offsetX;
             dy = event.getY() - offsetY;
             // 重绘图片
-            drawPicture(canvas, image, 1+factor, lastdx+dx, lastdy+dy);
+            drawPicture(canvas, image, 1+factor, dx, dy);
         });
 
         canvas.setOnMouseReleased(event->{
-            lastdx = dx;
-            lastdy = dy;
+            lastDetX = dx + lastDetX;
+            lastDetY = dy + lastDetY;
         });
 
     }
