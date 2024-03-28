@@ -3,14 +3,16 @@ package top.ithaic.listener;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import top.ithaic.Myinterface.Listener;
+import top.ithaic.shower.SlideShower.SlideWindow;
 import top.ithaic.shower.slidePlay.SlidePlay;
+import top.ithaic.utils.PathUtil;
 import top.ithaic.utils.PictureOperationUtil;
+import top.ithaic.utils.PictureUtil;
 
 import java.io.IOException;
 
 public class PictureOperateListener implements Listener {
-    private static ContextMenu contextMenuT;//On Thumbnail
-    private static ContextMenu contextMenuP;//On Pane
+    private static final MenuItem openItem = new MenuItem("打开");
     private static final MenuItem copyItem = new MenuItem("复制");
     private static final MenuItem renameItem = new MenuItem("重命名");
     private static final MenuItem deleteItem = new MenuItem("删除");
@@ -20,9 +22,7 @@ public class PictureOperateListener implements Listener {
     private static final MenuItem slidePlay = new MenuItem("播放幻灯片");
 
     public PictureOperateListener(ContextMenu contextMenuT, ContextMenu contextMenuP) {
-        PictureOperateListener.contextMenuT = contextMenuT;
-        PictureOperateListener.contextMenuP = contextMenuP;
-        contextMenuT.getItems().addAll(copyItem, renameItem, deleteItem, playHere);
+        contextMenuT.getItems().addAll(openItem,copyItem, renameItem, deleteItem, playHere);
         contextMenuP.getItems().addAll(pasteItem, selectAllItem, slidePlay);
         contextMenuT.setStyle(" -fx-background-color: white");
         contextMenuP.setStyle(" -fx-background-color: white");
@@ -31,6 +31,9 @@ public class PictureOperateListener implements Listener {
 
     @Override
     public void Listen() {
+        openItem.setOnAction(actionEvent -> {
+            new SlideWindow(PathUtil.getCurrentFiles(), PictureUtil.getPictureIndex(PictureShowerListener.getThumbnailArrayList().get(0).getImageFile()));
+        });
         copyItem.setOnAction(actionEvent -> {
             PictureOperationUtil.copyPictures();
         });
