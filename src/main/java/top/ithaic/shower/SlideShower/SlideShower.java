@@ -19,11 +19,9 @@ public class SlideShower {
     private static Button amplifyPicture;
     private static Button lastPicture;
     private static Button nextPicture;
-    private static Button slidePlay;
     private static Pane pictureShower;
     private static Canvas canvas;
     private static Image image;
-    private static Label blankFiller;
     private long lastScrollTime;
     private long lastMouseTime;
     private double offsetX = 0;
@@ -35,7 +33,7 @@ public class SlideShower {
     public SlideShower() {
     }
 
-    public SlideShower(Pane pictureShower, Button lastPicture, Button nextPicture, Button amplifyPicture, Button shrinkPicture, Button slidePlay,Label blankFiller) {
+    public SlideShower(Pane pictureShower, Button lastPicture, Button nextPicture, Button amplifyPicture, Button shrinkPicture, Button slidePlay) {
         SlideShower.pictureShower = pictureShower;
         SlideShower.lastPicture = lastPicture;
         SlideShower.nextPicture = nextPicture;
@@ -43,35 +41,24 @@ public class SlideShower {
         SlideShower.shrinkPicture = shrinkPicture;
         SlideShower.factor = 0;
         SlideShower.scaleTransitionThread = null;
-        SlideShower.blankFiller = blankFiller;
-        SlideShower.slidePlay = slidePlay;
         initPicture();
         initMouseListen();
         initCanvasEvent();
     }
 
     private void initPicture() {
-        pictureShower.getChildren().clear();
+        pictureShower.getChildren().remove(canvas);
         double slideWidth = pictureShower.getWidth();
         double slideHeight = pictureShower.getHeight();
-
         image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()].toURI().toString());
-
         //初始化控件
         canvas = new Canvas(slideWidth, slideHeight);
         canvas.widthProperty().bind(pictureShower.widthProperty());
         canvas.heightProperty().bind(pictureShower.heightProperty());
 
-        //工具栏宽度监听
-        ((BorderPane)pictureShower.getParent()).widthProperty().addListener(((observableValue, number, t1) -> {
-            double buttonWidth = amplifyPicture.getWidth()+shrinkPicture.getWidth()+slidePlay.getWidth();
-            blankFiller.setPrefWidth(((BorderPane)pictureShower.getParent()).getWidth()/2-buttonWidth/2);
-        }));
-
         //画布监听
         canvas.widthProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas, image, 1 + factor, 0, 0)));
         canvas.heightProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas, image, 1 + factor, 0, 0)));
-
 
         pictureShower.getChildren().add(canvas);
     }
@@ -138,11 +125,6 @@ public class SlideShower {
 
             // 在Canvas上绘制缩放后的图像
             gc.drawImage(image, offsetX + detX + lastDetX, offsetY + detY + lastDetY, scaledWidth, scaledHeight);
-            System.out.println("DetX:"+detX);
-            System.out.println("DetY:"+detY+"\n");
-
-            System.out.println("lastDetX:"+lastDetX);
-            System.out.println("lastDetY:"+lastDetY+"\n");
     }
 
     public void drawPicture() {
@@ -181,7 +163,7 @@ public class SlideShower {
 
         SlideShower.canvas.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
             long currentTime = System.currentTimeMillis();
-            if (currentTime - lastScrollTime < 300) {
+            if (currentTime - lastMouseTime < 300) {
                 return;
             }
             if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
