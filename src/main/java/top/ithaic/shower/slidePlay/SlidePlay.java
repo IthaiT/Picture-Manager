@@ -194,6 +194,7 @@ public final class SlidePlay {
             arrayList.clear();
             i = 0;
             playStage.close();
+            SlideShower.recoverPicture();
             StageManager.popStage();
         }));
     }
