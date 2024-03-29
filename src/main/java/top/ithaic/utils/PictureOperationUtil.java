@@ -1,10 +1,11 @@
 package top.ithaic.utils;
 
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.listener.PictureOperateListener;
 import top.ithaic.listener.PictureShowerListener;
@@ -58,12 +59,45 @@ public class PictureOperationUtil {
             boolean flag = false;
             String sourceName = thumbnail.getImageFile().getName();
             //如果名字冲突，一直要求重命名直到不冲突
-            while(isNameExit(sourceName,imageFiles)){
-                sourceName = renameSource(thumbnail.getImageFile().toString());
-                if(sourceName == null){
-                    flag = true;
-                    break;
-                }
+            if(isNameExit(sourceName,imageFiles)) {
+                Dialog<String> dialog = new Dialog<>();
+                dialog.setTitle("替换或跳过文件");
+
+                DialogPane dialogPane = new DialogPane();
+                dialogPane.setContentText("请选择一个选项：");
+
+                VBox vBox = new VBox();
+                Label replaceLabel = new Label("替换目标中的文件");
+                Label ignoreLabel = new Label("跳过这些文件");
+                replaceLabel.setStyle("-fx-background-color: red; -fx-alignment: center;  -fx-font-size: 24px; -fx-pref-width: 200px; -fx-pref-height: 100px;");
+                ignoreLabel.setStyle("-fx-background-color: red; -fx-alignment: center;  -fx-font-size: 24px; -fx-pref-width: 200px; -fx-pref-height: 100px;");
+                vBox.getChildren().addAll(replaceLabel,ignoreLabel);
+                vBox.setPrefWidth(500);
+                vBox.setPrefHeight(500);
+                dialogPane.setContent(vBox);
+                dialog.setDialogPane(dialogPane);
+
+                dialog.showAndWait();
+                replaceLabel.setOnMouseClicked(mouseEvent -> {
+                    if(mouseEvent.getClickCount()>=1){
+                        Desktop.getDesktop().moveToTrash(thumbnail.getImageFile());
+                        try {
+                            Files.copy(Path.of(thumbnail.getImageFile().toString()), Path.of(currentPath.toPath() +"/"+ sourceName));
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        dialog.close();
+                        System.out.println("测试点击replace");
+                    }
+                });
+                ignoreLabel.setOnMouseClicked(mouseEvent -> {
+                    if(mouseEvent.getClickCount()>=1){
+                        dialog.close();
+                        System.out.println("测试点击ignore");
+                    }
+
+                });
+
             }
             //没有输入任何名字，直接跳过这个图片的复制
             if(flag)continue;
