@@ -21,7 +21,6 @@ public class PictureShower {
     private static FlowPane thumbnails;
     private static ScrollPane scrollPane;
     private static PictureShower.ImageLoadThread imageLoadThread;
-    public final static Image NO_PICTURE = new Image(Objects.requireNonNull(PictureShowerListener.class.getResourceAsStream("/top/ithaic/noResult.png")));
     public PictureShower(){}
     public PictureShower(FlowPane thumbnails,ScrollPane scrollPane){
         PictureShower.thumbnails = thumbnails;
@@ -43,12 +42,7 @@ public class PictureShower {
         Platform.runLater(()->{
             thumbnails.getChildren().clear();
             if(pictures.length == 0){
-                ImageView imageView = new ImageView(NO_PICTURE);
-                StackPane stackPane = new StackPane(imageView);
-                imageView.setFitHeight(500);
-                imageView.setPreserveRatio(true);
-                stackPane.setPrefWidth(scrollPane.getWidth());
-                scrollPane.setContent(stackPane);
+                scrollPane.setContent(PictureShowerListener.getNoPicturePane());
             }
             else{
                 scrollPane.setContent(thumbnails);

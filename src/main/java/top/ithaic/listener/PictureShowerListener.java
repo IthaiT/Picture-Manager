@@ -30,7 +30,6 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static top.ithaic.shower.PictureShower.NO_PICTURE;
 
 
 public class PictureShowerListener implements Listener {
@@ -40,7 +39,9 @@ public class PictureShowerListener implements Listener {
     private EventHandler<MouseEvent> mouseClickEventHandler;
     private EventHandler<MouseEvent> autoScrollTimer;//当鼠标到底部时触发滚动
     private static FlowPane thumbnails;
+    private static StackPane noPicturePane;
     private static ScrollPane scrollPane;
+    public final static Image NO_PICTURE = new Image(Objects.requireNonNull(PictureShowerListener.class.getResourceAsStream("/top/ithaic/noResult.png")));
     private static ArrayList<Thumbnail> thumbnailArrayList;
     private static ContextMenu contextMenuT;//On Thumbnail
     private static ContextMenu contextMenuP;//On Pane
@@ -53,12 +54,14 @@ public class PictureShowerListener implements Listener {
 
 
     public PictureShowerListener(FlowPane thumbnails, ScrollPane scrollPane) {
+        //程序起始时，没有任何图片
         ImageView imageView = new ImageView(NO_PICTURE);
-        StackPane stackPane = new StackPane(imageView);
+        noPicturePane = new StackPane(imageView);
         imageView.setFitHeight(500);
         imageView.setPreserveRatio(true);
-        stackPane.setPrefWidth(scrollPane.getWidth());
-        scrollPane.setContent(stackPane);
+        noPicturePane.setPrefWidth(scrollPane.getWidth());
+        scrollPane.setContent(noPicturePane);
+
         PictureShowerListener.scrollPane = scrollPane;
         PictureShowerListener.thumbnails = thumbnails;
         thumbnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(10));
@@ -87,8 +90,10 @@ public class PictureShowerListener implements Listener {
         mouseClickEventHandler = this::handleMouseClicked;
         autoScrollTimer = this::handleScrollSlide;
         EventHandler<KeyEvent> keyCtrlPress = this::handleCtrlPressed;
+        EventHandler<MouseEvent> noPictureEvent = this::handleNoPicture;
         //启动基本的鼠标事件
         thumbnails.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressEventHandler);
+        noPicturePane.addEventHandler(MouseEvent.MOUSE_CLICKED,noPictureEvent);
         scrollPane.addEventHandler(KeyEvent.KEY_PRESSED,keyCtrlPress);
     }
 
@@ -356,6 +361,13 @@ public class PictureShowerListener implements Listener {
             PictureOperationUtil.selectAll();
         }
     }
+    private void handleNoPicture(MouseEvent mouseEvent){
+        if(mouseEvent.getButton() == MouseButton.SECONDARY){
+            contextMenuP.show(scrollPane,mouseEvent.getScreenX(),mouseEvent.getScreenY());
+            return;
+        }
+        contextMenuP.hide();
+    }
 
 
     private boolean isClickBlankArea(MouseEvent mouseEvent) {
@@ -368,7 +380,6 @@ public class PictureShowerListener implements Listener {
         }
         return true;
     }
-
 
     private void clearSelected() {
         pms.updateText(0);
@@ -399,5 +410,8 @@ public class PictureShowerListener implements Listener {
     }
     public static void setSlideWindow(SlideWindow slideWindow) {
         PictureShowerListener.slideWindow = slideWindow;
+    }
+    public static StackPane getNoPicturePane(){
+        return noPicturePane;
     }
 }

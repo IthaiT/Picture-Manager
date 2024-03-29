@@ -42,11 +42,11 @@ public class PictureOperationUtil {
         if (thumbnails.isEmpty()) return;//如果没有文件被复制，返回
 
         //判断已经复制的文件有没有被修改（删除或者重命名）
-        for(Thumbnail thumbnail : thumbnails){
+        for(int i =0 ;i <thumbnails.size();i++){
             //如果不存在，发出警告
-            if(!thumbnail.getImageFile().exists()){
+            if(!thumbnails.get(i).getImageFile().exists()){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText(thumbnail.getImageFile() + "不存在，请确认该项目的位置");
+                alert.setContentText(thumbnails.get(i).getImageFile() + "不存在，请确认该项目的位置");
                 alert.show();
                 thumbnails.clear();
             }
