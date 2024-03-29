@@ -62,7 +62,7 @@ public class mainController {
         //TODO 初始化磁盘树目录
         new DiskTreeShower(disktree);
         //TODO 初始化图片预览
-        new PictureShower(thumbnails);
+        new PictureShower(thumbnails,scrollPane);
         //TODO 初始化路径显示
         new PathShower(pathShower,anchorPane,historyPath);
         //TODO 初始化图片信息统计

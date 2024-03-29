@@ -10,6 +10,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import top.ithaic.Myinterface.Listener;
@@ -25,8 +26,11 @@ import top.ithaic.utils.PictureUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static top.ithaic.shower.PictureShower.NO_PICTURE;
 
 
 public class PictureShowerListener implements Listener {
@@ -49,12 +53,19 @@ public class PictureShowerListener implements Listener {
 
 
     public PictureShowerListener(FlowPane thumbnails, ScrollPane scrollPane) {
+        ImageView imageView = new ImageView(NO_PICTURE);
+        StackPane stackPane = new StackPane(imageView);
+        imageView.setFitHeight(500);
+        imageView.setPreserveRatio(true);
+        stackPane.setPrefWidth(scrollPane.getWidth());
+        scrollPane.setContent(stackPane);
         PictureShowerListener.scrollPane = scrollPane;
         PictureShowerListener.thumbnails = thumbnails;
+        thumbnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(10));
         thumbnailArrayList = new ArrayList<>();
         //初始化右键点击菜单
-        contextMenuT = new ContextMenu();
-        contextMenuP = new ContextMenu();
+        contextMenuT = new ContextMenu();//for thumbnail
+        contextMenuP = new ContextMenu();//for pane
         contextMenuT.setStyle(" -fx-background-color: white");
         contextMenuP.setStyle(" -fx-background-color: white");
         new PictureOperateListener(contextMenuT,contextMenuP);
@@ -76,7 +87,6 @@ public class PictureShowerListener implements Listener {
         mouseClickEventHandler = this::handleMouseClicked;
         autoScrollTimer = this::handleScrollSlide;
         EventHandler<KeyEvent> keyCtrlPress = this::handleCtrlPressed;
-
         //启动基本的鼠标事件
         thumbnails.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressEventHandler);
         scrollPane.addEventHandler(KeyEvent.KEY_PRESSED,keyCtrlPress);
@@ -92,12 +102,10 @@ public class PictureShowerListener implements Listener {
             }
             clearSelected();
             //创建一个anchorPane
-            thumbnails.prefWidthProperty().bind(scrollPane.widthProperty().subtract(10));
             AnchorPane anchorPane = new AnchorPane();
             anchorPane.setPrefWidth(scrollPane.getWidth());
             anchorPane.getChildren().add(thumbnails);
             anchorPane.getChildren().add(rectangle);
-            anchorPane.setPrefWidth(scrollPane.getWidth());
             scrollPane.setContent(anchorPane);
             //添加事件处理器
 

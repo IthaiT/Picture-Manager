@@ -1,22 +1,31 @@
 package top.ithaic.shower;
 
 import javafx.application.Platform;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.listener.PictureShowerListener;
 import top.ithaic.utils.PathUtil;
 import top.ithaic.utils.PictureUtil;
+
+import java.beans.EventHandler;
 import java.io.File;
+import java.util.Objects;
+import java.util.Stack;
 
 public class PictureShower {
     private static FlowPane thumbnails;
+    private static ScrollPane scrollPane;
     private static PictureShower.ImageLoadThread imageLoadThread;
-//    private Image image = new Image(PictureShower.class.getResourceAsStream("/top/ithaic/noResult.png"));
+    public final static Image NO_PICTURE = new Image(Objects.requireNonNull(PictureShowerListener.class.getResourceAsStream("/top/ithaic/noResult.png")));
     public PictureShower(){}
-    public PictureShower(FlowPane thumbnails){
+    public PictureShower(FlowPane thumbnails,ScrollPane scrollPane){
         PictureShower.thumbnails = thumbnails;
+        PictureShower.scrollPane = scrollPane;
     }
     public static FlowPane getThumbnails() {
         return thumbnails;
@@ -25,13 +34,6 @@ public class PictureShower {
     //TODO 传入File[]数组显示图片
     public void showPicture(File[] pictures){
         if(pictures == null)return;
-//        if(pictures.length==0){
-//            ImageView imageView = new ImageView();
-//            imageView.setFitWidth(thumbnails.getWidth());
-//            imageView.setFitHeight(thumbnails.getHeight());
-//            imageView.setImage(image);
-//            thumbnails.getChildren().add(imageView);
-//        }
         //维护工具类属性
         PathUtil.updateFiles(pictures);
         //维护属性绑定
@@ -40,7 +42,19 @@ public class PictureShower {
         //清除图片
         Platform.runLater(()->{
             thumbnails.getChildren().clear();
+            if(pictures.length == 0){
+                ImageView imageView = new ImageView(NO_PICTURE);
+                StackPane stackPane = new StackPane(imageView);
+                imageView.setFitHeight(500);
+                imageView.setPreserveRatio(true);
+                stackPane.setPrefWidth(scrollPane.getWidth());
+                scrollPane.setContent(stackPane);
+            }
+            else{
+                scrollPane.setContent(thumbnails);
+            }
         });
+
         //若有线程，则终止
         if(imageLoadThread!=null && imageLoadThread.isAlive()){
             imageLoadThread.terminate();
@@ -60,7 +74,8 @@ public class PictureShower {
     }
     //TODO 无参显示当前图片
     public void showPicture(){
-        if(PathUtil.getCurrentFiles()!=null)this.showPicture(PathUtil.getCurrentFiles());
+        if(PathUtil.getCurrentFiles()!=null)
+            this.showPicture(PathUtil.getCurrentFiles());
     }
 
     private class ImageLoadThread extends Thread{
