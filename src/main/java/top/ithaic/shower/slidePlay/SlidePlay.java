@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureShower;
+import top.ithaic.shower.SlideShower.SlideShower;
 import top.ithaic.utils.StageManager;
 
 import java.io.File;
@@ -134,6 +135,7 @@ public final class SlidePlay {
                 arrayList.clear();
                 i = 0;
                 playStage.close();
+                SlideShower.recoverPicture();
                 StageManager.popStage();
             }
         });

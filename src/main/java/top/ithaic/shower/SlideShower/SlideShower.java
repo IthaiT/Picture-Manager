@@ -24,12 +24,12 @@ public class SlideShower {
     private static Image image;
     private long lastScrollTime;
     private long lastMouseTime;
-    private double offsetX = 0;
-    private double offsetY = 0;
-    private double lastDetX = 0;
-    private double lastDetY = 0;
-    private double dx = 0;
-    private double dy = 0;
+    private static double offsetX = 0;
+    private static double offsetY = 0;
+    private static double lastDetX = 0;
+    private static double lastDetY = 0;
+    private static double dx = 0;
+    private static double dy = 0;
     public SlideShower() {
     }
 
@@ -132,15 +132,23 @@ public class SlideShower {
         this.drawPicture(canvas, image, 1, 0, 0);
     }
 
+    public static void recoverPicture(){
+        offsetX = 0;
+        offsetY = 0;
+        lastDetX = 0;
+        lastDetY = 0;
+        dx = 0;
+        dy = 0;
+    }
     private void amplifyPicture() {
         if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
-        scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT,0,0);
+        scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT);
         scaleTransitionThread.start();
     }
 
     private void shrinkPicture() {
         if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
-        scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT,0,0);
+        scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT);
         scaleTransitionThread.start();
     }
 
@@ -168,11 +176,11 @@ public class SlideShower {
             }
             if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
             if(mouseEvent.isControlDown()){
-                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT,0,0);
+                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT);
                 scaleTransitionThread1.start();
             }
             if(mouseEvent.isAltDown()){
-                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT,0,0);
+                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT);
                 scaleTransitionThread1.start();
             }
             lastMouseTime = currentTime;
@@ -184,11 +192,11 @@ public class SlideShower {
             }
             if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
             if(scrollEvent.getDeltaY()>0){
-                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT,0,0);
+                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT);
                 scaleTransitionThread1.start();
             }
             if(scrollEvent.getDeltaY()<0){
-                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT,0,0);
+                ScaleTransitionThread scaleTransitionThread1 = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT);
                 scaleTransitionThread1.start();
             }
             lastScrollTime = currentTime;
@@ -224,14 +232,10 @@ public class SlideShower {
         private double startFactor;
         private final double endFactor;
         private boolean isTerminal;
-        private double detX;
-        private double detY;
 
-        public ScaleTransitionThread(double startFactor,double endFactor,double detX,double detY){
+        public ScaleTransitionThread(double startFactor,double endFactor){
             this.startFactor = startFactor;
             this.endFactor = endFactor;
-            this.detX = detX;
-            this.detY = detY;
         }
         @Override
         public void run(){
@@ -243,7 +247,7 @@ public class SlideShower {
             if(endFactor < startFactor){
                 while(Math.abs(startFactor-endFactor) > 1e-5&&!isTerminal){
                     startFactor-=0.01;
-                    drawPicture(canvas,image,1+startFactor,detX,detY);
+                    drawPicture(canvas,image,1+startFactor,0,0);
                     try {
                         sleep(15);
                     } catch (InterruptedException e) {
@@ -254,7 +258,7 @@ public class SlideShower {
             else{
                 while(Math.abs(endFactor-startFactor) > 1e-5&&!isTerminal){
                     startFactor+=0.01;
-                    drawPicture(canvas,image,1+startFactor,detX,detY);
+                    drawPicture(canvas,image,1+startFactor,0,0);
                     try {
                         sleep(30);
                     } catch (InterruptedException e) {
