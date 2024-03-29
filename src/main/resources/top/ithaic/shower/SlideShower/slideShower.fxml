@@ -22,6 +22,6 @@
          </children></Pane>
    </center>
    <bottom>
-      <FlowPane prefHeight="33.0" prefWidth="747.0" BorderPane.alignment="CENTER" />
+      <FlowPane fx:id="pictureScanner" prefHeight="78.0" prefWidth="747.0" BorderPane.alignment="CENTER" />
    </bottom>
 </BorderPane>

@@ -19,14 +19,16 @@ public class Thumbnail extends BorderPane {
     private File imageFile;
     private StackPane stackPane;
     private Label label;
-    public Thumbnail(){}
-    public Thumbnail(File imageFile){
+
+    public Thumbnail() {}
+
+    public Thumbnail(File imageFile) {
         this.imageFile = imageFile;
         Canvas canvas = new Canvas(thumbnailWidth, thumbnailHeight);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         //加载并画出图片
-        Image image = new Image(imageFile.toURI().toString(), thumbnailWidth , thumbnailHeight , true, true);
+        Image image = new Image(imageFile.toURI().toString(), thumbnailWidth, thumbnailHeight, true, true);
         double x = (thumbnailWidth - image.getWidth()) / 2;
         double y = (thumbnailHeight - image.getHeight()) / 2;
         gc.drawImage(image, x, y);
@@ -46,67 +48,53 @@ public class Thumbnail extends BorderPane {
 
         stackPane.getStyleClass().add("thumbnail-default");
 
-//        Listen();
     }
 
 
     public double getThumbnailWidth() {
         return thumbnailWidth;
     }
+
     public void setThumbnailWidth(double thumbnailWidth) {
         Thumbnail.thumbnailWidth = thumbnailWidth;
     }
+
     public double getThumbnailHeight() {
         return thumbnailHeight;
     }
+
     public void setThumbnailHeight(double thumbnailHeight) {
         Thumbnail.thumbnailHeight = thumbnailHeight;
     }
-    public File getImageFile(){
+
+    public File getImageFile() {
         return this.imageFile;
     }
-    public void setImageFile(File imageFile){
-        this.imageFile  = imageFile;
+
+    public void setImageFile(File imageFile) {
+        this.imageFile = imageFile;
     }
 
-    public boolean getIsClicked(){
+    public boolean getIsClicked() {
         return this.isClicked;
     }
-    public void setIsClicked(boolean isClicked){
+
+    public void setIsClicked(boolean isClicked) {
         this.isClicked = isClicked;
     }
 
-    public void setSelectedStyle(){
+    public void setSelectedStyle() {
         stackPane.getStyleClass().remove("thumbnail-default");
         stackPane.getStyleClass().add("thumbnail-hover");
         label.setTextFill(Color.BLACK);
-        label.setBackground(new Background(new BackgroundFill(rgb(28,136,203),null,null)));
+        label.setBackground(new Background(new BackgroundFill(rgb(28, 136, 203), null, null)));
 
     }
-    public void setUnSelectedStyle(){
+
+    public void setUnSelectedStyle() {
         stackPane.getStyleClass().remove("thumbnail-hover");
         stackPane.getStyleClass().add("thumbnail-default");
-        label.setBackground(new Background(new BackgroundFill(rgb(247,247,247),null,null)));
+        label.setBackground(new Background(new BackgroundFill(rgb(247, 247, 247), null, null)));
     }
 
-//    @Override
-//    public void Listen() {
-//        //设置鼠标点击事件
-//        this.setOnMouseClicked(mouseEvent -> {
-//            if(mouseEvent.getClickCount() == 1){
-//                //如果没有被点击
-//                if(!isClicked){
-//                    isClicked = true;
-//                    setSelectedStyle();
-//                }
-//                else{
-//                    isClicked = false;
-//                    setUnSelectedStyle();
-//                }
-//            }
-//            if(mouseEvent.getClickCount() >= 2){
-//                new SlideShower(imageFile);
-//            }
-//        });
-//    }
 }
