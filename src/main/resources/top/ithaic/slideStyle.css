@@ -1,0 +1,15 @@
+
+/*预览图样式*/
+.slideThumbnail-default {
+    -fx-border-width: 1;/* 设置边框的宽度 */
+    -fx-border-color: rgb(222,222,222);
+    -fx-background-color: rgb(255,255,255);
+    -fx-padding: 3;
+}
+
+.slideThumbnail-hover {
+    -fx-border-width: 3;/* 设置边框的宽度 */
+    -fx-border-color: rgb(28,136,203);
+    -fx-padding: 3;
+}
+

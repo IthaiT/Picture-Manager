@@ -15,10 +15,6 @@ public class SlideShower {
     private final double FACTORINCREMENT = 0.15;
     private static ScaleTransitionThread scaleTransitionThread;
     private static double factor;
-    private static Button shrinkPicture;
-    private static Button amplifyPicture;
-    private static Button lastPicture;
-    private static Button nextPicture;
     private static Pane pictureShower;
     private static Canvas canvas;
     private static Image image;
@@ -33,12 +29,8 @@ public class SlideShower {
     public SlideShower() {
     }
 
-    public SlideShower(Pane pictureShower, Button lastPicture, Button nextPicture, Button amplifyPicture, Button shrinkPicture, Button slidePlay) {
+    public SlideShower(Pane pictureShower) {
         SlideShower.pictureShower = pictureShower;
-        SlideShower.lastPicture = lastPicture;
-        SlideShower.nextPicture = nextPicture;
-        SlideShower.amplifyPicture = amplifyPicture;
-        SlideShower.shrinkPicture = shrinkPicture;
         SlideShower.factor = 0;
         SlideShower.scaleTransitionThread = null;
         initPicture();
@@ -63,7 +55,7 @@ public class SlideShower {
         pictureShower.getChildren().add(canvas);
     }
 
-    private void lastPicture(Canvas canvas) {
+    public void lastPicture() {
         if (SlideFileManager.getCurrentIndex() > 0) {
             factor = 0;
             lastDetX = 0;
@@ -74,7 +66,7 @@ public class SlideShower {
         }
     }
 
-    private void nextPicture(Canvas canvas) {
+    public void nextPicture() {
         if (SlideFileManager.getCurrentIndex() < SlideFileManager.getPictures().length - 1) {
             factor = 0;
             lastDetX = 0;
@@ -140,35 +132,19 @@ public class SlideShower {
         dx = 0;
         dy = 0;
     }
-    private void amplifyPicture() {
+    public void amplifyPicture() {
         if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
         scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT);
         scaleTransitionThread.start();
     }
 
-    private void shrinkPicture() {
+    public void shrinkPicture() {
         if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
         scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT);
         scaleTransitionThread.start();
     }
 
     private void initMouseListen(){
-        //按钮监听
-        if (SlideFileManager.getPictures().length == 1) {
-            lastPicture.setVisible(false);
-            nextPicture.setVisible(false);
-        } else {
-            lastPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> lastPicture(canvas));
-            nextPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> nextPicture(canvas));
-            pictureShower.getParent().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
-                if (keyEvent.getCode() == KeyCode.LEFT) lastPicture(canvas);
-                if (keyEvent.getCode() == KeyCode.RIGHT) nextPicture(canvas);
-            });
-        }
-        amplifyPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> amplifyPicture());
-        shrinkPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> shrinkPicture());
-
-
         SlideShower.canvas.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastMouseTime < 300) {
@@ -206,13 +182,11 @@ public class SlideShower {
     private void initCanvasEvent(){
         // 添加鼠标事件监听器
         canvas.setOnMousePressed(event -> {
-//            if(factor<=0)return;
             offsetX = event.getX();
             offsetY = event.getY();
         });
 
         canvas.setOnMouseDragged(event -> {
-//            if(factor<=0)return;
             // 更新图片位置
             dx = event.getX() - offsetX;
             dy = event.getY() - offsetY;

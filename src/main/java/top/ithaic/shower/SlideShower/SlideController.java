@@ -34,8 +34,8 @@ public class SlideController {
 
     @FXML
     private void initialize(){
-        new SlideShower(pictureShower,lastPicture,nextPicture,amplifyPicture,shrinkPicture,slidePlay);
-        new SlideListener(pictureShower,slidePlay,toolBar,mainPane,pictureScanner);//监听pane右键点击与幻灯片播放
+        new SlideShower(pictureShower);
+        new SlideListener(pictureShower,slidePlay,toolBar,mainPane,pictureScanner,pictureShower,lastPicture,nextPicture,amplifyPicture,shrinkPicture);//监听pane右键点击与幻灯片播放
     }
 
 }

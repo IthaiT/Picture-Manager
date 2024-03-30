@@ -292,7 +292,6 @@ public class PictureShowerListener implements Listener {
                     if (!thumbnailArrayList.isEmpty()) {
                         //如果这次与上次双击的图片相同，创建幻灯片后返回
                         if (thumbnailArrayList.get(0).equals(thumbnail)) {
-                            System.out.println("点击了相同的文件"+thumbnailArrayList.get(0).getImageFile().getName());
                             if(slideWindow==null) slideWindow = new SlideWindow(PathUtil.getCurrentFiles(), PictureUtil.getPictureIndex(thumbnailArrayList.get(0).getImageFile()));
                             else{
                                 SlideFileManager.setCurrentIndex(PictureUtil.getPictureIndex(thumbnailArrayList.get(0).getImageFile()));

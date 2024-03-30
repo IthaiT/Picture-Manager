@@ -5,14 +5,20 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 import java.io.File;
+
+import static javafx.scene.paint.Color.rgb;
 
 public class SlideThumbnail extends Thumbnail {
     private static double thumbnailWidth = 80;
     private static double thumbnailHeight = 60;
     private StackPane stackPane;
+
     public SlideThumbnail(){}
     public SlideThumbnail(File imageFile){
         Canvas canvas = new Canvas(thumbnailWidth, thumbnailHeight);
@@ -29,9 +35,9 @@ public class SlideThumbnail extends Thumbnail {
         stackPane.getChildren().add(canvas);
 
         this.setCenter(stackPane);
-        this.setMaxWidth(thumbnailWidth + 10);
+        this.setMaxWidth(thumbnailWidth+10);
 
-        stackPane.getStyleClass().add("thumbnail-default");
+        stackPane.getStyleClass().add("slideThumbnail-default");
     }
 
     @Override
@@ -42,5 +48,16 @@ public class SlideThumbnail extends Thumbnail {
     @Override
     public double getThumbnailHeight() {
         return thumbnailHeight;
+    }
+
+    @Override
+    public void setSelectedStyle() {
+        stackPane.getStyleClass().remove("slideThumbnail-default");
+        stackPane.getStyleClass().add("slideThumbnail-hover");
+    }
+    @Override
+    public void setUnSelectedStyle() {
+        stackPane.getStyleClass().remove("slideThumbnail-hover");
+        stackPane.getStyleClass().add("slideThumbnail-default");
     }
 }

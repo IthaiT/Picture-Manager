@@ -3,6 +3,7 @@ package top.ithaic.shower.SlideShower;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import top.ithaic.HelloApplication;
 import top.ithaic.listener.PictureShowerListener;
 import top.ithaic.utils.StageManager;
 
@@ -26,6 +27,7 @@ public class SlideWindow {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        scene.getStylesheets().add(String.valueOf(HelloApplication.class.getResource("slideStyle.css")));
         Stage stage = new Stage();
         stage.setTitle("幻灯片展示");
         stage.setMinWidth(800);
