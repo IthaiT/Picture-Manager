@@ -69,13 +69,21 @@ public class PictureOperationUtil {
         ArrayList<File> conflictFiles = new ArrayList<>();
         for (Thumbnail thumbnail : thumbnails) {
             String sourceName = thumbnail.getImageFile().getName();
+            String targetName = null;
+            for(File file : File.listRoots()){
+                if(currentPath.equals(file)){
+                    targetName = currentPath + sourceName;
+                    break;
+                }
+                targetName = currentPath.toPath() + "\\" + sourceName;
+            }
             //如果粘贴的位置是本地文件夹，那么直接创建副本
-            if(thumbnail.getImageFile().toString().equals(currentPath.toPath() +"\\"+ sourceName)){
+            if(thumbnail.getImageFile().toString().equals(targetName)){
                 System.out.println("同名文件");
                 Path sourcePath = thumbnail.getImageFile().toPath();
                 Path targetPath = thumbnail.getImageFile().toPath();
                 while(isNameExit(sourceName, imageFiles)){
-                    String targetName = sourceName.replaceFirst( "(?=\\.[^.]+$)", "-副本");
+                    targetName = sourceName.replaceFirst( "(?=\\.[^.]+$)", "-副本");
                     targetPath = targetPath.resolveSibling(targetName);
                     sourceName = targetName;
                 }
