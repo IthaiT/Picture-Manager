@@ -4,11 +4,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import top.ithaic.imageview.Thumbnail;
@@ -167,7 +166,11 @@ public class PictureOperationUtil {
     }
 
     public static void renamePictures(){
+        File currentPath = PathUtil.getCurrentPath();
+        if(currentPath==null)return;
+        List<File> imageFiles = Arrays.stream(PathUtil.getCurrentPath().listFiles()).filter(file -> PictureUtil.isPicture(file)).toList();
         ArrayList<Thumbnail> thumbnailArrayList = PictureShowerListener.getThumbnailArrayList();
+        //单个图片重命名
         if(thumbnailArrayList.size() == 1){
             File oldFile = thumbnailArrayList.get(0).getImageFile();
             String pictureName = oldFile.getName();
@@ -178,81 +181,140 @@ public class PictureOperationUtil {
             Optional<String> result = dialog.showAndWait();
             if(result.isPresent()){
                 String newName = result.get()+suffix;
+                if(isNameExit(newName,imageFiles)){
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setContentText(newName + "已被使用");
+                    alert.show();
+                    return;
+                }
                 oldFile.renameTo(new File(oldFile.getParentFile()+"/" +newName));
             }
             pictureShower.showPicture(PathUtil.getCurrentPath());
             return;
         }
-        //得到前缀
-        String prefix;
-        TextInputDialog prefixDialog = new TextInputDialog("default");
-        prefixDialog.setTitle("设置文件前缀");
-        prefixDialog.setContentText("请输入文件前缀");
-        Optional<String> prefixResult = prefixDialog.showAndWait();
-        if(prefixResult.isPresent()){
-            prefix = prefixResult.get();
-        }
-        else return;
 
-        System.out.println("前缀" + prefix);
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(StageManager.getStageStack().peek());
+        stage.setResizable(false);
+        stage.setWidth(460);
+        stage.setHeight(300);
+        stage.setTitle("批量重命名");
 
-        //得到起始编号
-        String code;
-        int startCode;
-        TextInputDialog startCodeDialog = new TextInputDialog("0");
-        startCodeDialog.setTitle("设置起始编号");
-        startCodeDialog.setContentText("请输入起始编号");
-        Optional<String> startCodeResult = startCodeDialog.showAndWait();
-        if(startCodeResult.isPresent()){
-            code= startCodeResult.get();
-            startCode = Integer.parseInt(code);
-        }
-        else return;
-        //判断起始编号是否合法
-        if(startCode<0) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("非法输入");
-            alert.show();
-            return;
-        }
-        System.out.println("起始编号" + startCode);
+        Label prefixLabel = new Label("请输入前缀:");
+        Label startCodeLabel = new Label("请输入起始编号:");
+        Label digitLabel = new Label("请输入编号位数:");
+        TextField prefixField = new TextField("default");
+        TextField startCodeField = new TextField("0");
+        TextField  digitField= new TextField("4");
+        HBox prefixHBox = new HBox(prefixLabel,prefixField);
+        HBox startCodeHBox = new HBox(startCodeLabel,startCodeField);
+        HBox digitHBox = new HBox(digitLabel,digitField);
 
-        //得到编号位数
-        int digit;
-        String digitS;
-        TextInputDialog  digitDialog= new TextInputDialog("4");
-        digitDialog.setTitle("设置位数");
-        digitDialog.setContentText("请输入你想编排的位数");
-        Optional<String> digitResult = digitDialog.showAndWait();
-        if(digitResult.isPresent()){
-            digitS= digitResult.get();
-            digit = Integer.parseInt(digitS);
-        }
-        else return;
-        //判断位数是否足够
-        if(digit > 16){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("非法输入");
-            alert.show();
-            return;
-        }
-        long baseNumber = (long)Math.pow(10,digit);
-        if(thumbnailArrayList.size() > baseNumber - startCode){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("编号不足");
-            alert.show();
-        }
+        prefixLabel.setStyle("-fx-font-size: 14px; -fx-pref-width: 150px; -fx-pref-height: 30px;");
+        startCodeLabel.setStyle("-fx-font-size: 14px; -fx-pref-width: 150px; -fx-pref-height: 30px;");
+        digitLabel.setStyle("-fx-font-size: 14px; -fx-pref-width: 150px; -fx-pref-height: 30px;");
 
-        System.out.println("位数" + digit);
-        for (int i = 0; i < thumbnailArrayList.size(); i++) {
-            File oldFile = thumbnailArrayList.get(i).getImageFile();
-            String pictureName = oldFile.getName();
-            String suffix = pictureName.substring(pictureName.lastIndexOf("."));
-            long tmp = startCode + i;
-            String newName = prefix + String.valueOf(0).repeat(digit-String.valueOf(tmp).length()) + tmp + suffix;
-            oldFile.renameTo(new File(oldFile.getParentFile()+"/"+newName));
-        }
-        pictureShower.showPicture(PathUtil.getCurrentPath());
+        Pane pane = new Pane();
+        pane.setPrefWidth(460);
+        pane.setPrefHeight(300);
+        pane.setStyle("-fx-background-color:  rgb(243,243,243);");
+        prefixHBox.setMaxWidth(400);prefixHBox.setMaxHeight(30);
+        prefixHBox.setLayoutX(45);prefixHBox.setLayoutY(60);
+        startCodeHBox.setMaxWidth(400);startCodeHBox.setMaxHeight(30);
+        startCodeHBox.setLayoutX(45);startCodeHBox.setLayoutY(90);
+        digitHBox.setMaxWidth(400);digitHBox.setMaxHeight(30);
+        digitHBox.setLayoutX(45);digitHBox.setLayoutY(120);
+
+        Button confirmButton = new Button("确认");
+        Button cancelButton = new Button("取消");
+        confirmButton.setMinWidth(60);cancelButton.setMinWidth(60);
+        confirmButton.setAlignment(Pos.CENTER);cancelButton.setAlignment(Pos.CENTER);
+        confirmButton.setLayoutX(290);confirmButton.setLayoutY(210);
+        cancelButton.setLayoutX(360);cancelButton.setLayoutY(210);
+        pane.getChildren().addAll(prefixHBox,startCodeHBox,digitHBox,confirmButton,cancelButton);
+        stage.setScene(new Scene(pane));
+        stage.show();
+
+        confirmButton.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getClickCount()>=1){
+                //得到前缀
+                String prefix = prefixField.getText();
+                if(prefix.isEmpty()){
+                    stage.close();
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setContentText("输入为空");
+                    alert.show();
+                    return;
+                }
+
+                //得到起始编号
+                if(startCodeField.getText().isEmpty()){
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setContentText("输入为空");
+                    alert.show();
+                    stage.close();
+                    return;
+                }
+                int startCode = Integer.parseInt(startCodeField.getText());
+                //判断起始编号是否合法
+                if(startCode<0) {
+                    stage.close();
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setContentText("非法输入");
+                    alert.show();
+                    return;
+                }
+                if(digitField.getText().isEmpty()){
+                    stage.close();
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setContentText("输入为空");
+                    alert.show();
+                    return;
+                }
+                int digit = Integer.parseInt(digitField.getText());
+                //判断位数是否足够
+                if(digit > 16){
+                    stage.close();
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setContentText("非法输入");
+                    alert.show();
+                    return;
+                }
+                long baseNumber = (long)Math.pow(10,digit);
+                if(thumbnailArrayList.size() > baseNumber - startCode){
+                    stage.close();
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setContentText("编号不足");
+                    alert.show();
+                    return;
+                }
+
+                for (int i = 0; i < thumbnailArrayList.size(); i++) {
+                    File oldFile = thumbnailArrayList.get(i).getImageFile();
+                    String pictureName = oldFile.getName();
+                    String suffix = pictureName.substring(pictureName.lastIndexOf("."));
+                    long tmp = startCode + i;
+                    String newName = prefix + String.valueOf(0).repeat(digit-String.valueOf(tmp).length()) + tmp + suffix;
+                    if(isNameExit(newName,imageFiles)){
+                        stage.close();
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setContentText(newName + "已被使用");
+                        alert.showAndWait();
+                        continue;
+                    }
+                    oldFile.renameTo(new File(oldFile.getParentFile()+"/"+newName));
+                }
+                pictureShower.showPicture(PathUtil.getCurrentPath());
+            }
+            stage.close();
+        });
+        cancelButton.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getClickCount()>=1){
+                stage.close();
+            }
+        });
+
     }
 
     public static void renamePictures(int currentIndex){
@@ -318,18 +380,6 @@ public class PictureOperationUtil {
             thumbnail.setIsClicked(true);
             thumbnailArrayList.add(thumbnail);
         }
-    }
-
-    //TODO 重命名被粘贴图片的私有函数
-    private static String renameSource(String sourceName){
-        //得到图片后缀
-        String suffix = sourceName.substring(sourceName.lastIndexOf("."));
-        TextInputDialog dialog = new TextInputDialog("default");
-        dialog.setTitle("文件名冲突");
-        dialog.setHeaderText("目标文件夹中已存在同名文件");
-        dialog.setContentText("请输入新的文件名");
-        Optional<String> result = dialog.showAndWait();
-        return result.map(s -> s + suffix).orElse(null);
     }
 
     //TODO 判断文件名是否在给定文件中存在
