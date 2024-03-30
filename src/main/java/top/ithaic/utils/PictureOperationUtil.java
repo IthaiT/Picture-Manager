@@ -1,10 +1,15 @@
 package top.ithaic.utils;
 
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.listener.PictureOperateListener;
@@ -14,14 +19,17 @@ import top.ithaic.shower.SlideShower.SlideFileManager;
 import top.ithaic.shower.SlideShower.SlideShower;
 import top.ithaic.shower.SlideShower.SlideWindow;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
-import java.awt.Desktop;
-
+import java.util.List;
 
 
 public class PictureOperationUtil {
@@ -38,6 +46,7 @@ public class PictureOperationUtil {
 
     public static void pastePictures() throws IOException {
         File currentPath = PathUtil.getCurrentPath();
+
         if (currentPath == null) return;
         if (!currentPath.exists()) return;
         if (thumbnails.isEmpty()) return;//如果没有文件被复制，返回
@@ -55,57 +64,98 @@ public class PictureOperationUtil {
 
         //得到当前目录下所有图片，为判断是否文件名冲突
         List<File> imageFiles = Arrays.stream(currentPath.listFiles()).filter(file -> PictureUtil.isPicture(file)).toList();
+
+        //将名字没有冲突的文件直接粘贴，名字有冲突的文件过滤出来
+        ArrayList<File> conflictFiles = new ArrayList<>();
         for (Thumbnail thumbnail : thumbnails) {
-            boolean flag = false;
             String sourceName = thumbnail.getImageFile().getName();
-            //如果名字冲突，一直要求重命名直到不冲突
-            if(isNameExit(sourceName,imageFiles)) {
-                Dialog<String> dialog = new Dialog<>();
-                dialog.setTitle("替换或跳过文件");
-
-                DialogPane dialogPane = new DialogPane();
-                dialogPane.setContentText("请选择一个选项：");
-
-                VBox vBox = new VBox();
-                Label replaceLabel = new Label("替换目标中的文件");
-                Label ignoreLabel = new Label("跳过这些文件");
-                replaceLabel.setStyle("-fx-background-color: red; -fx-alignment: center;  -fx-font-size: 24px; -fx-pref-width: 200px; -fx-pref-height: 100px;");
-                ignoreLabel.setStyle("-fx-background-color: red; -fx-alignment: center;  -fx-font-size: 24px; -fx-pref-width: 200px; -fx-pref-height: 100px;");
-                vBox.getChildren().addAll(replaceLabel,ignoreLabel);
-                vBox.setPrefWidth(500);
-                vBox.setPrefHeight(500);
-                dialogPane.setContent(vBox);
-                dialog.setDialogPane(dialogPane);
-
-                dialog.showAndWait();
-                replaceLabel.setOnMouseClicked(mouseEvent -> {
-                    if(mouseEvent.getClickCount()>=1){
-                        Desktop.getDesktop().moveToTrash(thumbnail.getImageFile());
-                        try {
-                            Files.copy(Path.of(thumbnail.getImageFile().toString()), Path.of(currentPath.toPath() +"/"+ sourceName));
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        dialog.close();
-                        System.out.println("测试点击replace");
-                    }
-                });
-                ignoreLabel.setOnMouseClicked(mouseEvent -> {
-                    if(mouseEvent.getClickCount()>=1){
-                        dialog.close();
-                        System.out.println("测试点击ignore");
-                    }
-
-                });
-
+            //如果粘贴的位置是本地文件夹，那么直接创建副本
+            if(thumbnail.getImageFile().toString().equals(currentPath.toPath() +"\\"+ sourceName)){
+                System.out.println("同名文件");
+                Path sourcePath = thumbnail.getImageFile().toPath();
+                Path targetPath = thumbnail.getImageFile().toPath();
+                while(isNameExit(sourceName, imageFiles)){
+                    String targetName = sourceName.replaceFirst( "(?=\\.[^.]+$)", "-副本");
+                    targetPath = targetPath.resolveSibling(targetName);
+                    sourceName = targetName;
+                }
+                Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                imageFiles = Arrays.stream(currentPath.listFiles()).filter(file -> PictureUtil.isPicture(file)).toList();
+                continue;
             }
-            //没有输入任何名字，直接跳过这个图片的复制
-            if(flag)continue;
+            //如果粘贴位置是其他文件夹，且有同名文件，将其加入冲突文件列表中
+            if(isNameExit(sourceName,imageFiles)){
+                conflictFiles.add(thumbnail.getImageFile());
+                continue;
+            }
+            //如果没有相同名字的文件，粘贴后刷新
             Files.copy(Path.of(thumbnail.getImageFile().toString()), Path.of(currentPath.toPath() +"/"+ sourceName));
-            imageFiles = Arrays.stream(currentPath.listFiles()).filter(file -> PictureUtil.isPicture(file)).toList();
-            pictureShower.showPicture(currentPath);
         }
-        //pictureShower.showPicture(currentPath);
+        if(conflictFiles.isEmpty()){
+            pictureShower.showPicture(currentPath);
+            return;
+        }
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(StageManager.getStageStack().peek());
+        stage.setResizable(false);
+        stage.setWidth(440);
+        stage.setHeight(280);
+        stage.setTitle("替换或跳过文件");
+
+        Label info1 = new Label("正在将"+thumbnails.size() + "个项目从 " + thumbnails.get(0).getImageFile().getParentFile().getName() +  " 复制到 " + currentPath.getName());
+        Label info2 = new Label("目标包含"+ conflictFiles.size() + "个同名文件");
+        Label replaceLabel = new Label(  "✔ 替换目标中的文件");
+        Label ignoreLabel = new Label("❌ 跳过这些文件");
+        info1.setStyle("  -fx-font-size: 12px; -fx-pref-width: 400px; -fx-pref-height: 25px;");
+        info2.setStyle("  -fx-font-size: 16px; -fx-pref-width: 400px; -fx-pref-height: 50px;");
+        replaceLabel.setStyle("  -fx-font-size: 16px; -fx-pref-width: 400px; -fx-pref-height: 50px;");
+        ignoreLabel.setStyle("-fx-font-size: 16px; -fx-pref-width: 400px; -fx-pref-height: 50px;");
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(info1,info2,replaceLabel,ignoreLabel);
+        StackPane stackPane = new StackPane(vBox);
+        stackPane.setPrefWidth(440);
+        stackPane.setPrefHeight(280);
+        stackPane.setStyle("-fx-background-color:  rgb(243,243,243);");
+        vBox.setMaxHeight(200);
+        vBox.setMaxWidth(400);
+        stackPane.setAlignment(Pos.CENTER);
+
+        replaceLabel.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getClickCount()>=1){
+                try {
+                    for(File file : conflictFiles){
+                        Files.copy(Path.of(file.toURI()), Path.of(currentPath.toPath() +"/"+ file.getName()), StandardCopyOption.REPLACE_EXISTING);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                stage.close();
+                pictureShower.showPicture(currentPath);
+            }
+        });
+        replaceLabel.setOnMouseEntered(mouseEvent -> {
+            replaceLabel.setStyle("  -fx-font-size: 16px; -fx-pref-width: 400px; -fx-pref-height: 50px;-fx-background-color:  rgb(204,232,247);");
+        });
+        replaceLabel.setOnMouseExited(mouseEvent -> {
+            replaceLabel.setStyle("  -fx-font-size: 16px; -fx-pref-width: 400px; -fx-pref-height: 50px;-fx-background-color:  rgb(243,243,243);");
+
+        });
+        ignoreLabel.setOnMouseClicked(mouseEvent -> {
+                if (mouseEvent.getClickCount() >= 1) {
+                    stage.close();
+                    pictureShower.showPicture(currentPath);
+                    System.out.println("测试点击ignore");
+                }
+            });
+        ignoreLabel.setOnMouseEntered(mouseEvent -> {
+            ignoreLabel.setStyle("  -fx-font-size: 16px; -fx-pref-width: 400px; -fx-pref-height: 50px;-fx-background-color:  rgb(204,232,247);");
+        });
+        ignoreLabel.setOnMouseExited(mouseEvent -> {
+            ignoreLabel.setStyle("  -fx-font-size: 16px; -fx-pref-width: 400px; -fx-pref-height: 50px;-fx-background-color:  rgb(243,243,243);");
+        });
+        stage.setScene(new Scene(stackPane));
+        stage.show();
     }
 
     public static void renamePictures(){

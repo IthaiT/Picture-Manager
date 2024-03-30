@@ -22,4 +22,7 @@ public class StageManager {
         Stage tmp = stageStack.peek();
         tmp.show();
     }
+    public static Stack<Stage> getStageStack(){
+        return stageStack;
+    }
 }
