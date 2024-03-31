@@ -18,9 +18,10 @@ public class SlideThumbnail extends Thumbnail {
     private static double thumbnailWidth = 80;
     private static double thumbnailHeight = 60;
     private StackPane stackPane;
-
+    private File imageFile;
     public SlideThumbnail(){}
     public SlideThumbnail(File imageFile){
+        this.imageFile = imageFile;
         Canvas canvas = new Canvas(thumbnailWidth, thumbnailHeight);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
@@ -59,5 +60,9 @@ public class SlideThumbnail extends Thumbnail {
     public void setUnSelectedStyle() {
         stackPane.getStyleClass().remove("slideThumbnail-hover");
         stackPane.getStyleClass().add("slideThumbnail-default");
+    }
+    @Override
+    public File getImageFile() {
+        return imageFile;
     }
 }

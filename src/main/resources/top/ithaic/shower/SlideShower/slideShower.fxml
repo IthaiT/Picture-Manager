@@ -10,7 +10,7 @@
    <center>
       <Pane fx:id="pictureShower" prefHeight="516.0" prefWidth="637.0" BorderPane.alignment="CENTER">
          <children>
-            <ToolBar fx:id="toolBar" layoutX="189.0" layoutY="382.0" prefHeight="41.0" prefWidth="370.0">
+            <ToolBar fx:id="toolBar" layoutX="189.0" layoutY="393.0" prefHeight="24.0" prefWidth="365.0">
               <items>
                   <Button fx:id="slidePlay" mnemonicParsing="false" prefHeight="23.0" prefWidth="79.0" text="幻灯片播放" />
                   <Button fx:id="lastPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="31.0" text="←" />

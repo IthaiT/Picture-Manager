@@ -13,3 +13,10 @@
     -fx-padding: 3;
 }
 
+ToolBar{
+    -fx-border-width: 1; /* 设置边框宽度 */
+    -fx-border-radius: 5; /* 设置圆角半径 */
+    -fx-background-radius: 5; /* 确保背景也是圆角的，与边框匹配 */
+    -fx-padding: 5; /* 添加一些内边距，以让边框和内容之间有一些空间 */
+}
+

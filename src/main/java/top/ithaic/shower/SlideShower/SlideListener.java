@@ -2,6 +2,7 @@ package top.ithaic.shower.SlideShower;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -20,11 +21,14 @@ import top.ithaic.imageview.SlideThumbnail;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.listener.PictureShowerListener;
 import top.ithaic.listener.SliderListener;
+import top.ithaic.shower.PathShower;
 import top.ithaic.shower.slidePlay.SlidePlay;
+import top.ithaic.utils.PictureUtil;
 
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Flow;
 
 public class SlideListener implements Listener {
     private int head;
@@ -55,36 +59,25 @@ public class SlideListener implements Listener {
         SlideListener.pictureShower = pictureShower;
         pictureScanner.setHgap(10);
         Listen();
-        startTimer();
     }
     @Override
     public void Listen() {
-        pane.setOnMouseClicked(mouseEvent -> {
-            if(mouseEvent.getButton() == MouseButton.SECONDARY){
-                contextMenu.show(pane,mouseEvent.getScreenX(),mouseEvent.getScreenY());
-            }
-            if(mouseEvent.getButton() == MouseButton.PRIMARY){
-                if(mouseEvent.getClickCount()>=2)
-                    SlidePlay.playPicture(SlideFileManager.getPictures(),SlideFileManager.getCurrentIndex());
-                contextMenu.hide();
-            }
-        });
         //工具栏坐标位置监听
         toolBar.layoutXProperty().bind(Bindings.createDoubleBinding(()->mainPane.getWidth()/2-toolBar.getWidth()/2,mainPane.widthProperty()));
         toolBar.layoutYProperty().bind((Bindings.createDoubleBinding(()->mainPane.getHeight()-toolBar.getHeight()-80,mainPane.heightProperty())));
-        //鼠标移动 显示工具栏
-        mainPane.setOnMouseMoved(mouseEvent -> {
-            if(mainPane.getChildren().contains(toolBar))return;
-            mainPane.getChildren().add(toolBar);
-        });
 
-        //下方预览图
+        //定时检测工具栏
+        startTimer();
+
+        //监听所需参数
         File[] pictures = SlideFileManager.getPictures();
         int currentIndex = SlideFileManager.getCurrentIndex();
 
+        //其他监听
         pictureLoad(currentIndex,pictures);
         indexListen(pictures);
         buttonListen();
+        mouseListen();
     }
 
     //此定时 隐藏工具栏
@@ -95,6 +88,7 @@ public class SlideListener implements Listener {
             public void run() {
                 Platform.runLater(()->{
                     if(!mainPane.getChildren().contains(toolBar))return;
+                    pictureShower.getParent().requestFocus(); //当ToolBar被移除时，焦点转移到BoardPane上，确保键盘监听正常
                     mainPane.getChildren().remove(toolBar);
                 });
             }
@@ -111,7 +105,7 @@ public class SlideListener implements Listener {
         pictureScanner.widthProperty().addListener((observableValue, oldValue,newValue) -> {
             scannerPictureNum = (int)(pictureScanner.getWidth()/(new SlideThumbnail().getThumbnailWidth()+20));
             int numGap = scannerPictureNum - pictureScanner.getChildren().size();
-            while(numGap > 0){
+            if(numGap > 0){
                 for(int i=tail;i<tail+numGap&&i<pictures.length;i++){
                     SlideThumbnail temp = new SlideThumbnail(pictures[i]);
                     pictureScanner.getChildren().add(temp);
@@ -138,8 +132,8 @@ public class SlideListener implements Listener {
     private void indexListen(File[] pictures){
         SlideFileManager.currentIndexPropertyProperty().addListener(((observableValue, oldValue,newValue) -> {
             if(newValue.intValue() < oldValue.intValue()){
-                ((SlideThumbnail) pictureScanner.getChildren().get(SlideFileManager.getCurrentIndex() - head)).setUnSelectedStyle();
-                if(head>=0) {
+                ((SlideThumbnail) pictureScanner.getChildren().get(oldValue.intValue() - head - 1)).setUnSelectedStyle();
+                for(int i=0;i<oldValue.intValue()-newValue.intValue()&&head>=0;i++) {
                     pictureScanner.getChildren().add(0, new SlideThumbnail(pictures[head]));
                     head--;
                     pictureScanner.getChildren().remove(pictureScanner.getChildren().size() - 1);
@@ -148,14 +142,14 @@ public class SlideListener implements Listener {
                 ((SlideThumbnail) pictureScanner.getChildren().get(SlideFileManager.getCurrentIndex() - head - 1)).setSelectedStyle();
             }
             if(newValue.intValue() > oldValue.intValue()) {
-                ((SlideThumbnail) pictureScanner.getChildren().get(SlideFileManager.getCurrentIndex() - head - 2)).setUnSelectedStyle();
-                if(tail<pictures.length) {
+                ((SlideThumbnail) pictureScanner.getChildren().get(oldValue.intValue() - head - 1)).setUnSelectedStyle();
+                for(int i=0;i<newValue.intValue()-oldValue.intValue()&&tail<pictures.length;i++) {
                     pictureScanner.getChildren().remove(0);
                     head++;
                     tail++;
                     pictureScanner.getChildren().add(new SlideThumbnail(pictures[tail - 1]));
                 }
-                ((SlideThumbnail) pictureScanner.getChildren().get(SlideFileManager.getCurrentIndex() - head - 1)).setSelectedStyle();
+                ((SlideThumbnail) pictureScanner.getChildren().get(newValue.intValue() - head - 1)).setSelectedStyle();
             }
         }));
     }
@@ -165,7 +159,6 @@ public class SlideListener implements Listener {
         slidePlay.setOnMouseClicked(mouseEvent -> {
             SlidePlay.playPicture(SlideFileManager.getPictures(),SlideFileManager.getCurrentIndex());
         });
-
         lastPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             new SlideShower().lastPicture();
         });
@@ -184,6 +177,39 @@ public class SlideListener implements Listener {
         });
         amplifyPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> new SlideShower().amplifyPicture());
         shrinkPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> new SlideShower().shrinkPicture());
+    }
+
+    private void mouseListen(){
+        //主视图点击
+        pane.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getButton() == MouseButton.SECONDARY){
+                contextMenu.show(pane,mouseEvent.getScreenX(),mouseEvent.getScreenY());
+            }
+            if(mouseEvent.getButton() == MouseButton.PRIMARY){
+                if(mouseEvent.getClickCount()>=2)
+                    SlidePlay.playPicture(SlideFileManager.getPictures(),SlideFileManager.getCurrentIndex());
+                contextMenu.hide();
+            }
+        });
+
+        //鼠标移动 显示工具栏
+        mainPane.setOnMouseMoved(mouseEvent -> {
+            if(mainPane.getChildren().contains(toolBar))return;
+            mainPane.getChildren().add(toolBar);
+        });
+
+        //预览图点击
+        pictureScanner.setOnMouseClicked(mouseEvent -> {
+            for(Node node : ((FlowPane) mouseEvent.getSource()).getChildren()) {
+                if (node instanceof SlideThumbnail && node.getBoundsInParent().contains(mouseEvent.getX(), mouseEvent.getY())) {
+                    int tempIndex = PictureUtil.getPictureIndex(((SlideThumbnail) node).getImageFile());
+                    SlideFileManager.setCurrentIndex(tempIndex);
+                    SlideFileManager.setCurrentIndexProperty(tempIndex);
+                    new SlideShower().drawPicture();
+                    break;
+                }
+            }
+        });
     }
 
     private void scanPicture(int currentIndex,File[] pictures){
