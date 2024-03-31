@@ -8,13 +8,13 @@ import java.io.File;
 import java.util.ArrayList;
 
 public final class SlideFileManager{
-    private static IntegerProperty scannerIndex;
+    private static IntegerProperty currentIndexProperty;
     private static int currentIndex;
     private static File[] pictures;
     public SlideFileManager(File[] pictures,int currentIndex){
         SlideFileManager.pictures = pictures;
         SlideFileManager.currentIndex = currentIndex;
-        SlideFileManager.scannerIndex = new SimpleIntegerProperty(0);
+        SlideFileManager.currentIndexProperty = new SimpleIntegerProperty(currentIndex);
     }
 
     public static File[] getPictures() {return pictures;}
@@ -28,15 +28,10 @@ public final class SlideFileManager{
         SlideFileManager.currentIndex = currentIndex;
     }
 
-    public static int getScannerIndex() {
-        return scannerIndex.get();
+    public static IntegerProperty currentIndexPropertyProperty() {
+        return currentIndexProperty;
     }
-
-    public static IntegerProperty scannerIndexProperty() {
-        return scannerIndex;
-    }
-
-    public static void setScannerIndex(int scannerIndex) {
-        SlideFileManager.scannerIndex.set(scannerIndex);
+    public static void setCurrentIndexProperty(int currentIndexProperty) {
+        SlideFileManager.currentIndexProperty.set(currentIndexProperty);
     }
 }

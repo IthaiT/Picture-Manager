@@ -62,6 +62,7 @@ public class SlideShower {
             lastDetY = 0;
             image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex() - 1].toURI().toString());
             SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex() - 1);
+            SlideFileManager.setCurrentIndexProperty(SlideFileManager.getCurrentIndex()-1);
             drawPicture(canvas, image, 1 + factor, 0, 0);
         }
     }
@@ -73,6 +74,7 @@ public class SlideShower {
             lastDetY = 0;
             image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex() + 1].toURI().toString());
             SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex() + 1);
+            SlideFileManager.setCurrentIndexProperty(SlideFileManager.getCurrentIndex()+1);
             drawPicture(canvas, image, 1, 0, 0);
         }
     }

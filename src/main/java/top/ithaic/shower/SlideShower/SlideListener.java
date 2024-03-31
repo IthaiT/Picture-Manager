@@ -53,6 +53,7 @@ public class SlideListener implements Listener {
         SlideListener.amplifyPicture = buttons[2];
         SlideListener.shrinkPicture = buttons[3];
         SlideListener.pictureShower = pictureShower;
+        pictureScanner.setHgap(10);
         Listen();
         startTimer();
     }
@@ -68,76 +69,22 @@ public class SlideListener implements Listener {
                 contextMenu.hide();
             }
         });
-        slidePlay.setOnMouseClicked(mouseEvent -> {
-            SlidePlay.playPicture(SlideFileManager.getPictures(),SlideFileManager.getCurrentIndex());
-        });
         //工具栏坐标位置监听
         toolBar.layoutXProperty().bind(Bindings.createDoubleBinding(()->mainPane.getWidth()/2-toolBar.getWidth()/2,mainPane.widthProperty()));
         toolBar.layoutYProperty().bind((Bindings.createDoubleBinding(()->mainPane.getHeight()-toolBar.getHeight()-80,mainPane.heightProperty())));
         //鼠标移动 显示工具栏
         mainPane.setOnMouseMoved(mouseEvent -> {
             if(mainPane.getChildren().contains(toolBar))return;
-            System.out.println("显示工具栏");
             mainPane.getChildren().add(toolBar);
         });
 
-
-
-
-        pictureScanner.setHgap(10);
         //下方预览图
         File[] pictures = SlideFileManager.getPictures();
         int currentIndex = SlideFileManager.getCurrentIndex();
-        head = currentIndex-1;
-        tail = currentIndex+1;
-        //初步加载
-        scanPicture(currentIndex,pictures);
-        //按容量继续加载
-        pictureScanner.widthProperty().addListener((observableValue, oldValue,newValue) -> {
-            scannerPictureNum = (int)(pictureScanner.getWidth()/(new SlideThumbnail().getThumbnailWidth()+20));
-            if(scannerPictureNum>pictureScanner.getChildren().size()){
-                for(int i=currentIndex+pictureScanner.getChildren().size();i<currentIndex+scannerPictureNum&&i<pictures.length;i++){
-                    SlideThumbnail temp = new SlideThumbnail(pictures[i]);
-                    pictureScanner.getChildren().add(temp);
-                }
-            }
-            if(scannerPictureNum<pictureScanner.getChildren().size()){
-                for(int i=pictureScanner.getChildren().size()-1;i>=scannerPictureNum&&i>=0;i--){
-                    pictureScanner.getChildren().remove(i);
-                }
-            }
-        });
 
-        SlideFileManager.scannerIndexProperty().addListener(((observableValue, oldValue, newValue) -> {
-            ((SlideThumbnail)pictureScanner.getChildren().get(oldValue.intValue())).setUnSelectedStyle();
-            ((SlideThumbnail)pictureScanner.getChildren().get(newValue.intValue())).setSelectedStyle();
-            System.out.println(oldValue.intValue() +" "+ newValue.intValue());
-        }));
-
-        //按钮监听
-        lastPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            new SlideShower().lastPicture();
-            if(SlideFileManager.getScannerIndex()>0) SlideFileManager.setScannerIndex(SlideFileManager.getScannerIndex()-1);
-        });
-
-        nextPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            new SlideShower().nextPicture();
-            if(SlideFileManager.getScannerIndex()<pictureScanner.getChildren().size()-1) SlideFileManager.setScannerIndex(SlideFileManager.getScannerIndex()+1);
-        });
-        pictureShower.getParent().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.LEFT) {
-                new SlideShower().lastPicture();
-                if(SlideFileManager.getScannerIndex()>0) SlideFileManager.setScannerIndex(SlideFileManager.getScannerIndex()-1);
-            }
-            if (keyEvent.getCode() == KeyCode.RIGHT) {
-                new SlideShower().nextPicture();
-                if (SlideFileManager.getScannerIndex() < pictureScanner.getChildren().size() - 1) SlideFileManager.setScannerIndex(SlideFileManager.getScannerIndex() + 1);
-            }
-        });
-        amplifyPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> new SlideShower().amplifyPicture());
-        shrinkPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> new SlideShower().shrinkPicture());
-
-
+        pictureLoad(currentIndex,pictures);
+        indexListen(pictures);
+        buttonListen();
     }
 
     //此定时 隐藏工具栏
@@ -148,12 +95,95 @@ public class SlideListener implements Listener {
             public void run() {
                 Platform.runLater(()->{
                     if(!mainPane.getChildren().contains(toolBar))return;
-                    System.out.println("隐藏工具栏");
                     mainPane.getChildren().remove(toolBar);
                 });
             }
         };
         timer.schedule(task,0,5000);
+    }
+
+    private void pictureLoad(int currentIndex,File[] pictures){
+        head = currentIndex-1;
+        tail = currentIndex+1;
+        //初步加载
+        scanPicture(currentIndex,pictures);
+        //按容量继续加载
+        pictureScanner.widthProperty().addListener((observableValue, oldValue,newValue) -> {
+            scannerPictureNum = (int)(pictureScanner.getWidth()/(new SlideThumbnail().getThumbnailWidth()+20));
+            int numGap = scannerPictureNum - pictureScanner.getChildren().size();
+            while(numGap > 0){
+                for(int i=tail;i<tail+numGap&&i<pictures.length;i++){
+                    SlideThumbnail temp = new SlideThumbnail(pictures[i]);
+                    pictureScanner.getChildren().add(temp);
+                    tail++;
+                    numGap--;
+                }
+                for(int i=head;i>head-numGap&&i>0;i--){
+                    SlideThumbnail temp = new SlideThumbnail(pictures[i]);
+                    pictureScanner.getChildren().add(0,temp);
+                    head--;
+                    numGap--;
+                }
+            }
+            if(numGap < 0){
+                for(int i=pictureScanner.getChildren().size()-1;i>=scannerPictureNum&&i>=0;i--){
+                    pictureScanner.getChildren().remove(i);
+                    tail--;
+                    numGap++;
+                }
+            }
+        });
+    }
+
+    private void indexListen(File[] pictures){
+        SlideFileManager.currentIndexPropertyProperty().addListener(((observableValue, oldValue,newValue) -> {
+            if(newValue.intValue() < oldValue.intValue()){
+                ((SlideThumbnail) pictureScanner.getChildren().get(SlideFileManager.getCurrentIndex() - head)).setUnSelectedStyle();
+                if(head>=0) {
+                    pictureScanner.getChildren().add(0, new SlideThumbnail(pictures[head]));
+                    head--;
+                    pictureScanner.getChildren().remove(pictureScanner.getChildren().size() - 1);
+                    tail--;
+                }
+                ((SlideThumbnail) pictureScanner.getChildren().get(SlideFileManager.getCurrentIndex() - head - 1)).setSelectedStyle();
+            }
+            if(newValue.intValue() > oldValue.intValue()) {
+                ((SlideThumbnail) pictureScanner.getChildren().get(SlideFileManager.getCurrentIndex() - head - 2)).setUnSelectedStyle();
+                if(tail<pictures.length) {
+                    pictureScanner.getChildren().remove(0);
+                    head++;
+                    tail++;
+                    pictureScanner.getChildren().add(new SlideThumbnail(pictures[tail - 1]));
+                }
+                ((SlideThumbnail) pictureScanner.getChildren().get(SlideFileManager.getCurrentIndex() - head - 1)).setSelectedStyle();
+            }
+        }));
+    }
+
+    private void buttonListen(){
+        //按钮监听
+        slidePlay.setOnMouseClicked(mouseEvent -> {
+            SlidePlay.playPicture(SlideFileManager.getPictures(),SlideFileManager.getCurrentIndex());
+        });
+
+        lastPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            new SlideShower().lastPicture();
+        });
+
+        nextPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            new SlideShower().nextPicture();
+
+        });
+        pictureShower.getParent().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.LEFT) {
+                new SlideShower().lastPicture();
+            }
+            if (keyEvent.getCode() == KeyCode.RIGHT) {
+                new SlideShower().nextPicture();
+            }
+        });
+        amplifyPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> new SlideShower().amplifyPicture());
+        shrinkPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> new SlideShower().shrinkPicture());
     }
 
     private void scanPicture(int currentIndex,File[] pictures){
@@ -173,7 +203,6 @@ public class SlideListener implements Listener {
                 tail++;
             }
         }
-        SlideFileManager.setScannerIndex(currentIndex-head-1);
     }
 
 }
