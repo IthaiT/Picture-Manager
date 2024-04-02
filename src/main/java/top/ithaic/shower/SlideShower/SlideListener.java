@@ -139,7 +139,7 @@ public class SlideListener implements Listener {
                     pictureScanner.getChildren().remove(pictureScanner.getChildren().size() - 1);
                     tail--;
                 }
-                ((SlideThumbnail) pictureScanner.getChildren().get(SlideFileManager.getCurrentIndex() - head - 1)).setSelectedStyle();
+                ((SlideThumbnail) pictureScanner.getChildren().get(newValue.intValue() - head - 1)).setSelectedStyle();
             }
             if(newValue.intValue() > oldValue.intValue()) {
                 ((SlideThumbnail) pictureScanner.getChildren().get(oldValue.intValue() - head - 1)).setUnSelectedStyle();
@@ -205,6 +205,7 @@ public class SlideListener implements Listener {
                     int tempIndex = PictureUtil.getPictureIndex(((SlideThumbnail) node).getImageFile());
                     SlideFileManager.setCurrentIndex(tempIndex);
                     SlideFileManager.setCurrentIndexProperty(tempIndex);
+                    SlideShower.recoverPicture();
                     new SlideShower().drawPicture();
                     break;
                 }

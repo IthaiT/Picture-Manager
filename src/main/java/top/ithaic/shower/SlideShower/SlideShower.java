@@ -28,7 +28,6 @@ public class SlideShower {
     private static double dy = 0;
     public SlideShower() {
     }
-
     public SlideShower(Pane pictureShower) {
         SlideShower.pictureShower = pictureShower;
         SlideShower.factor = 0;
@@ -37,7 +36,6 @@ public class SlideShower {
         initMouseListen();
         initCanvasEvent();
     }
-
     private void initPicture() {
         pictureShower.getChildren().remove(canvas);
         double slideWidth = pictureShower.getWidth();
@@ -54,30 +52,36 @@ public class SlideShower {
 
         pictureShower.getChildren().add(canvas);
     }
-
     public void lastPicture() {
         if (SlideFileManager.getCurrentIndex() > 0) {
-            factor = 0;
-            lastDetX = 0;
-            lastDetY = 0;
+            recoverPicture();
             image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex() - 1].toURI().toString());
             SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex() - 1);
-            SlideFileManager.setCurrentIndexProperty(SlideFileManager.getCurrentIndex()-1);
+            SlideFileManager.setCurrentIndexProperty(SlideFileManager.getCurrentIndex());
             drawPicture(canvas, image, 1 + factor, 0, 0);
         }
     }
-
     public void nextPicture() {
         if (SlideFileManager.getCurrentIndex() < SlideFileManager.getPictures().length - 1) {
-            factor = 0;
-            lastDetX = 0;
-            lastDetY = 0;
+            recoverPicture();
             image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex() + 1].toURI().toString());
             SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex() + 1);
-            SlideFileManager.setCurrentIndexProperty(SlideFileManager.getCurrentIndex()+1);
+            SlideFileManager.setCurrentIndexProperty(SlideFileManager.getCurrentIndex());
             drawPicture(canvas, image, 1, 0, 0);
         }
     }
+    public void amplifyPicture() {
+        if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
+        scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT);
+        scaleTransitionThread.start();
+    }
+
+    public void shrinkPicture() {
+        if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
+        scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT);
+        scaleTransitionThread.start();
+    }
+
 
     /**
      * /
@@ -127,23 +131,13 @@ public class SlideShower {
     }
 
     public static void recoverPicture(){
+        factor = 0;
         offsetX = 0;
         offsetY = 0;
         lastDetX = 0;
         lastDetY = 0;
         dx = 0;
         dy = 0;
-    }
-    public void amplifyPicture() {
-        if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
-        scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT);
-        scaleTransitionThread.start();
-    }
-
-    public void shrinkPicture() {
-        if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
-        scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT);
-        scaleTransitionThread.start();
     }
 
     private void initMouseListen(){
