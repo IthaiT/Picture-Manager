@@ -20,7 +20,7 @@ public class SlideWindow {
         FXMLLoader fxmlLoader = new FXMLLoader(SlideController.class.getResource("slideShower.fxml"));
         //幻灯片窗口文件管理
         new SlideFileManager(currentFiles,currentIndex);
-
+        SlideShower.recoverPicture();
         Scene scene = null;
         try {
             scene = new Scene(fxmlLoader.load());

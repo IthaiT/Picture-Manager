@@ -12,9 +12,9 @@ import java.util.Properties;
 
 public final class PathUtil {
     private static List<String> historyPath;
+    private static File currentPath;
     private static File[] currentFiles;
     private static StringProperty currentPathProperty;
-    private static File currentPath;
     private static File lastPath;
 
     static {

@@ -10,10 +10,10 @@
    <center>
       <Pane fx:id="pictureShower" prefHeight="516.0" prefWidth="637.0" BorderPane.alignment="CENTER">
          <children>
-            <ToolBar fx:id="toolBar" layoutX="189.0" layoutY="393.0" prefHeight="24.0" prefWidth="365.0">
+            <ToolBar fx:id="toolBar" layoutX="209.0" layoutY="397.0" prefHeight="33.0" prefWidth="329.0">
               <items>
-                  <Button fx:id="slidePlay" mnemonicParsing="false" prefHeight="23.0" prefWidth="79.0" text="幻灯片播放" />
-                  <Button fx:id="lastPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="31.0" text="←" />
+                  <Button fx:id="slidePlay" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" text="►" />
+                  <Button fx:id="lastPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="35.0" text="←" />
                   <Button fx:id="nextPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" text="→" />
                   <Button fx:id="amplifyPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="88.0" text="放大" />
                   <Button fx:id="shrinkPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="105.0" text="缩小" />

@@ -14,7 +14,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 
-
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500" minWidth="800" prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.ithaic.mainController">
    <left>
       <TreeView fx:id="disktree" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
@@ -44,9 +43,9 @@
        <BorderPane>
            <top>
                <AnchorPane fx:id="anchorPane" prefHeight="85.0" prefWidth="800.0">
-                   <TextField fx:id="pathShower" layoutX="155.0" layoutY="14.0" prefHeight="23.0" prefWidth="445.0">
+                   <TextField fx:id="pathShower" layoutX="109.0" layoutY="14.0" prefHeight="28.0" prefWidth="546.0">
                        <AnchorPane.leftAnchor>
-                           <Double fx:value="155.0" />
+                           <Double fx:value="109.0" />
                        </AnchorPane.leftAnchor>
                   <contextMenu>
                      <ContextMenu fx:id="historyPath">
@@ -56,19 +55,19 @@
                      </ContextMenu>
                   </contextMenu>
                    </TextField>
-                   <TextField fx:id="searchName" layoutX="645.0" layoutY="14.0" prefHeight="23.0" prefWidth="161.0">
+                   <TextField fx:id="searchName" layoutX="645.0" layoutY="14.0" prefHeight="28.0" prefWidth="215.0">
                         <AnchorPane.rightAnchor>
                            <Double fx:value="60.0" />
                         </AnchorPane.rightAnchor>
                    </TextField>
-                   <Button fx:id="backwardButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="51.0" text="后退">
+                   <Button fx:id="backwardButton" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="36.0" text="←">
                        <AnchorPane.leftAnchor>
                            <Double fx:value="14.0" />
                        </AnchorPane.leftAnchor>
                    </Button>
-                   <Button fx:id="forwardButton" layoutX="80.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="51.0" text="前进">
+                   <Button fx:id="forwardButton" layoutX="60.0" layoutY="14.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="34.0" text="→">
                        <AnchorPane.leftAnchor>
-                           <Double fx:value="80.0" />
+                           <Double fx:value="60.0" />
                        </AnchorPane.leftAnchor>
                    </Button>
                    <Slider fx:id="sizeChanger" layoutX="627.0" layoutY="53.0" prefHeight="14.0" prefWidth="102.0">
@@ -81,17 +80,17 @@
                            <Double fx:value="12.600000000000023" />
                        </AnchorPane.rightAnchor>
                    </Button>
-                   <Button fx:id="searchButton" layoutX="547.0" layoutY="14.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="45.0" text="🔍">
+                   <Button fx:id="searchButton" layoutX="742.0" layoutY="13.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="44.0" text="🔍">
                            <AnchorPane.rightAnchor>
-                               <Double fx:value="12.600000000000023" />
+                               <Double fx:value="14.0" />
                            </AnchorPane.rightAnchor>
                    </Button>
                </AnchorPane>
            </top>
            <center>
-               <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" hbarPolicy="NEVER" vbarPolicy="ALWAYS">
+               <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vbarPolicy="ALWAYS">
                    <content>
-                       <FlowPane fx:id="thumbnails" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"/>
+                       <FlowPane fx:id="thumbnails" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
                    </content>
                </ScrollPane>
            </center>

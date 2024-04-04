@@ -189,7 +189,7 @@ public class PictureOperationUtil {
                 }
                 oldFile.renameTo(new File(oldFile.getParentFile()+"/" +newName));
             }
-            pictureShower.showPicture(PathUtil.getCurrentPath());
+            pictureShower.showPicture();
             return;
         }
 
@@ -305,7 +305,7 @@ public class PictureOperationUtil {
                     }
                     oldFile.renameTo(new File(oldFile.getParentFile()+"/"+newName));
                 }
-                pictureShower.showPicture(PathUtil.getCurrentPath());
+                pictureShower.showPicture();
             }
             stage.close();
         });
@@ -329,7 +329,7 @@ public class PictureOperationUtil {
             String newName = result.get()+suffix;
             oldFile.renameTo(new File(oldFile.getParentFile()+"/" +newName));
         }
-        pictureShower.showPicture(PathUtil.getCurrentPath());
+        pictureShower.showPicture();
     }
     //TODO 删除图片，为主窗口使用
     public static void deletePictures() throws IOException {
@@ -343,7 +343,7 @@ public class PictureOperationUtil {
                 Desktop.getDesktop().moveToTrash(thumbnail.getImageFile());
             }
         }
-        pictureShower.showPicture(PathUtil.getCurrentPath());
+        pictureShower.showPicture();
         if(PictureShowerListener.getSlideWindow()!=null){
             PathUtil.updateFiles();
             SlideFileManager.setPictures(PathUtil.getCurrentFiles());

@@ -20,3 +20,17 @@ ToolBar{
     -fx-padding: 5; /* 添加一些内边距，以让边框和内容之间有一些空间 */
 }
 
+.root {
+    -fx-background-color: #e0e8f0; /* 淡蓝色背景 */
+}
+
+.button {
+    -fx-background-color: #add8e6; /* 淡蓝色按钮 */
+    -fx-text-fill: white; /* 白色文字 */
+    -fx-border-radius: 5; /* 边角圆滑 */
+    -fx-padding: 5 10 5 10; /* 内边距 */
+}
+
+.button:hover {
+    -fx-background-color: #87CEEB; /* 鼠标悬停时颜色变深 */
+}
