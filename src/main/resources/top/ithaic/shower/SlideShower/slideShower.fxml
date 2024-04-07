@@ -10,13 +10,16 @@
    <center>
       <Pane fx:id="pictureShower" prefHeight="516.0" prefWidth="637.0" BorderPane.alignment="CENTER">
          <children>
-            <ToolBar fx:id="toolBar" layoutX="209.0" layoutY="397.0" prefHeight="33.0" prefWidth="329.0">
+            <ToolBar fx:id="toolBar" layoutX="167.0" layoutY="397.0" prefHeight="33.0" prefWidth="420.0">
               <items>
                   <Button fx:id="slidePlay" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" text="►" />
                   <Button fx:id="lastPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="35.0" text="←" />
                   <Button fx:id="nextPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" text="→" />
-                  <Button fx:id="amplifyPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="88.0" text="放大" />
-                  <Button fx:id="shrinkPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="105.0" text="缩小" />
+                  <Button fx:id="amplifyPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="50.0" text="放大" />
+                  <Button fx:id="shrinkPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="54.0" text="缩小" />
+                  <Button fx:id="leftRotatePicture" mnemonicParsing="false" text="左旋" />
+                  <Button fx:id="rightRotatePicture" mnemonicParsing="false" text="右旋" />
+                  <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="87.0" text="压缩体积" />
               </items>
             </ToolBar>
          </children></Pane>

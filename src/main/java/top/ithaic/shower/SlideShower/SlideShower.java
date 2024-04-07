@@ -1,13 +1,8 @@
 package top.ithaic.shower.SlideShower;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 
@@ -18,6 +13,7 @@ public class SlideShower {
     private static Pane pictureShower;
     private static Canvas canvas;
     private static Image image;
+    private static double historyAngle;
     private long lastScrollTime;
     private long lastMouseTime;
     private static double offsetX = 0;
@@ -32,6 +28,7 @@ public class SlideShower {
         SlideShower.pictureShower = pictureShower;
         SlideShower.factor = 0;
         SlideShower.scaleTransitionThread = null;
+        SlideShower.historyAngle = 0.0;
         initPicture();
         initMouseListen();
         initCanvasEvent();
@@ -47,8 +44,8 @@ public class SlideShower {
         canvas.heightProperty().bind(pictureShower.heightProperty());
 
         //画布监听
-        canvas.widthProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas, image, 1 + factor, 0, 0)));
-        canvas.heightProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas, image, 1 + factor, 0, 0)));
+        canvas.widthProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas, image, 1 + factor, 0, 0,0)));
+        canvas.heightProperty().addListener(((observableValue, number, t1) -> drawPicture(canvas, image, 1 + factor, 0, 0,0)));
 
         pictureShower.getChildren().add(canvas);
     }
@@ -58,7 +55,7 @@ public class SlideShower {
             image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex() - 1].toURI().toString());
             SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex() - 1);
             SlideFileManager.setCurrentIndexProperty(SlideFileManager.getCurrentIndex());
-            drawPicture(canvas, image, 1 + factor, 0, 0);
+            drawPicture(canvas, image, 1 + factor, 0, 0,0);
         }
     }
     public void nextPicture() {
@@ -67,7 +64,7 @@ public class SlideShower {
             image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex() + 1].toURI().toString());
             SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex() + 1);
             SlideFileManager.setCurrentIndexProperty(SlideFileManager.getCurrentIndex());
-            drawPicture(canvas, image, 1, 0, 0);
+            drawPicture(canvas, image, 1+factor, 0, 0,0);
         }
     }
     public void amplifyPicture() {
@@ -82,7 +79,9 @@ public class SlideShower {
         scaleTransitionThread.start();
     }
 
-
+    public void rotatePicture(double angle){
+        drawPicture(canvas,image,1+factor,dx,dy,angle);
+    }
     /**
      * /
      * @param canvas 画布
@@ -91,43 +90,64 @@ public class SlideShower {
      * @param detX  放缩位置偏移量X
      * @param detY  放缩位置偏移量Y
      */
-    private void drawPicture(Canvas canvas, Image image, double factor, double detX, double detY) {
-            double canvasWidth = canvas.getWidth();
-            double canvasHeight = canvas.getHeight();
+    private void drawPicture(Canvas canvas, Image image, double factor, double detX, double detY,double angle) {
+        double canvasWidth = canvas.getWidth();
+        double canvasHeight = canvas.getHeight();
 
-            // 获取图片的原始尺寸
-            double imageWidth = image.getWidth();
-            double imageHeight = image.getHeight();
+        // 获取图片的原始尺寸
+        double imageWidth = image.getWidth();
+        double imageHeight = image.getHeight();
 
-            //  适应画布
-            double scaleFactorWidth = canvasWidth / imageWidth;
-            double scaleFactorHeight = canvasHeight / imageHeight;
-            double tmpFactor = Math.min(scaleFactorWidth, scaleFactorHeight); // 选择较小的因子以保持纵横比
-            factor*=tmpFactor;
+        //  适应画布
+        double scaleFactorWidth = canvasWidth / imageWidth;
+        double scaleFactorHeight = canvasHeight / imageHeight;
+        double tmpFactor = Math.min(scaleFactorWidth, scaleFactorHeight); // 选择较小的因子以保持纵横比
+        factor *= tmpFactor;
 
-            // 根据factor计算缩放后的尺寸
-            double scaledWidth = imageWidth * factor;
-            double scaledHeight = imageHeight * factor;
+        // 根据factor计算缩放后的尺寸
+        double scaledWidth = imageWidth * factor;
+        double scaledHeight = imageHeight * factor;
 
-            // 计算图像在Canvas上的位置，使其居中
-            double offsetX = (canvasWidth - scaledWidth) / 2;
-            double offsetY = (canvasHeight - scaledHeight) / 2;
+        // 计算图像在Canvas上的位置，使其居中
+        double offsetX = (canvasWidth - scaledWidth) / 2;
+        double offsetY = (canvasHeight - scaledHeight) / 2;
 
-            // 确保图像不会超出Canvas边界
-            offsetX =  Math.min(offsetX, canvasWidth - scaledWidth);
-            offsetY =  Math.min(offsetY, canvasHeight - scaledHeight);
+        // 确保图像不会超出Canvas边界
+        offsetX = Math.min(offsetX, canvasWidth - scaledWidth);
+        offsetY = Math.min(offsetY, canvasHeight - scaledHeight);
 
-            // 获取GraphicsContext对象并清除Canvas
-            GraphicsContext gc = canvas.getGraphicsContext2D();
-            gc.clearRect(0, 0, canvasWidth, canvasHeight);
-
-            // 在Canvas上绘制缩放后的图像
-            gc.drawImage(image, offsetX + detX + lastDetX, offsetY + detY + lastDetY, scaledWidth, scaledHeight);
+        // 获取GraphicsContext对象并清除Canvas
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvasWidth, canvasHeight);
+        gc.save();
+        gc.translate(canvas.getWidth() / 2, canvas.getHeight() / 2);
+        gc.rotate(historyAngle + angle);
+        historyAngle = historyAngle + angle;
+        gc.translate(-canvas.getWidth() / 2, -canvas.getHeight() / 2);
+        //存在旋转角度时处理鼠标拖动
+        double temp;
+        double X = detX + lastDetX;
+        double Y = detY + lastDetY;
+        if (historyAngle % 360 == 90 || historyAngle % 360 == -270) {
+            temp = X;
+            X = Y;
+            Y = -temp;
+        } else if (historyAngle % 360 == 180 || historyAngle % 360 == -180) {
+            X = -X;
+            Y = -Y;
+        } else if (historyAngle % 360 == 270 || historyAngle % 360 == -90) {
+            temp = X;
+            X = -Y;
+            Y = temp;
+        }
+        // 在Canvas上绘制缩放后的图像
+        gc.drawImage(image, offsetX + X, offsetY + Y, scaledWidth, scaledHeight);
+        gc.restore();
     }
 
     public void drawPicture() {
         image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()].toURI().toString());
-        this.drawPicture(canvas, image, 1, 0, 0);
+        this.drawPicture(canvas, image, 1, 0, 0,0);
     }
 
     public static void recoverPicture(){
@@ -138,6 +158,7 @@ public class SlideShower {
         lastDetY = 0;
         dx = 0;
         dy = 0;
+        historyAngle = 0.0;
     }
 
     private void initMouseListen(){
@@ -187,7 +208,7 @@ public class SlideShower {
             dx = event.getX() - offsetX;
             dy = event.getY() - offsetY;
             // 重绘图片
-            drawPicture(canvas, image, 1+factor, dx, dy);
+            drawPicture(canvas, image, 1+factor, dx, dy,0);
         });
 
         canvas.setOnMouseReleased(event->{
@@ -196,7 +217,6 @@ public class SlideShower {
         });
 
     }
-
 
     private class ScaleTransitionThread extends Thread{
         private double startFactor;
@@ -217,7 +237,7 @@ public class SlideShower {
             if(endFactor < startFactor){
                 while(Math.abs(startFactor-endFactor) > 1e-5&&!isTerminal){
                     startFactor-=0.01;
-                    drawPicture(canvas,image,1+startFactor,0,0);
+                    drawPicture(canvas,image,1+startFactor,0,0,0);
                     try {
                         sleep(15);
                     } catch (InterruptedException e) {
@@ -228,9 +248,9 @@ public class SlideShower {
             else{
                 while(Math.abs(endFactor-startFactor) > 1e-5&&!isTerminal){
                     startFactor+=0.01;
-                    drawPicture(canvas,image,1+startFactor,0,0);
+                    drawPicture(canvas,image,1+startFactor,0,0,0);
                     try {
-                        sleep(30);
+                        sleep(15);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

@@ -43,6 +43,8 @@ public class SlideListener implements Listener {
     private static Button amplifyPicture;
     private static Button lastPicture;
     private static Button nextPicture;
+    private static Button leftRotatePicture;
+    private static Button rightRotatePicture;
     private static Pane pictureShower;
     private ContextMenu contextMenu = new ContextMenu();
     public SlideListener(Pane pane, Button slidePlay, ToolBar toolBar, BorderPane mainPane, FlowPane pictureScanner,Pane pictureShower,Button...buttons){
@@ -56,6 +58,8 @@ public class SlideListener implements Listener {
         SlideListener.nextPicture = buttons[1];
         SlideListener.amplifyPicture = buttons[2];
         SlideListener.shrinkPicture = buttons[3];
+        SlideListener.leftRotatePicture = buttons[4];
+        SlideListener.rightRotatePicture = buttons[5];
         SlideListener.pictureShower = pictureShower;
         pictureScanner.setHgap(10);
         Listen();
@@ -177,6 +181,8 @@ public class SlideListener implements Listener {
         });
         amplifyPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> new SlideShower().amplifyPicture());
         shrinkPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> new SlideShower().shrinkPicture());
+        leftRotatePicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> new SlideShower().rotatePicture(-90));
+        rightRotatePicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> new SlideShower().rotatePicture(90));
     }
 
     private void mouseListen(){

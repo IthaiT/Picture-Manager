@@ -19,6 +19,10 @@ public class SlideController {
     @FXML
     public FlowPane pictureScanner;
     @FXML
+    public Button leftRotatePicture;
+    @FXML
+    public Button rightRotatePicture;
+    @FXML
     private Button shrinkPicture;
     @FXML
     private Button amplifyPicture;
@@ -35,7 +39,7 @@ public class SlideController {
     @FXML
     private void initialize(){
         new SlideShower(pictureShower);
-        new SlideListener(pictureShower,slidePlay,toolBar,mainPane,pictureScanner,pictureShower,lastPicture,nextPicture,amplifyPicture,shrinkPicture);//监听pane右键点击与幻灯片播放
+        new SlideListener(pictureShower,slidePlay,toolBar,mainPane,pictureScanner,pictureShower,lastPicture,nextPicture,amplifyPicture,shrinkPicture,leftRotatePicture,rightRotatePicture);//监听pane右键点击与幻灯片播放
     }
 
 }
