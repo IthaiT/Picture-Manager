@@ -2,6 +2,8 @@ module top.ithaic.showpicture {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
+    requires thumbnailator;
+    requires org.slf4j;
 
 
     opens top.ithaic to javafx.fxml;

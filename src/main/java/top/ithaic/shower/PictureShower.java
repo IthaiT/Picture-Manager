@@ -68,6 +68,7 @@ public class PictureShower {
     }
     //TODO 无参显示当前图片
     public void showPicture(){
+        PathUtil.updateFiles();
         if(PathUtil.getCurrentFiles()!=null)
             this.showPicture(PathUtil.getCurrentFiles());
     }

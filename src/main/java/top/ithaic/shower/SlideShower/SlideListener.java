@@ -5,7 +5,7 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
+
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -13,22 +13,16 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
+
 import javafx.scene.layout.Pane;
-import top.ithaic.HelloApplication;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.SlideThumbnail;
-import top.ithaic.imageview.Thumbnail;
-import top.ithaic.listener.PictureShowerListener;
-import top.ithaic.listener.SliderListener;
-import top.ithaic.shower.PathShower;
 import top.ithaic.shower.slidePlay.SlidePlay;
 import top.ithaic.utils.PictureUtil;
 
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Flow;
 
 public class SlideListener implements Listener {
     private int head;
@@ -46,8 +40,10 @@ public class SlideListener implements Listener {
     private static Button leftRotatePicture;
     private static Button rightRotatePicture;
     private static Pane pictureShower;
+    private static Button compressImage;
+    private static Pane compressPane;
     private ContextMenu contextMenu = new ContextMenu();
-    public SlideListener(Pane pane, Button slidePlay, ToolBar toolBar, BorderPane mainPane, FlowPane pictureScanner,Pane pictureShower,Button...buttons){
+    public SlideListener(Pane pane, Button slidePlay, ToolBar toolBar, BorderPane mainPane, FlowPane pictureScanner,Pane pictureShower,Pane compressPane,Button...buttons){
         new ContextMenuListener(contextMenu);
         SlideListener.pane = pane;
         SlideListener.slidePlay = slidePlay;
@@ -60,8 +56,11 @@ public class SlideListener implements Listener {
         SlideListener.shrinkPicture = buttons[3];
         SlideListener.leftRotatePicture = buttons[4];
         SlideListener.rightRotatePicture = buttons[5];
+        SlideListener.compressImage = buttons[6];
         SlideListener.pictureShower = pictureShower;
+        SlideListener.compressPane = compressPane;
         pictureScanner.setHgap(10);
+        compressPane.getStyleClass().add("compressPane");
         Listen();
     }
     @Override
@@ -69,14 +68,14 @@ public class SlideListener implements Listener {
         //工具栏坐标位置监听
         toolBar.layoutXProperty().bind(Bindings.createDoubleBinding(()->mainPane.getWidth()/2-toolBar.getWidth()/2,mainPane.widthProperty()));
         toolBar.layoutYProperty().bind((Bindings.createDoubleBinding(()->mainPane.getHeight()-toolBar.getHeight()-80,mainPane.heightProperty())));
-
+        //压缩参数窗口位置监听
+        compressPane.layoutXProperty().bind(Bindings.createDoubleBinding(()->(mainPane.getWidth()-compressPane.getWidth())/2,mainPane.widthProperty()));
+        compressPane.layoutYProperty().bind(Bindings.createDoubleBinding(()->(mainPane.getHeight()-pictureScanner.getHeight()-compressPane.getHeight())/2,mainPane.widthProperty()));
         //定时检测工具栏
         startTimer();
-
         //监听所需参数
         File[] pictures = SlideFileManager.getPictures();
         int currentIndex = SlideFileManager.getCurrentIndex();
-
         //其他监听
         pictureLoad(currentIndex,pictures);
         indexListen(pictures);
@@ -183,6 +182,11 @@ public class SlideListener implements Listener {
         shrinkPicture.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> new SlideShower().shrinkPicture());
         leftRotatePicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> new SlideShower().rotatePicture(-90));
         rightRotatePicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> new SlideShower().rotatePicture(90));
+        compressImage.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
+            if(!mainPane.getChildren().contains(compressPane))
+                mainPane.getChildren().add(compressPane);
+        });
+//        System.out.println(PictureOperationUtil.compressImage(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()],100))
     }
 
     private void mouseListen(){
