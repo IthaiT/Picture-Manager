@@ -60,8 +60,8 @@ public class SlideListener implements Listener {
         SlideListener.pictureShower = pictureShower;
         SlideListener.compressPane = compressPane;
         pictureScanner.setHgap(10);
-        compressPane.getStyleClass().add("compressPane");
         Listen();
+        SlideListener.pictureShower.getChildren().remove(compressPane);
     }
     @Override
     public void Listen() {
@@ -69,8 +69,8 @@ public class SlideListener implements Listener {
         toolBar.layoutXProperty().bind(Bindings.createDoubleBinding(()->mainPane.getWidth()/2-toolBar.getWidth()/2,mainPane.widthProperty()));
         toolBar.layoutYProperty().bind((Bindings.createDoubleBinding(()->mainPane.getHeight()-toolBar.getHeight()-80,mainPane.heightProperty())));
         //压缩参数窗口位置监听
-        compressPane.layoutXProperty().bind(Bindings.createDoubleBinding(()->(mainPane.getWidth()-compressPane.getWidth())/2,mainPane.widthProperty()));
-        compressPane.layoutYProperty().bind(Bindings.createDoubleBinding(()->(mainPane.getHeight()-pictureScanner.getHeight()-compressPane.getHeight())/2,mainPane.widthProperty()));
+        compressPane.layoutXProperty().bind(Bindings.createDoubleBinding(()->(pictureShower.getWidth()-compressPane.getPrefWidth())/2,pictureShower.widthProperty()));
+        compressPane.layoutYProperty().bind(Bindings.createDoubleBinding(()->(pictureShower.getHeight()-compressPane.getPrefHeight())/2,pictureShower.heightProperty()));
         //定时检测工具栏
         startTimer();
         //监听所需参数
@@ -183,10 +183,13 @@ public class SlideListener implements Listener {
         leftRotatePicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> new SlideShower().rotatePicture(-90));
         rightRotatePicture.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> new SlideShower().rotatePicture(90));
         compressImage.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
-            if(!mainPane.getChildren().contains(compressPane))
-                mainPane.getChildren().add(compressPane);
+            if(!pictureShower.getChildren().contains(compressPane)) {
+                pictureShower.getChildren().add(compressPane);
+                compressPane.getStyleClass().add("compressPane");
+            }
+            else pictureShower.getChildren().remove(compressPane);
+
         });
-//        System.out.println(PictureOperationUtil.compressImage(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()],100))
     }
 
     private void mouseListen(){

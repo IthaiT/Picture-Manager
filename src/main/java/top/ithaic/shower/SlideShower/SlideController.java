@@ -54,7 +54,7 @@ public class SlideController {
     private void initialize(){
         new SlideShower(pictureShower);
         new SlideListener(pictureShower,slidePlay,toolBar,mainPane,pictureScanner,pictureShower,compressPane,lastPicture,nextPicture,amplifyPicture,shrinkPicture,leftRotatePicture,rightRotatePicture,compressImage);//监听pane右键点击与幻灯片播放
-        new CompressListener(mainPane,compressPane,desFileSize,sizeShower,saveAs,compress,compressResult,close);
+        new CompressListener(pictureShower,compressPane,desFileSize,sizeShower,saveAs,compress,compressResult,close);
     }
 
 }
