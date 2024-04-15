@@ -199,8 +199,6 @@ public class SlideListener implements Listener {
                 contextMenu.show(pane,mouseEvent.getScreenX(),mouseEvent.getScreenY());
             }
             if(mouseEvent.getButton() == MouseButton.PRIMARY){
-                if(mouseEvent.getClickCount()>=2)
-                    SlidePlay.playPicture(SlideFileManager.getPictures(),SlideFileManager.getCurrentIndex());
                 contextMenu.hide();
             }
         });
