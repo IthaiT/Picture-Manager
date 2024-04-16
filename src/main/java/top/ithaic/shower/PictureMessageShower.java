@@ -3,6 +3,7 @@ package top.ithaic.shower;
 import javafx.scene.control.TextField;
 import top.ithaic.utils.FileMessageUtil;
 import top.ithaic.utils.PathUtil;
+import top.ithaic.utils.PictureUtil;
 
 public class PictureMessageShower {
     private static TextField pictureMessage;
@@ -11,6 +12,7 @@ public class PictureMessageShower {
     }
     public PictureMessageShower(TextField pictureMessage){
         PictureMessageShower.pictureMessage = pictureMessage;
+        PictureMessageShower.pictureMessage.setEditable(false);
     }
 
     public void updateText(){

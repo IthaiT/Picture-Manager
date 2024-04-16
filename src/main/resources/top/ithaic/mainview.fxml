@@ -14,12 +14,12 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500" minWidth="800" prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.ithaic.mainController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500" minWidth="800" prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #f0f4fa;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.ithaic.mainController">
    <left>
-      <TreeView fx:id="disktree" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <TreeView fx:id="disktree" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #7bb6dd;" BorderPane.alignment="CENTER" />
    </left>
    <top>
-      <MenuBar prefHeight="9.0" prefWidth="720.0" BorderPane.alignment="CENTER">
+      <MenuBar prefHeight="9.0" prefWidth="720.0" style="-fx-background-color: #f0f4fa; -fx-border-color: #e0e8f0;" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="文件">
             <items>
@@ -42,7 +42,7 @@
    <center>
        <BorderPane>
            <top>
-               <AnchorPane fx:id="anchorPane" prefHeight="85.0" prefWidth="800.0">
+               <AnchorPane fx:id="anchorPane" prefHeight="85.0" prefWidth="800.0" style="-fx-background-color: #f0f4fa; -fx-border-color: #e0e8f0;">
                    <TextField fx:id="pathShower" layoutX="109.0" layoutY="14.0" prefHeight="28.0" prefWidth="546.0">
                        <AnchorPane.leftAnchor>
                            <Double fx:value="109.0" />
@@ -88,9 +88,9 @@
                </AnchorPane>
            </top>
            <center>
-               <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vbarPolicy="ALWAYS">
+               <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="497.0" prefWidth="800.0" style="-fx-background-color: #f0f4fa;" vbarPolicy="ALWAYS">
                    <content>
-                       <FlowPane fx:id="thumbnails" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                       <FlowPane fx:id="thumbnails" layoutY="117.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #f0f4fa;" />
                    </content>
                </ScrollPane>
            </center>

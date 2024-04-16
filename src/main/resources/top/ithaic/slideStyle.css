@@ -29,12 +29,13 @@ ToolBar{
     -fx-background-color: #add8e6; /* 淡蓝色按钮 */
     -fx-border-radius: 5; /* 边角圆滑 */
     -fx-padding: 5 10 5 10; /* 内边距 */
+    -fx-cursor: HAND; /* 鼠标悬停时显示手形图标 */
 }
 
 .button:hover {
-    -fx-background-color: #87CEEB; /* 鼠标悬停时颜色变深 */
+    -fx-background-color: #7bb6dd; /* 悬停时的背景颜色，稍深的淡蓝色 */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0, 0, 0); /* 添加阴影效果 */
 }
-
 .compressPane{
     -fx-border-width: 1; /* 设置边框宽度 */
     -fx-border-color: #003366; /* 设置边框颜色为深蓝色 */
@@ -43,3 +44,4 @@ ToolBar{
     -fx-padding: 5; /* 添加一些内边距，以让边框和内容之间有一些空间 */
     -fx-background-color: #e0e8f0; /* 淡蓝色 */
 }
+

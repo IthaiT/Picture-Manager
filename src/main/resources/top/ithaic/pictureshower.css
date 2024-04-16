@@ -45,3 +45,98 @@ HBox {
     -fx-border-color: rgb(28,136,203);
     -fx-padding: 5; /* 内边距为 5 像素 */
 }
+
+.button {
+    -fx-background-color: #f0f4fa; /* 淡蓝色按钮 */
+    -fx-border-color:#7bb6dd;  /*淡蓝色边框*/
+    -fx-border-radius: 5; /* 边角圆滑 */
+    -fx-padding: 5 10 5 10; /* 内边距 */
+    -fx-cursor: HAND; /* 鼠标悬停时显示手形图标 */
+}
+
+.button:hover {
+    -fx-background-color: #7bb6dd; /* 悬停时的背景颜色，稍深的淡蓝色 */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0, 0, 0); /* 添加阴影效果 */
+}
+
+.text-field {
+    -fx-background-color: white; /* 淡蓝色背景 */
+    -fx-background-insets: 0; /* 背景颜色填充整个区域 */
+    -fx-border-color: #7bb6dd; /* 深一点的淡蓝色边框 */
+    -fx-border-width: 1; /* 边框宽度 */
+    -fx-border-radius: 5; /* 边角圆滑 */
+    -fx-padding: 5 10 5 10; /* 内边距 */
+    -fx-prompt-text-fill: #333333; /* 提示文本颜色 */
+    -fx-text-fill: #333333; /* 文本颜色 */
+    -fx-caret-color: #333333; /* 光标颜色 */
+}
+
+.text-field:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0, 0, 0); /* 添加阴影效果 */
+}
+
+
+.slider .track {
+    -fx-background-color: #7bb6dd; /* 轨道的背景颜色 */
+    -fx-background-insets: 0;
+    -fx-background-radius: 2.5;
+    -fx-padding: 0.25em; /* 轨道的内边距 */
+}
+
+.slider .thumb {
+    -fx-background-color: #5599cc; /* 拇指的背景颜色 */
+    -fx-background-insets: 0;
+    -fx-background-radius: 1em; /* 拇指的圆角 */
+    -fx-padding: 0.5em; /* 拇指的内边距 */
+}
+
+.slider .thumb:hover {
+    -fx-background-color: #5e9ed6; /* 拇指悬停时的背景颜色 */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0, 0, 0); /* 悬停时添加阴影效果 */
+}
+
+.slider .axis {
+    -fx-tick-label-fill: #000000; /* 刻度标签的颜色 */
+}
+
+.tree-view {
+    -fx-background-color: #f0f4fa; /* 设置TreeView的背景颜色为淡蓝色 */
+    -fx-padding: 5; /* 设置内边距 */
+    fx-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1), 0 3px 3px -2px rgba(0, 0, 0, 0.1); /* 外部阴影和内部阴影 */
+}
+
+.tree-view .tree-cell {
+    -fx-text-fill: black; /* 设置树单元格中文本的颜色 */
+    -fx-background-color: transparent; /* 设置树单元格的背景颜色为透明 */
+    -fx-border-color: transparent; /* 设置树单元格的边框颜色为透明 */
+}
+
+.tree-view .tree-cell:selected {
+    -fx-background-color: #7bb6dd; /* 设置选中树单元格的背景颜色为深一点的蓝色 */
+    -fx-text-fill: white; /* 设置选中树单元格中文本的颜色为白色 */
+}
+
+.tree-view .scroll-bar {
+    -fx-background-color: transparent; /* 设置滚动条的背景颜色为透明 */
+}
+
+.tree-view .scroll-bar .thumb {
+    -fx-background-color: derive(#f0f4fa, -20%); /* 设置滚动条滑块的颜色为TreeView背景颜色的较暗版本 */
+    -fx-background-insets: 0; /* 设置滚动条滑块的内边距 */
+    -fx-border-radius: 5; /* 设置滚动条滑块的边框圆角 */
+}
+
+.tree-view .scroll-bar .track {
+    -fx-background-color: transparent; /* 设置滚动条轨道的背景颜色为透明 */
+    -fx-border-color: transparent; /* 设置滚动条轨道的边框颜色为透明 */
+    -fx-border-radius: 0; /* 设置滚动条轨道的边框圆角 */
+    -fx-background-radius: 0; /* 设置滚动条轨道的背景圆角 */
+}
+
+.tree-view .scroll-bar .increment-button,
+.tree-view .scroll-bar .decrement-button {
+    -fx-background-color: transparent; /* 设置滚动条增加/减少按钮的背景颜色为透明 */
+    -fx-background-radius: 0; /* 设置滚动条增加/减少按钮的背景圆角 */
+    -fx-padding: 0; /* 设置滚动条增加/减少按钮的内边距 */
+}
+
