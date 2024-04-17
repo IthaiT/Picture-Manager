@@ -17,7 +17,7 @@ public class SlideWindow {
     }
 
     public void launch(File[] currentFiles,int currentIndex){
-        FXMLLoader fxmlLoader = new FXMLLoader(SlideController.class.getResource("slideShower.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(SlideController.class.getResource("/top/ithaic/shower/SlideShower/slideShower.fxml"));
         //幻灯片窗口文件管理
         new SlideFileManager(currentFiles,currentIndex);
         SlideShower.recoverPicture();
@@ -27,7 +27,7 @@ public class SlideWindow {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        scene.getStylesheets().add(String.valueOf(HelloApplication.class.getResource("slideStyle.css")));
+        scene.getStylesheets().add(String.valueOf(HelloApplication.class.getResource("/top/ithaic/cssFiles/slideStyle.css")));
         Stage stage = new Stage();
         stage.setTitle("幻灯片展示");
         stage.setMinWidth(800);

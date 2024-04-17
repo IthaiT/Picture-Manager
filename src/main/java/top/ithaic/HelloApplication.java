@@ -12,10 +12,10 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("mainview.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/top/ithaic/mainView.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Image icon = new Image(String.valueOf(HelloApplication.class.getResource("/top/ithaic/icons/softIcon.png")));
-        scene.getStylesheets().add(String.valueOf(HelloApplication.class.getResource("pictureshower.css")));
+        scene.getStylesheets().add(String.valueOf(HelloApplication.class.getResource("/top/ithaic/cssFiles/pictureShower.css")));
         stage.getIcons().add(icon);
         stage.setTitle("ithaic");
         stage.setScene(scene);
