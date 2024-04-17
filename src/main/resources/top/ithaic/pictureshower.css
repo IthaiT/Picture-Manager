@@ -102,7 +102,7 @@ HBox {
 .tree-view {
     -fx-background-color: #f0f4fa; /* 设置TreeView的背景颜色为淡蓝色 */
     -fx-padding: 5; /* 设置内边距 */
-    fx-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1), 0 3px 3px -2px rgba(0, 0, 0, 0.1); /* 外部阴影和内部阴影 */
+    -fx-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1), 0 3px 3px -2px rgba(0, 0, 0, 0.1); /* 外部阴影和内部阴影 */
 }
 
 .tree-view .tree-cell {

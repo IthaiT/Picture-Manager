@@ -41,7 +41,7 @@ public class PictureShowerListener implements Listener {
     private static FlowPane thumbnails;
     private static StackPane noPicturePane;
     private static ScrollPane scrollPane;
-    public final static Image NO_PICTURE = new Image(Objects.requireNonNull(PictureShowerListener.class.getResourceAsStream("/top/ithaic/noResult.png")));
+    public final static Image NO_PICTURE = new Image(Objects.requireNonNull(PictureShowerListener.class.getResourceAsStream("/top/ithaic/icons/noResult.png")));
     private static ArrayList<Thumbnail> thumbnailArrayList;
     private static ContextMenu contextMenuT;//On Thumbnail
     private static ContextMenu contextMenuP;//On Pane

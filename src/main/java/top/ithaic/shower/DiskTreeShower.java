@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /*
 *   TODO
@@ -18,9 +19,12 @@ import java.util.ArrayList;
 *
 * */
 public class DiskTreeShower {
-    private static final Image DISK_IMAGE = new Image(DiskTreeShower.class.getResourceAsStream("/top/ithaic/partition.png"));
-    private static final Image FOLDER_IMAGE = new Image(DiskTreeShower.class.getResourceAsStream("/top/ithaic/directory.png"));
-
+    private static final Image DISK_IMAGE = new Image(Objects.requireNonNull(DiskTreeShower.class.getResourceAsStream("/top/ithaic/icons/partition.png")));
+    private static final Image FOLDER_IMAGE = new Image(Objects.requireNonNull(DiskTreeShower.class.getResourceAsStream("/top/ithaic/icons/directory.png")));
+    private static final Image COMPUTER_IMAGE = new Image(Objects.requireNonNull(DiskTreeShower.class.getResourceAsStream("/top/ithaic/icons/computer.png")));
+    private static final Image DOCUMENT_IMAGE = new Image(Objects.requireNonNull(DiskTreeShower.class.getResourceAsStream("/top/ithaic/icons/document.png")));
+    private static final Image PICTURES_IMAGE = new Image(Objects.requireNonNull(DiskTreeShower.class.getResourceAsStream("/top/ithaic/icons/pictures.png")));
+    private static final Image DESKTOP_IMAGE = new Image(Objects.requireNonNull(DiskTreeShower.class.getResourceAsStream("/top/ithaic/icons/desktop.png")));
     private ImageView getIcon(Image image){
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(16);
@@ -35,6 +39,9 @@ public class DiskTreeShower {
         public MyFile(File file){
             this.file = file;
             this.filename = file.getName();
+            if(this.filename.compareTo("Documents")==0)this.filename = "文档";
+            else if(this.filename.compareTo("Pictures")==0)this.filename = "图片";
+            else if(this.filename.compareTo("Desktop")==0)this.filename = "桌面";
         }
         public MyFile(File file,String relativeFilename){
             this.file = file;
@@ -54,8 +61,17 @@ public class DiskTreeShower {
     }
     //TODO 构建目录树
     public DiskTreeShower(TreeView disktree){
+        MyFile documentFile = new MyFile(new File(System.getenv("USERPROFILE") + "\\Documents"));
+        MyFile picturesFile = new MyFile(new File(System.getenv("USERPROFILE") + "\\Pictures"));
+        MyFile desktopFile = new MyFile(new File(System.getenv("USERPROFILE") + "\\Desktop"));
+
+        TreeItem<MyFile> virtualRoot = new TreeItem<>();
+
+        TreeItem<MyFile> computerItem = new TreeItem<>(new MyFile(new File("此电脑")),getIcon(COMPUTER_IMAGE));
+        virtualRoot.getChildren().addAll(computerItem,createNode(desktopFile),createNode(picturesFile),createNode(documentFile));
+
         //设置树视图的根目录
-        disktree.setRoot(new TreeItem<MyFile>(new MyFile(new File("此电脑"))));
+        disktree.setRoot(virtualRoot);
         //获取电脑磁盘分区
         ArrayList<MyFile> diskPartitions = getDiskPartitions();
         if (diskPartitions != null) {
@@ -63,10 +79,12 @@ public class DiskTreeShower {
                 //递归获取每一个分区的目录
                 TreeItem<MyFile> item = createNode(partition);
                 item.setGraphic(getIcon(DISK_IMAGE));
-                //将分区添加到“此电脑”根节点
-                disktree.getTreeItem(0).getChildren().add(item);
+                //将分区添加到“此电脑”节点
+                TreeItem<MyFile> temp = (TreeItem<MyFile>) disktree.getTreeItem(0).getChildren().get(0);
+                temp.getChildren().add(item);
             }
         }
+        disktree.setShowRoot(false);
     }
 
     // TODO 获取电脑磁盘分区
@@ -85,7 +103,11 @@ public class DiskTreeShower {
     }
 
     private TreeItem<MyFile> createNode(MyFile myFile){
-        return new TreeItem<>(myFile,getIcon(FOLDER_IMAGE)){
+        Image Icon = FOLDER_IMAGE;
+        if(myFile.filename.compareTo("文档")==0)Icon=DOCUMENT_IMAGE;
+        else if(myFile.filename.compareTo("桌面")==0)Icon=DESKTOP_IMAGE;
+        else if(myFile.filename.compareTo("图片")==0)Icon=PICTURES_IMAGE;
+        return new TreeItem<>(myFile,getIcon(Icon)){
             private boolean isLeaf;
             /*
             *  以下两个变量保证每次展开目录时不会重复计算

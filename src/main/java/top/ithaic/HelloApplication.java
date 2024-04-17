@@ -14,7 +14,7 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("mainview.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        Image icon = new Image(String.valueOf(HelloApplication.class.getResource("softicon.png")));
+        Image icon = new Image(String.valueOf(HelloApplication.class.getResource("/top/ithaic/icons/softIcon.png")));
         scene.getStylesheets().add(String.valueOf(HelloApplication.class.getResource("pictureshower.css")));
         stage.getIcons().add(icon);
         stage.setTitle("ithaic");
