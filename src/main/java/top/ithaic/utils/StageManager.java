@@ -1,6 +1,7 @@
 package top.ithaic.utils;
 
 import javafx.stage.Stage;
+import top.ithaic.shower.PictureShower;
 
 import java.util.Stack;
 
@@ -9,8 +10,8 @@ import java.util.Stack;
 public class StageManager {
     private static final Stack<Stage> stageStack = new Stack<>();
     public StageManager(){}
-    public static void pushStage(Stage stack){
-        stageStack.push(stack);
+    public static void pushStage(Stage stage){
+        stageStack.push(stage);
         for(int i =0 ;i<stageStack.size()-1;i++){
             Stage tmp = stageStack.elementAt(i);
             tmp.hide();
@@ -21,6 +22,7 @@ public class StageManager {
         stageStack.pop();
         Stage tmp = stageStack.peek();
         tmp.show();
+        new PictureShower().showPicture();
     }
     public static Stack<Stage> getStageStack(){
         return stageStack;

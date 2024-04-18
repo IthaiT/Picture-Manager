@@ -42,13 +42,13 @@ public class ContextMenuListener implements Listener {
         deleteItem.setOnAction(actionEvent -> {
             try {
                 PictureOperationUtil.deletePictures(SlideFileManager.getCurrentIndex());
+                PathUtil.updateFiles();
+                SlideFileManager.setPictures(PathUtil.getCurrentFiles());
+                SlideFileManager.setCurrentIndex((SlideFileManager.getCurrentIndex()-1)>=0?SlideFileManager.getCurrentIndex()-1:SlideFileManager.getCurrentIndex());
+                new SlideShower().drawPicture();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            PathUtil.updateFiles();
-            SlideFileManager.setPictures(PathUtil.getCurrentFiles());
-            SlideFileManager.setCurrentIndex((SlideFileManager.getCurrentIndex()-1)>=0?SlideFileManager.getCurrentIndex()-1:SlideFileManager.getCurrentIndex());
-            new SlideShower().drawPicture();
         });
         slidePlay.setOnAction((actionEvent -> {
             SlidePlay.playPicture(SlideFileManager.getPictures(),SlideFileManager.getCurrentIndex());

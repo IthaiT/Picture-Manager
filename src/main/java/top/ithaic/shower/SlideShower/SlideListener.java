@@ -76,6 +76,7 @@ public class SlideListener implements Listener {
         //监听所需参数
         File[] pictures = SlideFileManager.getPictures();
         int currentIndex = SlideFileManager.getCurrentIndex();
+        System.out.println(currentIndex);
         //其他监听
         pictureLoad(currentIndex,pictures);
         indexListen(pictures);
@@ -103,7 +104,22 @@ public class SlideListener implements Listener {
         head = currentIndex-1;
         tail = currentIndex+1;
         //初步加载
-        scanPicture(currentIndex,pictures);
+        SlideThumbnail first = new SlideThumbnail(pictures[currentIndex]);
+        first.setSelectedStyle();
+        pictureScanner.getChildren().add(first);
+        while(tail-head<8&&(head>=0||tail<pictures.length)){
+            if(tail-head<8&&head>=0) {
+                SlideThumbnail slideThumbnail = new SlideThumbnail(pictures[head]);
+                pictureScanner.getChildren().add(0,slideThumbnail);
+                head--;
+            }
+            if(tail-head<8&&tail<pictures.length){
+                SlideThumbnail slideThumbnail = new SlideThumbnail(pictures[tail]);
+                pictureScanner.getChildren().add(slideThumbnail);
+                tail++;
+            }
+        }
+
         //按容量继续加载
         pictureScanner.widthProperty().addListener((observableValue, oldValue,newValue) -> {
             scannerPictureNum = (int)(pictureScanner.getWidth()/(new SlideThumbnail().getThumbnailWidth()+20));
@@ -224,23 +240,9 @@ public class SlideListener implements Listener {
         });
     }
 
-    private void scanPicture(int currentIndex,File[] pictures){
-        SlideThumbnail first = new SlideThumbnail(pictures[currentIndex]);
-        first.setSelectedStyle();
-        pictureScanner.getChildren().add(first);
-        while(tail-head<8&&head>0&&tail<pictures.length){
-            if(tail-head<8&&head>0) {
-                SlideThumbnail slideThumbnail = new SlideThumbnail(pictures[head]);
-                pictureScanner.getChildren().add(0,slideThumbnail);
-                head--;
-            }
-            if(tail-head<8&&tail<pictures.length){
-                System.out.println(tail);
-                SlideThumbnail slideThumbnail = new SlideThumbnail(pictures[tail]);
-                pictureScanner.getChildren().add(slideThumbnail);
-                tail++;
-            }
-        }
+
+    public static FlowPane getPictureScanner() {
+        return pictureScanner;
     }
 
 }

@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import top.ithaic.Myinterface.Listener;
+import top.ithaic.shower.PictureShower;
 import top.ithaic.utils.PictureOperationUtil;
 
 import java.io.File;
