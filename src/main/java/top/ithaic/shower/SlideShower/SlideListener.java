@@ -21,12 +21,14 @@ import top.ithaic.shower.slidePlay.SlidePlay;
 import top.ithaic.utils.PictureUtil;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class SlideListener implements Listener {
-    private int head;
-    private int tail;
+    private static int head;
+    private static int tail;
     private int scannerPictureNum;
     private static Pane pane;
     private static ToolBar toolBar;
@@ -73,13 +75,10 @@ public class SlideListener implements Listener {
         compressPane.layoutYProperty().bind(Bindings.createDoubleBinding(()->(pictureShower.getHeight()-compressPane.getPrefHeight())/2,pictureShower.heightProperty()));
         //定时检测工具栏
         startTimer();
-        //监听所需参数
-        File[] pictures = SlideFileManager.getPictures();
-        int currentIndex = SlideFileManager.getCurrentIndex();
-        System.out.println(currentIndex);
         //其他监听
-        pictureLoad(currentIndex,pictures);
-        indexListen(pictures);
+        pictureLoad();
+        lengthListen();
+        indexListen();
         buttonListen();
         mouseListen();
     }
@@ -100,7 +99,9 @@ public class SlideListener implements Listener {
         timer.schedule(task,0,5000);
     }
 
-    private void pictureLoad(int currentIndex,File[] pictures){
+    private void pictureLoad(){
+        File[] pictures = SlideFileManager.getPictures();
+        int currentIndex = SlideFileManager.getCurrentIndex();
         head = currentIndex-1;
         tail = currentIndex+1;
         //初步加载
@@ -148,8 +149,9 @@ public class SlideListener implements Listener {
         });
     }
 
-    private void indexListen(File[] pictures){
+    private void indexListen(){
         SlideFileManager.currentIndexPropertyProperty().addListener(((observableValue, oldValue,newValue) -> {
+            File[] pictures = SlideFileManager.getPictures();
             if(newValue.intValue() < oldValue.intValue()){
                 ((SlideThumbnail) pictureScanner.getChildren().get(oldValue.intValue() - head - 1)).setUnSelectedStyle();
                 for(int i=0;i<oldValue.intValue()-newValue.intValue()&&head>=0;i++) {
@@ -170,6 +172,14 @@ public class SlideListener implements Listener {
                 }
                 ((SlideThumbnail) pictureScanner.getChildren().get(newValue.intValue() - head - 1)).setSelectedStyle();
             }
+        }));
+    }
+
+    private void lengthListen(){
+        SlideFileManager.picturesLengthProperty().addListener(((observableValue, oldValue, newValue) -> {
+                SlideListener.pictureScanner.getChildren().clear();
+                this.pictureLoad();
+
         }));
     }
 
@@ -240,9 +250,19 @@ public class SlideListener implements Listener {
         });
     }
 
-
     public static FlowPane getPictureScanner() {
         return pictureScanner;
     }
-
+    public static int getHead() {
+        return head;
+    }
+    public static void setHead(int head) {
+        SlideListener.head = head;
+    }
+    public static int getTail() {
+        return tail;
+    }
+    public static void setTail(int tail) {
+        SlideListener.tail = tail;
+    }
 }

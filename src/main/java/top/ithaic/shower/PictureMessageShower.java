@@ -7,7 +7,6 @@ import top.ithaic.utils.PictureUtil;
 
 public class PictureMessageShower {
     private static TextField pictureMessage;
-    private String directoryMessage;
     public PictureMessageShower(){
     }
     public PictureMessageShower(TextField pictureMessage){

@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.shower.PictureShower;
+import top.ithaic.utils.PathUtil;
 import top.ithaic.utils.PictureOperationUtil;
 
 import java.io.File;
@@ -58,9 +59,16 @@ public class CompressListener implements Listener {
             sizeShower.setText(text+" %");
         });
 
-        File sourceImage = SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()];
         compress.setOnMouseClicked(mouseEvent -> {
-            if(PictureOperationUtil.compressImage(sourceImage,desFileSize.getValue(),saveAs.isSelected()))compressResult.setText("压缩成功");
+            File sourceImage = SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()];
+            if(PictureOperationUtil.compressImage(sourceImage,desFileSize.getValue(),saveAs.isSelected())){
+                if(saveAs.isSelected()){
+                    PathUtil.updateFiles();
+                    SlideFileManager.setPictures(PathUtil.getCurrentFiles());
+                    SlideFileManager.setPicturesLengthProperty(SlideFileManager.getPictures().length);
+                }
+                compressResult.setText("压缩成功");
+            }
             else compressResult.setText("压缩失败");
         });
     }

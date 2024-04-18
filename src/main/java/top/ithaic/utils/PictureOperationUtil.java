@@ -370,15 +370,17 @@ public class PictureOperationUtil {
     }
 
     //TODO 删除图片，为幻灯片窗口使用
-    public static void deletePictures(int currentIndex) throws IOException {
-        if (currentIndex < 0 || currentIndex > SlideFileManager.getPictures().length) return;
+    public static boolean deletePictures(int currentIndex) throws IOException {
+        if (currentIndex < 0 || currentIndex > SlideFileManager.getPictures().length) return false;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("确认删除？");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             Desktop.getDesktop().moveToTrash(SlideFileManager.getPictures()[currentIndex]);
+            return true;
         }
         pictureShower.showPicture();
+        return false;
     }
 
     //TODO 选中主窗口所有图片

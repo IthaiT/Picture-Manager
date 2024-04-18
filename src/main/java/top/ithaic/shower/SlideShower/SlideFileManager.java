@@ -9,12 +9,14 @@ import java.util.ArrayList;
 
 public final class SlideFileManager{
     private static IntegerProperty currentIndexProperty;
+    private static IntegerProperty picturesLengthProperty;
     private static int currentIndex;
     private static File[] pictures;
     public SlideFileManager(File[] pictures,int currentIndex){
         SlideFileManager.pictures = pictures;
         SlideFileManager.currentIndex = currentIndex;
         SlideFileManager.currentIndexProperty = new SimpleIntegerProperty(currentIndex);
+        SlideFileManager.picturesLengthProperty = new SimpleIntegerProperty(pictures.length);
     }
 
     public static File[] getPictures() {return pictures;}
@@ -33,5 +35,12 @@ public final class SlideFileManager{
     }
     public static void setCurrentIndexProperty(int currentIndexProperty) {
         SlideFileManager.currentIndexProperty.set(currentIndexProperty);
+    }
+
+    public static IntegerProperty picturesLengthProperty() {
+        return picturesLengthProperty;
+    }
+    public static void setPicturesLengthProperty(int picturesLengthProperty) {
+        SlideFileManager.picturesLengthProperty.set(picturesLengthProperty);
     }
 }
