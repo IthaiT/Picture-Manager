@@ -52,6 +52,7 @@ public class PictureShowerListener implements Listener {
     private final PictureMessageShower pms = new PictureMessageShower();
     private String preName = null;
     private String newName = null;
+    private boolean preClick = false;
 
 
     public PictureShowerListener(FlowPane thumbnails, ScrollPane scrollPane) {
@@ -100,6 +101,11 @@ public class PictureShowerListener implements Listener {
         scrollPane.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                handleNameChange();
+               Thumbnail thumbnail = thumbnailArrayList.get(0);
+                thumbnail.setBottom(thumbnail.getLabel());
+                thumbnail.getLabel().setTextFill(Color.BLACK);
+                thumbnail.getLabel().setBackground(new Background(new BackgroundFill(rgb(28, 136, 203), null, null)));
+                preClick = false;
             }
         });
     }
@@ -259,7 +265,13 @@ public class PictureShowerListener implements Listener {
                     if (!thumbnailArrayList.isEmpty()) {
                         //如果上次选中的跟这次选中的相同并且标签没有被点中，清除后返回
                         if (thumbnail.equals(thumbnailArrayList.get(0)) && !thumbnail.getIsLabelClicked()) {
-
+                            if(preClick){
+                                preClick =false;
+                                thumbnail.setBottom(thumbnail.getLabel());
+                                thumbnail.getLabel().setTextFill(Color.BLACK);
+                                thumbnail.getLabel().setBackground(new Background(new BackgroundFill(rgb(28, 136, 203), null, null)));
+                                return;
+                            }
                             isSingleClick = true;
                             timer.schedule(new TimerTask() {
                                 @Override
@@ -400,6 +412,7 @@ public class PictureShowerListener implements Listener {
                     "-fx-border-color: rgb(28,136,203);\n"
                     );
         }
+        preClick = true;
     }
 
     private void handleNameChange(){
@@ -412,7 +425,6 @@ public class PictureShowerListener implements Listener {
         if(newName.isEmpty())return;
         Thumbnail thumbnail = thumbnailArrayList.get(0);
         if(newName.equals(preName)){
-            thumbnail.setBottom(thumbnail.getLabel());
         }
         else{
             Label label = thumbnail.getLabel();
@@ -425,19 +437,15 @@ public class PictureShowerListener implements Listener {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setContentText(newName + "已被使用");
                 alert.showAndWait();
-                clearSelected();
-                thumbnail.setBottom(thumbnail.getLabel());
             }
             else{
                 File oldFile = thumbnail.getImageFile();
                 oldFile.renameTo(new File(oldFile.getParentFile() + "/" + newName + suffix));
                 label.setText(oldFile.getName());
-                thumbnail.setBottom(thumbnail.getLabel());
                 PictureShower pictureShower = new PictureShower();
                 pictureShower.showPicture();
             }
         }
-        thumbnail.setUnSelectedStyle();
         thumbnail.setIsLabelClicked(false);
         textField = null;
     }
@@ -454,6 +462,15 @@ public class PictureShowerListener implements Listener {
     }
 
     private void clearSelected() {
+        if(preClick){
+            handleNameChange();
+            Thumbnail thumbnail = thumbnailArrayList.get(0);
+            thumbnail.setBottom(thumbnail.getLabel());
+            thumbnail.getLabel().setTextFill(Color.BLACK);
+            thumbnail.getLabel().setBackground(new Background(new BackgroundFill(rgb(28, 136, 203), null, null)));
+            preClick = false;
+            return;
+        }
         pms.updateText(0);
         if (thumbnailArrayList.isEmpty()) return;
         for (Thumbnail thumbnail : thumbnailArrayList) {

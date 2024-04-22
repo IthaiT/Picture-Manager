@@ -100,7 +100,6 @@ public class Thumbnail extends BorderPane {
         stackPane.getStyleClass().add("thumbnail-hover");
         label.setTextFill(Color.BLACK);
         label.setBackground(new Background(new BackgroundFill(rgb(28, 136, 203), null, null)));
-        System.out.println("ok1");
         labelListener(); //被点击之后监听label有没有被点击
     }
 
