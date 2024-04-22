@@ -101,10 +101,6 @@ public class PictureShowerListener implements Listener {
         scrollPane.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                handleNameChange();
-               Thumbnail thumbnail = thumbnailArrayList.get(0);
-                thumbnail.setBottom(thumbnail.getLabel());
-                thumbnail.getLabel().setTextFill(Color.BLACK);
-                thumbnail.getLabel().setBackground(new Background(new BackgroundFill(rgb(28, 136, 203), null, null)));
                 preClick = false;
             }
         });
@@ -267,9 +263,6 @@ public class PictureShowerListener implements Listener {
                         if (thumbnail.equals(thumbnailArrayList.get(0)) && !thumbnail.getIsLabelClicked()) {
                             if(preClick){
                                 preClick =false;
-                                thumbnail.setBottom(thumbnail.getLabel());
-                                thumbnail.getLabel().setTextFill(Color.BLACK);
-                                thumbnail.getLabel().setBackground(new Background(new BackgroundFill(rgb(28, 136, 203), null, null)));
                                 return;
                             }
                             isSingleClick = true;
@@ -424,9 +417,7 @@ public class PictureShowerListener implements Listener {
         newName = textField.getText();
         if(newName.isEmpty())return;
         Thumbnail thumbnail = thumbnailArrayList.get(0);
-        if(newName.equals(preName)){
-        }
-        else{
+        if(!newName.equals(preName)){
             Label label = thumbnail.getLabel();
             String filename = label.getText();
             String suffix = filename.substring(filename.lastIndexOf("."));
@@ -446,6 +437,9 @@ public class PictureShowerListener implements Listener {
                 pictureShower.showPicture();
             }
         }
+        thumbnail.setBottom(thumbnail.getLabel());
+        thumbnail.getLabel().setTextFill(Color.BLACK);
+        thumbnail.getLabel().setBackground(new Background(new BackgroundFill(rgb(28, 136, 203), null, null)));
         thumbnail.setIsLabelClicked(false);
         textField = null;
     }
@@ -463,11 +457,6 @@ public class PictureShowerListener implements Listener {
 
     private void clearSelected() {
         if(preClick){
-            handleNameChange();
-            Thumbnail thumbnail = thumbnailArrayList.get(0);
-            thumbnail.setBottom(thumbnail.getLabel());
-            thumbnail.getLabel().setTextFill(Color.BLACK);
-            thumbnail.getLabel().setBackground(new Background(new BackgroundFill(rgb(28, 136, 203), null, null)));
             preClick = false;
             return;
         }
