@@ -401,7 +401,7 @@ public class PictureOperationUtil {
     }
 
     //TODO 判断文件名是否在给定文件中存在
-    private static boolean isNameExit(String sourceName, List<File> Dir) {
+    public static boolean isNameExit(String sourceName, List<File> Dir) {
         if (Dir.isEmpty()) return false;
         String destName;
         for (File picture : Dir) {

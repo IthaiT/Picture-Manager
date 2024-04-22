@@ -1,21 +1,20 @@
 package top.ithaic.listener;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.*;
 
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureMessageShower;
+import top.ithaic.shower.PictureShower;
 import top.ithaic.shower.SlideShower.SlideFileManager;
 import top.ithaic.shower.SlideShower.SlideShower;
 import top.ithaic.shower.SlideShower.SlideWindow;
@@ -24,12 +23,11 @@ import top.ithaic.utils.PictureOperationUtil;
 import top.ithaic.utils.PictureUtil;
 
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
+import static javafx.scene.paint.Color.rgb;
 
 
 public class PictureShowerListener implements Listener {
@@ -46,11 +44,14 @@ public class PictureShowerListener implements Listener {
     private static ContextMenu contextMenuT;//On Thumbnail
     private static ContextMenu contextMenuP;//On Pane
     private static SlideWindow slideWindow;
+    private static TextField textField = null;
     private final Timer timer = new Timer();
     private Rectangle rectangle;
     boolean isSingleClick = false;
     private double startX, startY;
     private final PictureMessageShower pms = new PictureMessageShower();
+    private String preName = null;
+    private String newName = null;
 
 
     public PictureShowerListener(FlowPane thumbnails, ScrollPane scrollPane) {
@@ -89,18 +90,25 @@ public class PictureShowerListener implements Listener {
         mouseReleasedEventHandler = this::handleMouseReleased;
         mouseClickEventHandler = this::handleMouseClicked;
         autoScrollTimer = this::handleScrollSlide;
+
         EventHandler<KeyEvent> keyCtrlPress = this::handleCtrlPressed;
         EventHandler<MouseEvent> noPictureEvent = this::handleNoPicture;
         //启动基本的鼠标事件
         thumbnails.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressEventHandler);
         noPicturePane.addEventHandler(MouseEvent.MOUSE_CLICKED,noPictureEvent);
         scrollPane.addEventHandler(KeyEvent.KEY_PRESSED,keyCtrlPress);
+        scrollPane.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+               handleNameChange();
+            }
+        });
     }
 
     private void handleMousePressed(MouseEvent mouseEvent) {
         contextMenuP.hide();
         isSingleClick = false;//防止对鼠标点击事件造成影响
         thumbnails.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
+        handleNameChange();
         if (isClickBlankArea(mouseEvent)) {
             if(mouseEvent.getButton() == MouseButton.SECONDARY){
                 contextMenuP.show(scrollPane,mouseEvent.getScreenX(),mouseEvent.getScreenY());
@@ -113,20 +121,19 @@ public class PictureShowerListener implements Listener {
             anchorPane.getChildren().add(rectangle);
             scrollPane.setContent(anchorPane);
             //添加事件处理器
-
             thumbnails.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedEventHandler);
             thumbnails.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedEventHandler);
+            startX = mouseEvent.getX();
+            startY = mouseEvent.getY();
+            rectangle.setX(startX);
+            rectangle.setY(startY);
+            rectangle.setWidth(0);
+            rectangle.setHeight(0);
+            rectangle.setVisible(true);
         } else {
             thumbnails.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedEventHandler);
             thumbnails.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedEventHandler);
         }
-        startX = mouseEvent.getX();
-        startY = mouseEvent.getY();
-        rectangle.setX(startX);
-        rectangle.setY(startY);
-        rectangle.setWidth(0);
-        rectangle.setHeight(0);
-        rectangle.setVisible(true);
     }
 
     private void handleMouseDragged(MouseEvent mouseEvent) {
@@ -166,6 +173,7 @@ public class PictureShowerListener implements Listener {
     }
 
     private void handleMouseClicked(MouseEvent mouseEvent) {
+        System.out.println("test4");
         double mouseX = mouseEvent.getX();
         double mouseY = mouseEvent.getY();
         /*
@@ -226,7 +234,6 @@ public class PictureShowerListener implements Listener {
             thumbnail.setSelectedStyle();
             thumbnail.setIsClicked(true);
             thumbnailArrayList.add(thumbnail);
-            System.out.println("右键了"+thumbnailArrayList.get(0).getImageFile().getName());
             pms.updateText(thumbnailArrayList.size());
             return;
         }
@@ -250,21 +257,24 @@ public class PictureShowerListener implements Listener {
                 if ((node instanceof Thumbnail) && (node.getBoundsInParent().contains(mouseX, mouseY))) {
                     thumbnail = (Thumbnail) node;
                     if (!thumbnailArrayList.isEmpty()) {
-                        //如果上次选中的跟这次选中的相同，清除后返回
-                        if (thumbnail.equals(thumbnailArrayList.get(0))) {
+                        //如果上次选中的跟这次选中的相同并且标签没有被点中，清除后返回
+                        if (thumbnail.equals(thumbnailArrayList.get(0)) && !thumbnail.getIsLabelClicked()) {
+
                             isSingleClick = true;
                             timer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
                                     if (isSingleClick) {
-                                        thumbnailArrayList.get(0).setIsClicked(false);
-                                        thumbnailArrayList.get(0).setUnSelectedStyle();
-                                        thumbnailArrayList.clear();
-                                        pms.updateText(0);
+                                        clearSelected();
                                     }
                                     isSingleClick = false;
                                 }
                             }, 100);
+                            return;
+                        }
+                        //如果标签被点中
+                        else if(thumbnail.getIsClicked()){
+                            handleLabelClicked(thumbnail);
                             return;
                         }
                         //如果不同，直接清除，不返回
@@ -274,6 +284,7 @@ public class PictureShowerListener implements Listener {
                             thumbnailArrayList.clear();
                         }
                     }
+                    thumbnail.setUnSelectedStyle();
                     thumbnailArrayList.add(thumbnail);
                     thumbnail.setIsClicked(true);
                     thumbnail.setSelectedStyle();
@@ -367,7 +378,69 @@ public class PictureShowerListener implements Listener {
         }
         contextMenuP.hide();
     }
+    private void handleLabelClicked(Thumbnail thumbnail){
+        Label label = thumbnail.getLabel();
+        if(thumbnail.getIsLabelClicked()){
+            label.setBackground(new Background(new BackgroundFill(rgb(247, 247, 247), null, null)));
 
+            StackPane stackPane = new StackPane();
+
+            String filename = label.getText();
+            preName = filename.substring(0,filename.lastIndexOf("."));
+
+            textField = new TextField();
+            textField.setText(preName);
+            textField.setAlignment(Pos.CENTER);
+            stackPane.getChildren().add(textField);
+            thumbnail.setBottom(stackPane);
+            textField.requestFocus();
+            textField.selectAll();
+            textField.setStyle("    -fx-background-insets: 0;\n" +
+                    "-fx-effect: null;\n"+
+                    "-fx-border-color: rgb(28,136,203);\n"
+                    );
+        }
+    }
+
+    private void handleNameChange(){
+        for (Thumbnail thumbnail1 : thumbnailArrayList){
+            System.out.println(thumbnail1.getLabel().getText());
+        }
+        if(thumbnailArrayList.isEmpty())return;
+        if(textField == null)return;
+        newName = textField.getText();
+        if(newName.isEmpty())return;
+        Thumbnail thumbnail = thumbnailArrayList.get(0);
+        if(newName.equals(preName)){
+            thumbnail.setBottom(thumbnail.getLabel());
+        }
+        else{
+            Label label = thumbnail.getLabel();
+            String filename = label.getText();
+            String suffix = filename.substring(filename.lastIndexOf("."));
+            File currentPath = PathUtil.getCurrentPath();
+            List<File>  imageFiles = Arrays.stream(currentPath.listFiles()).filter(file -> PictureUtil.isPicture(file)).toList();
+            //判断名字是否存在,if如果存在
+            if(PictureOperationUtil.isNameExit(newName+suffix,imageFiles)){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setContentText(newName + "已被使用");
+                alert.showAndWait();
+                clearSelected();
+                thumbnail.setBottom(thumbnail.getLabel());
+            }
+            else{
+                File oldFile = thumbnail.getImageFile();
+                oldFile.renameTo(new File(oldFile.getParentFile() + "/" + newName + suffix));
+                label.setText(oldFile.getName());
+                thumbnail.setBottom(thumbnail.getLabel());
+                PictureShower pictureShower = new PictureShower();
+                pictureShower.showPicture();
+            }
+        }
+        thumbnail.setUnSelectedStyle();
+        thumbnail.setIsLabelClicked(false);
+        textField = null;
+    }
 
     private boolean isClickBlankArea(MouseEvent mouseEvent) {
         double mouseX = mouseEvent.getX();
@@ -386,6 +459,9 @@ public class PictureShowerListener implements Listener {
         for (Thumbnail thumbnail : thumbnailArrayList) {
             thumbnail.setUnSelectedStyle();
             thumbnail.setIsClicked(false);
+            if(thumbnail.getIsLabelClicked()){
+                thumbnail.setUnSelectedStyle();
+            }
         }
         thumbnailArrayList.clear();
     }
@@ -413,4 +489,5 @@ public class PictureShowerListener implements Listener {
     public static StackPane getNoPicturePane(){
         return noPicturePane;
     }
+
 }

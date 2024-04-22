@@ -9,6 +9,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static javafx.scene.paint.Color.rgb;
 
@@ -19,6 +20,7 @@ public class Thumbnail extends BorderPane {
     private File imageFile;
     private StackPane stackPane;
     private Label label;
+    private boolean isLabelClicked = false;
 
     public Thumbnail() {}
 
@@ -47,7 +49,7 @@ public class Thumbnail extends BorderPane {
         this.setMaxWidth(thumbnailWidth + 10);
 
         stackPane.getStyleClass().add("thumbnail-default");
-
+        label.getStyleClass().add("textField-default");
     }
 
 
@@ -75,6 +77,10 @@ public class Thumbnail extends BorderPane {
         this.imageFile = imageFile;
     }
 
+    public Label getLabel() {
+        return label;
+    }
+
     public boolean getIsClicked() {
         return this.isClicked;
     }
@@ -83,18 +89,40 @@ public class Thumbnail extends BorderPane {
         this.isClicked = isClicked;
     }
 
+    public boolean getIsLabelClicked(){
+        return isLabelClicked;
+    }
+    public void  setIsLabelClicked(boolean isLabelClicked){
+         this.isLabelClicked = isLabelClicked;
+    }
     public void setSelectedStyle() {
         stackPane.getStyleClass().remove("thumbnail-default");
         stackPane.getStyleClass().add("thumbnail-hover");
         label.setTextFill(Color.BLACK);
         label.setBackground(new Background(new BackgroundFill(rgb(28, 136, 203), null, null)));
-
+        System.out.println("ok1");
+        labelListener(); //被点击之后监听label有没有被点击
     }
 
     public void setUnSelectedStyle() {
         stackPane.getStyleClass().remove("thumbnail-hover");
         stackPane.getStyleClass().add("thumbnail-default");
         label.setBackground(new Background(new BackgroundFill(rgb(247, 247, 247), null, null)));
+        label.setOnMouseClicked(null);
+        stackPane.setOnMouseClicked(null);
+        isLabelClicked = false;
+    }
+    public void labelListener(){
+        label.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getClickCount() >= 1){
+                isLabelClicked = true;
+            }
+        });
+        stackPane.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getClickCount() >= 1){
+                isLabelClicked = false;
+            }
+        });
     }
 
 }

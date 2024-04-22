@@ -45,7 +45,14 @@ HBox {
     -fx-border-color: rgb(28,136,203);
     -fx-padding: 5; /* 内边距为 5 像素 */
 }
-
+/*.textField-default {
+    -fx-text-fill: black;
+    -fx-background-color:  rgb(247,247,247);
+    -fx-pref-width: 10px;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}*/
 .button {
     -fx-background-color: #f0f4fa; /* 淡蓝色按钮 */
     -fx-border-color:#7bb6dd;  /*淡蓝色边框*/
