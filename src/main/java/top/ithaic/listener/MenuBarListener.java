@@ -1,12 +1,15 @@
 package top.ithaic.listener;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -23,7 +26,6 @@ import top.ithaic.shower.PictureShower;
 import top.ithaic.utils.PictureOperationUtil;
 import top.ithaic.utils.StageManager;
 
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ public class MenuBarListener implements Listener {
     private static final MenuItem copyMenu = new MenuItem("复制");
     private static final MenuItem pasteMenu = new MenuItem("粘贴");
     private static final MenuItem deleteMenu = new MenuItem("删除");
+    private static final MenuItem selectAllMenu = new MenuItem("全选");
 
     private static final Menu helpMenu = new Menu("帮助");
     private static final MenuItem contactMenu = new MenuItem("联系我们");
@@ -50,7 +53,7 @@ public class MenuBarListener implements Listener {
         MenuBarListener.menuBar = menuBar;
         MenuBarListener.menuBar.getMenus().addAll(fileMenu,editMenu,helpMenu);
         fileMenu.getItems().addAll(openMenu,closeMenu);
-        editMenu.getItems().addAll(renameMenu,copyMenu,pasteMenu,deleteMenu);
+        editMenu.getItems().addAll(renameMenu,copyMenu,pasteMenu,deleteMenu,selectAllMenu);
         helpMenu.getItems().addAll(contactMenu);
         thumbnailArrayList = PictureShowerListener.getThumbnailArrayList();
         Listen();
@@ -58,21 +61,6 @@ public class MenuBarListener implements Listener {
 
     @Override
     public void Listen() {
-//        menuBar.setOnMouseClicked(mmouseEvent -> {
-//            if(mmouseEvent.getClickCount() >= 1){
-//                if(thumbnailArrayList == null || thumbnailArrayList.isEmpty()) {
-//                    renameMenu.setDisable(true);
-//                    copyMenu.setDisable(true);
-//                    pasteMenu.setDisable(true);
-//                    deleteMenu.setDisable(true);
-//                }else{
-//                    renameMenu.setDisable(false);
-//                    copyMenu.setDisable(false);
-//                    pasteMenu.setDisable(false);
-//                    deleteMenu.setDisable(false);
-//                }
-//            }
-//        });
         openMenu.setOnAction(actionEvent -> {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("选择文件夹");
@@ -110,6 +98,9 @@ public class MenuBarListener implements Listener {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        });
+        selectAllMenu.setOnAction(actionEvent -> {
+            PictureOperationUtil.selectAll();
         });
         contactMenu.setOnAction(actionEvent -> {
             Image image = new Image(Objects.requireNonNull(MenuBarListener.class.getResourceAsStream("/top/ithaic/icons/contact.jpg")));

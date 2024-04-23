@@ -386,13 +386,13 @@ public class PictureOperationUtil {
     public static void selectAll() {
         FlowPane flowPane = PictureShower.getThumbnails();
         ArrayList<Thumbnail> thumbnailArrayList = PictureShowerListener.getThumbnailArrayList();
-        for (Thumbnail thumbnail : thumbnailArrayList) {
-            thumbnail.setUnSelectedStyle();
-            thumbnail.setIsClicked(false);
-        }
         thumbnailArrayList.clear();
         for (Node node : flowPane.getChildren()) {
             Thumbnail thumbnail = (Thumbnail) node;
+            if(thumbnail.getIsClicked()) {
+                thumbnailArrayList.add(thumbnail);
+                continue;
+            }
             thumbnail.setSelectedStyle();
             thumbnail.setIsClicked(true);
             thumbnailArrayList.add(thumbnail);
