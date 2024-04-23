@@ -1,6 +1,7 @@
 package top.ithaic;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -23,6 +24,9 @@ public class HelloApplication extends Application {
         stage.setMinHeight(500);
         StageManager.pushStage(stage);
         stage.show();
+        stage.setOnCloseRequest(windowEvent -> {
+            Platform.exit();
+        });
     }
 
     public static void main(String[] args) {

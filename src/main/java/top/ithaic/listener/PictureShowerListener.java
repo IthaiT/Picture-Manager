@@ -415,9 +415,8 @@ public class PictureShowerListener implements Listener {
         if(thumbnailArrayList.isEmpty())return;
         if(textField == null)return;
         newName = textField.getText();
-        if(newName.isEmpty())return;
         Thumbnail thumbnail = thumbnailArrayList.get(0);
-        if(!newName.equals(preName)){
+        if(!newName.isEmpty() && !newName.equals(preName)){
             Label label = thumbnail.getLabel();
             String filename = label.getText();
             String suffix = filename.substring(filename.lastIndexOf("."));

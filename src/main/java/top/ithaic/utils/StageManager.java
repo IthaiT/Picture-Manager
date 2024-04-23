@@ -18,11 +18,15 @@ public class StageManager {
         }
     }
 
-    public static void popStage(){
+    public static Stage popStage(){
         stageStack.pop();
         Stage tmp = stageStack.peek();
         tmp.show();
         new PictureShower().showPicture();
+        return tmp;
+    }
+    public static Stage getNowStage(){
+        return stageStack.peek();
     }
     public static Stack<Stage> getStageStack(){
         return stageStack;

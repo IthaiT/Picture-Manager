@@ -48,7 +48,8 @@ public class mainController {
     private TextField pictureMessage;
     @FXML
     private TextField searchName;
-
+    @FXML
+    public MenuBar menubar;//主窗口的menuBar
 
 
     @FXML
@@ -77,6 +78,7 @@ public class mainController {
         new SortButtonListener(sortButton);
         new SearchButtonListener(searchName,searchButton);
         new PictureShowerListener(thumbnails,scrollPane);
+        new MenuBarListener(menubar);
     }
 
 }

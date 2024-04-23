@@ -14,6 +14,7 @@ import top.ithaic.utils.PictureUtil;
 
 import java.beans.EventHandler;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Stack;
 
@@ -88,6 +89,7 @@ public class PictureShower {
                 Platform.runLater(()->{
                     if(this.isTerminal)return;
                     thumbnails.getChildren().add(thumbnail);
+                    PictureShowerListener.getThumbnailArrayList().clear();
                 });
             }
         }
