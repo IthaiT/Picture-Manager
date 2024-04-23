@@ -26,7 +26,6 @@ public class SearchButtonListener implements Listener {
         this.searchButton.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
             if(this.searchName.getText().isEmpty())return;
             //创建ImageSearchUtil对象搜索
-            System.out.println("搜索文件名为:"+this.searchName.getText());
             //搜索
             try {
                 new ImageSearchUtil().search(PathUtil.getCurrentPath(),this.searchName.getText());
@@ -39,7 +38,6 @@ public class SearchButtonListener implements Listener {
             if(this.searchName.getText().isEmpty())return;
             if(keyEvent.getCode() == KeyCode.ENTER) {
                 //创建ImageSearchUtil对象搜索
-                System.out.println("搜索文件名为:" + this.searchName.getText());
                 //搜索
                 try {
                     new ImageSearchUtil().search(PathUtil.getCurrentPath(),this.searchName.getText());

@@ -145,7 +145,6 @@ public final class SlidePlay {
             mainPane.getChildren().add(toolBar);
             //TODO 这里有问题，第一次加入的时候，meunubar的宽度为0
             toolBar.setLayoutX((mainPane.getWidth()-247.33333333333334)/2);
-            System.out.println(toolBar.getWidth());
             toolBar.setLayoutY(mainPane.getHeight()-100);
 
         });
@@ -204,7 +203,6 @@ public final class SlidePlay {
             @Override
             public void run() {
                 Platform.runLater(()->{
-                    System.out.println("测试是否还在执行");
                     if(!mainPane.getChildren().contains(toolBar))return;
                     mainPane.getChildren().remove(toolBar);
 

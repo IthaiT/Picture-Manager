@@ -1,5 +1,6 @@
 package top.ithaic.listener;
 
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -110,7 +111,7 @@ public class PictureShowerListener implements Listener {
         contextMenuP.hide();
         isSingleClick = false;//防止对鼠标点击事件造成影响
         thumbnails.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
-        handleNameChange();
+        handleNameChange();//处理点击label重命名
         if (isClickBlankArea(mouseEvent)) {
             if(mouseEvent.getButton() == MouseButton.SECONDARY){
                 contextMenuP.show(scrollPane,mouseEvent.getScreenX(),mouseEvent.getScreenY());
@@ -121,6 +122,7 @@ public class PictureShowerListener implements Listener {
             anchorPane.setPrefWidth(scrollPane.getWidth());
             anchorPane.getChildren().add(thumbnails);
             anchorPane.getChildren().add(rectangle);
+            anchorPane.setStyle("-fx-background-color: #f0f4fa;");
             scrollPane.setContent(anchorPane);
             //添加事件处理器
             thumbnails.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedEventHandler);
@@ -175,7 +177,6 @@ public class PictureShowerListener implements Listener {
     }
 
     private void handleMouseClicked(MouseEvent mouseEvent) {
-        System.out.println("test4");
         double mouseX = mouseEvent.getX();
         double mouseY = mouseEvent.getY();
         /*
@@ -409,9 +410,6 @@ public class PictureShowerListener implements Listener {
     }
 
     private void handleNameChange(){
-        for (Thumbnail thumbnail1 : thumbnailArrayList){
-            System.out.println(thumbnail1.getLabel().getText());
-        }
         if(thumbnailArrayList.isEmpty())return;
         if(textField == null)return;
         newName = textField.getText();

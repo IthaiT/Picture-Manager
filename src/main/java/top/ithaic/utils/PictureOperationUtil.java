@@ -156,7 +156,6 @@ public class PictureOperationUtil {
             if (mouseEvent.getClickCount() >= 1) {
                 stage.close();
                 pictureShower.showPicture(currentPath);
-                System.out.println("测试点击ignore");
             }
         });
         ignoreLabel.setOnMouseEntered(mouseEvent -> {

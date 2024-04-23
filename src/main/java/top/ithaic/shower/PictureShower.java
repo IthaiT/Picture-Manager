@@ -92,6 +92,7 @@ public class PictureShower {
                     thumbnails.getChildren().add(thumbnail);
                 });
             }
+            //每次加载完成后，清楚上一次的图片缓存
             Platform.runLater(()->{
                 if(this.isTerminal)return;
                 PictureShowerListener.getThumbnailArrayList().clear();

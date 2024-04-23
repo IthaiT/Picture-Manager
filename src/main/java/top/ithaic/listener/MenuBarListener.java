@@ -3,6 +3,7 @@ package top.ithaic.listener;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -29,6 +30,7 @@ import top.ithaic.utils.StageManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -61,14 +63,13 @@ public class MenuBarListener implements Listener {
 
     @Override
     public void Listen() {
+
         openMenu.setOnAction(actionEvent -> {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("选择文件夹");
-
             File selectedFolder = directoryChooser.showDialog(StageManager.getNowStage());
             PictureShower pictureShower = new PictureShower();
             pictureShower.showPicture(selectedFolder);
-
         });
         closeMenu.setOnAction(actionEvent -> {
             Stage mainStage = StageManager.getNowStage();
@@ -138,6 +139,5 @@ public class MenuBarListener implements Listener {
             stage.getIcons().add(icon);
             stage.show();
         });
-
     }
 }

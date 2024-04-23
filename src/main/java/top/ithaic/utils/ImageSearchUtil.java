@@ -51,7 +51,6 @@ public final class ImageSearchUtil {
         }
         @Override
         public void run() {
-            long start = System.currentTimeMillis();
             for(int i=1;i<=threadNumber;i++){
                 new SearchThread(searchPath,searchName).start();
             }
@@ -60,8 +59,6 @@ public final class ImageSearchUtil {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            long end = System.currentTimeMillis();
-            System.out.println("本次搜索耗时:"+(end-start)+"ms");
             //返回结果
             this.searchResult = new File[tempResult.size()];
             for(int i=0;i<tempResult.size();i++){
@@ -91,7 +88,6 @@ public final class ImageSearchUtil {
         private void searchImage(File currentFile,String searchName){
             if(currentFile.isFile()&&!isfindFiles.contains(currentFile)){
                 if(PictureUtil.isPicture(currentFile) && match(currentFile.getName().toLowerCase(),searchName)){
-                    System.out.println("匹配成功:"+currentFile.getName());
                     synchronized (tempResult) {
                         if (!tempResult.contains(currentFile)) tempResult.add(currentFile);
                     }
