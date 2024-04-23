@@ -7,6 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 
 import javafx.scene.control.ToolBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -17,14 +19,12 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.SlideThumbnail;
+import top.ithaic.listener.PathButtonListener;
 import top.ithaic.shower.slidePlay.SlidePlay;
 import top.ithaic.utils.PictureUtil;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class SlideListener implements Listener {
     private static int head;
@@ -63,6 +63,7 @@ public class SlideListener implements Listener {
         SlideListener.compressPane = compressPane;
         pictureScanner.setHgap(10);
         Listen();
+        setIcon();
         SlideListener.pictureShower.getChildren().remove(compressPane);
     }
     @Override
@@ -248,6 +249,56 @@ public class SlideListener implements Listener {
                 }
             }
         });
+    }
+
+    private void setIcon(){
+        ImageView image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/play.png"))));
+        image.setPreserveRatio(true);
+        image.setFitWidth(slidePlay.getPrefWidth());
+        image.setFitHeight(slidePlay.getPrefHeight());
+        slidePlay.setGraphic(image);
+
+        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/back.png"))));
+        image.setPreserveRatio(true);
+        image.setFitWidth(lastPicture.getPrefWidth());
+        image.setFitHeight(lastPicture.getPrefHeight());
+        lastPicture.setGraphic(image);
+
+        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/forward.png"))));
+        image.setPreserveRatio(true);
+        image.setFitWidth(nextPicture.getPrefWidth());
+        image.setFitHeight(nextPicture.getPrefHeight());
+        nextPicture.setGraphic(image);
+
+        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/amplify.png"))));
+        image.setPreserveRatio(true);
+        image.setFitWidth(amplifyPicture.getPrefWidth());
+        image.setFitHeight(amplifyPicture.getPrefHeight());
+        amplifyPicture.setGraphic(image);
+
+        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/shrink.png"))));
+        image.setPreserveRatio(true);
+        image.setFitWidth(shrinkPicture.getPrefWidth());
+        image.setFitHeight(shrinkPicture.getPrefHeight());
+        shrinkPicture.setGraphic(image);
+
+        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/leftRotate.png"))));
+        image.setPreserveRatio(true);
+        image.setFitWidth(leftRotatePicture.getPrefWidth());
+        image.setFitHeight(leftRotatePicture.getPrefHeight());
+        leftRotatePicture.setGraphic(image);
+
+        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/rightRotate.png"))));
+        image.setPreserveRatio(true);
+        image.setFitWidth(rightRotatePicture.getPrefWidth());
+        image.setFitHeight(rightRotatePicture.getPrefHeight());
+        rightRotatePicture.setGraphic(image);
+
+        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/compress.png"))));
+        image.setPreserveRatio(true);
+        image.setFitWidth(compressImage.getPrefWidth());
+        image.setFitHeight(compressImage.getPrefHeight());
+        compressImage.setGraphic(image);
     }
 
     public static FlowPane getPictureScanner() {

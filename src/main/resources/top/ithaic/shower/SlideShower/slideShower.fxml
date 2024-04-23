@@ -13,16 +13,16 @@
    <center>
       <Pane fx:id="pictureShower" prefHeight="516.0" prefWidth="637.0" BorderPane.alignment="CENTER">
          <children>
-            <ToolBar fx:id="toolBar" layoutX="160.0" layoutY="396.0" prefHeight="33.0" prefWidth="430.0">
+            <ToolBar fx:id="toolBar" layoutX="173.0" layoutY="396.0" prefHeight="42.0" prefWidth="381.0">
               <items>
-                  <Button fx:id="slidePlay" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" text="►" />
-                  <Button fx:id="lastPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="35.0" text="←" />
-                  <Button fx:id="nextPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" text="→" />
-                  <Button fx:id="amplifyPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="50.0" text="放大" />
-                  <Button fx:id="shrinkPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="54.0" text="缩小" />
-                  <Button fx:id="leftRotatePicture" mnemonicParsing="false" text="左旋" />
-                  <Button fx:id="rightRotatePicture" mnemonicParsing="false" text="右旋" />
-                  <Button fx:id="compressImage" mnemonicParsing="false" prefHeight="23.0" prefWidth="87.0" text="压缩体积" />
+                  <Button fx:id="slidePlay" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" />
+                  <Button fx:id="lastPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" />
+                  <Button fx:id="nextPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" />
+                  <Button fx:id="amplifyPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" />
+                  <Button fx:id="shrinkPicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" />
+                  <Button fx:id="leftRotatePicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" />
+                  <Button fx:id="rightRotatePicture" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" />
+                  <Button fx:id="compressImage" mnemonicParsing="false" prefHeight="23.0" prefWidth="34.0" />
               </items>
             </ToolBar>
             <Pane fx:id="compressPane" layoutX="209.0" layoutY="232.0" prefHeight="107.0" prefWidth="331.0">
