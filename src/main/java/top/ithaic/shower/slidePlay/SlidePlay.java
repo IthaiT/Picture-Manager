@@ -14,6 +14,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import top.ithaic.HelloApplication;
 import top.ithaic.imageview.Thumbnail;
 import top.ithaic.shower.PictureShower;
 import top.ithaic.shower.SlideShower.SlideShower;
@@ -55,7 +56,7 @@ public final class SlidePlay {
         exitButton = new Button("退出");
         toolBar.getItems().addAll(statusButton,reduceOneS,label,addOneS,exitButton);
         playScene = new Scene(mainPane);
-
+        playScene.getStylesheets().add(String.valueOf(HelloApplication.class.getResource("/top/ithaic/cssFiles/slideStyle.css")));
         imageView.setPreserveRatio(true);
         
         mainPane.getChildren().add(subPane);
