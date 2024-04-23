@@ -89,9 +89,11 @@ public class PictureShower {
                 Platform.runLater(()->{
                     if(this.isTerminal)return;
                     thumbnails.getChildren().add(thumbnail);
-                    PictureShowerListener.getThumbnailArrayList().clear();
                 });
             }
+            Platform.runLater(()->{
+                PictureShowerListener.getThumbnailArrayList().clear();
+            });
         }
         public void terminate(){
             this.isTerminal = true;

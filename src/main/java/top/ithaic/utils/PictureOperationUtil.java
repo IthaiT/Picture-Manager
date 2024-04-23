@@ -83,7 +83,6 @@ public class PictureOperationUtil {
             }
             //如果粘贴的位置是本地文件夹，那么直接创建副本
             if (thumbnail.getImageFile().toString().equals(targetName)) {
-                System.out.println("同名文件");
                 Path sourcePath = thumbnail.getImageFile().toPath();
                 Path targetPath = thumbnail.getImageFile().toPath();
                 while (isNameExit(sourceName, imageFiles)) {
