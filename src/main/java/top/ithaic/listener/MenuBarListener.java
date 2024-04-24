@@ -135,7 +135,7 @@ public class MenuBarListener implements Listener {
             stage.initModality(Modality.APPLICATION_MODAL); // 设置为模态窗口
             stage.setScene(scene);
             stage.setResizable(false); // 设置窗口大小不可改变
-            Image icon = new Image(String.valueOf(HelloApplication.class.getResource("/top/ithaic/icons/softIcon.png")));
+            Image icon = new Image(String.valueOf(HelloApplication.class.getResource("/top/ithaic/icons/Ithai.png")));
             stage.getIcons().add(icon);
             stage.show();
         });
