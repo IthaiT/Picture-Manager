@@ -1,7 +1,6 @@
 package top.ithaic.shower;
 
 import javafx.beans.binding.StringBinding;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -11,7 +10,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import top.ithaic.utils.PathUtil;
+import top.ithaic.utils.FilePathUtil;
 
 import java.io.File;
 
@@ -35,9 +34,9 @@ public class PathShower {
         PathShower.pathShower.setOnMouseClicked(mouseEvent -> {
             if(mouseEvent.getClickCount() >= 2 && mouseEvent.getButton() == MouseButton.PRIMARY){
                 PathShower.historyPath.getItems().clear();
-                if(PathUtil.getHistoryPath() == null) return;
+                if(FilePathUtil.getHistoryPath() == null) return;
 
-                for(String path:PathUtil.getHistoryPath()){
+                for(String path: FilePathUtil.getHistoryPath()){
                     MenuItem menuItem = new MenuItem(path);
                     //设置样式 与路径栏齐平
                     menuItem.setStyle("-fx-pref-width: " + (pathShower.getWidth()-5) + "px;");
@@ -84,11 +83,11 @@ public class PathShower {
     public void bindProperty(){
         PathShower.pathShower.textProperty().bind(new StringBinding() {
             {
-                bind(PathUtil.getCurrentPathProperty());
+                bind(FilePathUtil.getCurrentPathProperty());
             }
             @Override
             protected String computeValue() {
-                return PathUtil.getCurrentPathProperty().getValue();
+                return FilePathUtil.getCurrentPathProperty().getValue();
             }
         });
     }

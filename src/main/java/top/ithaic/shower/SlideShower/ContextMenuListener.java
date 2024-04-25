@@ -1,12 +1,10 @@
 package top.ithaic.shower.SlideShower;
 
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import top.ithaic.Myinterface.Listener;
-import top.ithaic.shower.PictureShower;
 import top.ithaic.shower.slidePlay.SlidePlay;
-import top.ithaic.utils.PathUtil;
+import top.ithaic.utils.FilePathUtil;
 import top.ithaic.utils.PictureOperationUtil;
 
 import java.io.IOException;
@@ -29,21 +27,21 @@ public class ContextMenuListener implements Listener {
     public void Listen() {
         copyItem.setOnAction(actionEvent -> {
             PictureOperationUtil.copyPictures(SlideFileManager.getCurrentIndex());
-            PathUtil.updateFiles();
-            SlideFileManager.setPictures(PathUtil.getCurrentFiles());
+            FilePathUtil.updateFiles();
+            SlideFileManager.setPictures(FilePathUtil.getCurrentFiles());
             new SlideShower().drawPicture();
         });
         renameItem.setOnAction(actionEvent -> {
             PictureOperationUtil.renamePictures(SlideFileManager.getCurrentIndex());
-            PathUtil.updateFiles();
-            SlideFileManager.setPictures(PathUtil.getCurrentFiles());
+            FilePathUtil.updateFiles();
+            SlideFileManager.setPictures(FilePathUtil.getCurrentFiles());
             new SlideShower().drawPicture();
         });
         deleteItem.setOnAction(actionEvent -> {
             try {
                 if(PictureOperationUtil.deletePictures(SlideFileManager.getCurrentIndex())) {
-                    PathUtil.updateFiles();
-                    SlideFileManager.setPictures(PathUtil.getCurrentFiles());
+                    FilePathUtil.updateFiles();
+                    SlideFileManager.setPictures(FilePathUtil.getCurrentFiles());
                     SlideFileManager.setPicturesLengthProperty(SlideFileManager.getPictures().length);
                     new SlideShower().drawPicture();
                 }

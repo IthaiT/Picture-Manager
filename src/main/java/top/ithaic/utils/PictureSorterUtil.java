@@ -10,26 +10,24 @@ import java.util.Comparator;
 public final class PictureSorterUtil {
 
     private static  File[] pictures;
+    private static final PictureShower pictureShower = new PictureShower();
 
-    private static PictureShower pictureShower = new PictureShower();
-
-    //TODO 根据名字进行分类
+    //根据名字进行分类
     public static void sortWithName() {
-        pictures = PictureUtil.getPicturesInDirectory(PathUtil.getCurrentFiles());
+        pictures = PictureUtil.getPicturesInDirectory(FilePathUtil.getCurrentFiles());
         Arrays.sort(pictures, Comparator.comparing(File::getName));
         pictureShower.showPicture(pictures);
     }
-
-    //TODO 根据大小进行分类
+    //根据大小进行分类
     public static void sortWithSize(){
-        pictures = PictureUtil.getPicturesInDirectory(PathUtil.getCurrentFiles());
+        pictures = PictureUtil.getPicturesInDirectory(FilePathUtil.getCurrentFiles());
         Arrays.sort(pictures, Comparator.comparing(File::length));
         pictureShower.showPicture(pictures);
     }
 
-    //TODO 根据上次修改的时间进行分类
+    //根据上次修改的时间进行分类
     public static void sortWithLastModify(){
-        pictures = PictureUtil.getPicturesInDirectory(PathUtil.getCurrentFiles());
+        pictures = PictureUtil.getPicturesInDirectory(FilePathUtil.getCurrentFiles());
         Arrays.sort(pictures, Comparator.comparing(File::lastModified));
         pictureShower.showPicture(pictures);
     }

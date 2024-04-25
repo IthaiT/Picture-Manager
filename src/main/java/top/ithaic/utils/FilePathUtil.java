@@ -1,16 +1,13 @@
 package top.ithaic.utils;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
-public final class PathUtil {
+public final class FilePathUtil {
     private static List<String> historyPath;
     private static File currentPath;
     private static File[] currentFiles;
@@ -47,10 +44,10 @@ public final class PathUtil {
     }
     public static void updateFiles(File[] currentFiles) {
         //更新当前文件
-        PathUtil.currentFiles = currentFiles;
+        FilePathUtil.currentFiles = currentFiles;
     }
     public static void updateFiles(){
-        PathUtil.updateFiles(PictureUtil.getPicturesInDirectory(currentPath));
+        FilePathUtil.updateFiles(PictureUtil.getPicturesInDirectory(currentPath));
     }
 
     public static File[] getCurrentFiles() {return currentFiles;}

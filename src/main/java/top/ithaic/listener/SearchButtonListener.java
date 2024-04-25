@@ -9,7 +9,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.utils.ImageSearchUtil;
-import top.ithaic.utils.PathUtil;
+import top.ithaic.utils.FilePathUtil;
 
 import java.util.Objects;
 
@@ -22,7 +22,7 @@ public class SearchButtonListener implements Listener {
         this.searchButton = searchButton;
         this.searchName = searchName;
         //设置搜索按钮图标
-        ImageView image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/search.png"))));
+        ImageView image = new ImageView(new Image(Objects.requireNonNull(SearchButtonListener.class.getResourceAsStream("/top/ithaic/icons/search.png"))));
         image.setPreserveRatio(true);
         image.setFitWidth(searchButton.getPrefWidth());
         image.setFitHeight(searchButton.getPrefHeight());
@@ -39,7 +39,7 @@ public class SearchButtonListener implements Listener {
             //创建ImageSearchUtil对象搜索
             //搜索
             try {
-                new ImageSearchUtil().search(PathUtil.getCurrentPath(),this.searchName.getText());
+                new ImageSearchUtil().search(FilePathUtil.getCurrentPath(),this.searchName.getText());
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -51,7 +51,7 @@ public class SearchButtonListener implements Listener {
                 //创建ImageSearchUtil对象搜索
                 //搜索
                 try {
-                    new ImageSearchUtil().search(PathUtil.getCurrentPath(),this.searchName.getText());
+                    new ImageSearchUtil().search(FilePathUtil.getCurrentPath(),this.searchName.getText());
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

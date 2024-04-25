@@ -73,9 +73,8 @@ public class mainController {
     //TODO 初始化各种监听器
     private void initListener(){
         new DiskTreeListener(disktree);
-        new SliderListener(sizeChanger);
-        new PathButtonListener(backwardButton, forwardButton);
         new SortButtonListener(sortButton);
+        new CommonListener(sizeChanger,backwardButton,forwardButton);
         new SearchButtonListener(searchName,searchButton);
         new PictureShowerListener(thumbnails,scrollPane);
         new MenuBarListener(menubar);

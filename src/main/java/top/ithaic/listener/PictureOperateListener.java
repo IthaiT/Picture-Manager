@@ -5,7 +5,7 @@ import javafx.scene.control.MenuItem;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.shower.SlideShower.SlideWindow;
 import top.ithaic.shower.slidePlay.SlidePlay;
-import top.ithaic.utils.PathUtil;
+import top.ithaic.utils.FilePathUtil;
 import top.ithaic.utils.PictureOperationUtil;
 import top.ithaic.utils.PictureUtil;
 
@@ -32,7 +32,7 @@ public class PictureOperateListener implements Listener {
     @Override
     public void Listen() {
         openItem.setOnAction(actionEvent -> {
-            new SlideWindow(PathUtil.getCurrentFiles(), PictureUtil.getPictureIndex(PictureShowerListener.getThumbnailArrayList().get(0).getImageFile()));
+            new SlideWindow(FilePathUtil.getCurrentFiles(), PictureUtil.getPictureIndex(PictureShowerListener.getThumbnailArrayList().get(0).getImageFile()));
         });
         copyItem.setOnAction(actionEvent -> {
             PictureOperationUtil.copyPictures();

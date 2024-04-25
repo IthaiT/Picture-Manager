@@ -30,6 +30,7 @@ public final class SlideFileManager{
         SlideFileManager.currentIndex = currentIndex;
     }
 
+    //当前数组下标属性
     public static IntegerProperty currentIndexPropertyProperty() {
         return currentIndexProperty;
     }
@@ -37,6 +38,7 @@ public final class SlideFileManager{
         SlideFileManager.currentIndexProperty.set(currentIndexProperty);
     }
 
+    //当前数组长度属性
     public static IntegerProperty picturesLengthProperty() {
         return picturesLengthProperty;
     }

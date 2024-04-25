@@ -2,8 +2,7 @@ package top.ithaic.shower;
 
 import javafx.scene.control.TextField;
 import top.ithaic.utils.FileMessageUtil;
-import top.ithaic.utils.PathUtil;
-import top.ithaic.utils.PictureUtil;
+import top.ithaic.utils.FilePathUtil;
 
 public class PictureMessageShower {
     private static TextField pictureMessage;
@@ -18,8 +17,8 @@ public class PictureMessageShower {
         updateText(0);
     }
     public void updateText(int num){
-        String text = FileMessageUtil.countPictureNumber(PathUtil.getCurrentFiles()) + "张图片";
-        double length = FileMessageUtil.countPictureSize(PathUtil.getCurrentFiles());
+        String text = FileMessageUtil.countPictureNumber(FilePathUtil.getCurrentFiles()) + "张图片";
+        double length = FileMessageUtil.countPictureSize(FilePathUtil.getCurrentFiles());
         String[] units = {"B","KB","MB","GB"};
         int count = 0;
         while(length >= 1024){

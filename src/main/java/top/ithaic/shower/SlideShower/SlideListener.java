@@ -19,7 +19,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import top.ithaic.Myinterface.Listener;
 import top.ithaic.imageview.SlideThumbnail;
-import top.ithaic.listener.PathButtonListener;
 import top.ithaic.shower.slidePlay.SlidePlay;
 import top.ithaic.utils.PictureUtil;
 
@@ -27,6 +26,7 @@ import java.io.File;
 import java.util.*;
 
 public class SlideListener implements Listener {
+    private boolean isMouseInToolBar;
     private static int head;
     private static int tail;
     private int scannerPictureNum;
@@ -62,6 +62,7 @@ public class SlideListener implements Listener {
         SlideListener.pictureShower = pictureShower;
         SlideListener.compressPane = compressPane;
         pictureScanner.setHgap(10);
+        isMouseInToolBar = false;
         Listen();
         setIcon();
         SlideListener.pictureShower.getChildren().remove(compressPane);
@@ -71,6 +72,8 @@ public class SlideListener implements Listener {
         //工具栏坐标位置监听
         toolBar.layoutXProperty().bind(Bindings.createDoubleBinding(()->mainPane.getWidth()/2-toolBar.getWidth()/2,mainPane.widthProperty()));
         toolBar.layoutYProperty().bind((Bindings.createDoubleBinding(()->mainPane.getHeight()-toolBar.getHeight()-80,mainPane.heightProperty())));
+        toolBar.addEventFilter(MouseEvent.MOUSE_ENTERED,mouseEvent -> isMouseInToolBar = true);
+        toolBar.addEventFilter(MouseEvent.MOUSE_EXITED,mouseEvent -> isMouseInToolBar = false);
         //压缩参数窗口位置监听
         compressPane.layoutXProperty().bind(Bindings.createDoubleBinding(()->(pictureShower.getWidth()-compressPane.getPrefWidth())/2,pictureShower.widthProperty()));
         compressPane.layoutYProperty().bind(Bindings.createDoubleBinding(()->(pictureShower.getHeight()-compressPane.getPrefHeight())/2,pictureShower.heightProperty()));
@@ -90,6 +93,7 @@ public class SlideListener implements Listener {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
+                if(isMouseInToolBar)return;
                 Platform.runLater(()->{
                     if(!mainPane.getChildren().contains(toolBar))return;
                     pictureShower.getParent().requestFocus(); //当ToolBar被移除时，焦点转移到BoardPane上，确保键盘监听正常
@@ -252,49 +256,49 @@ public class SlideListener implements Listener {
     }
 
     private void setIcon(){
-        ImageView image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/play.png"))));
+        ImageView image = new ImageView(new Image(Objects.requireNonNull(SlideListener.class.getResourceAsStream("/top/ithaic/icons/play.png"))));
         image.setPreserveRatio(true);
         image.setFitWidth(slidePlay.getPrefWidth());
         image.setFitHeight(slidePlay.getPrefHeight());
         slidePlay.setGraphic(image);
 
-        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/back.png"))));
+        image = new ImageView(new Image(Objects.requireNonNull(SlideListener.class.getResourceAsStream("/top/ithaic/icons/back.png"))));
         image.setPreserveRatio(true);
         image.setFitWidth(lastPicture.getPrefWidth());
         image.setFitHeight(lastPicture.getPrefHeight());
         lastPicture.setGraphic(image);
 
-        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/forward.png"))));
+        image = new ImageView(new Image(Objects.requireNonNull(SlideListener.class.getResourceAsStream("/top/ithaic/icons/forward.png"))));
         image.setPreserveRatio(true);
         image.setFitWidth(nextPicture.getPrefWidth());
         image.setFitHeight(nextPicture.getPrefHeight());
         nextPicture.setGraphic(image);
 
-        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/amplify.png"))));
+        image = new ImageView(new Image(Objects.requireNonNull(SlideListener.class.getResourceAsStream("/top/ithaic/icons/amplify.png"))));
         image.setPreserveRatio(true);
         image.setFitWidth(amplifyPicture.getPrefWidth());
         image.setFitHeight(amplifyPicture.getPrefHeight());
         amplifyPicture.setGraphic(image);
 
-        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/shrink.png"))));
+        image = new ImageView(new Image(Objects.requireNonNull(SlideListener.class.getResourceAsStream("/top/ithaic/icons/shrink.png"))));
         image.setPreserveRatio(true);
         image.setFitWidth(shrinkPicture.getPrefWidth());
         image.setFitHeight(shrinkPicture.getPrefHeight());
         shrinkPicture.setGraphic(image);
 
-        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/leftRotate.png"))));
+        image = new ImageView(new Image(Objects.requireNonNull(SlideListener.class.getResourceAsStream("/top/ithaic/icons/leftRotate.png"))));
         image.setPreserveRatio(true);
         image.setFitWidth(leftRotatePicture.getPrefWidth());
         image.setFitHeight(leftRotatePicture.getPrefHeight());
         leftRotatePicture.setGraphic(image);
 
-        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/rightRotate.png"))));
+        image = new ImageView(new Image(Objects.requireNonNull(SlideListener.class.getResourceAsStream("/top/ithaic/icons/rightRotate.png"))));
         image.setPreserveRatio(true);
         image.setFitWidth(rightRotatePicture.getPrefWidth());
         image.setFitHeight(rightRotatePicture.getPrefHeight());
         rightRotatePicture.setGraphic(image);
 
-        image = new ImageView(new Image(Objects.requireNonNull(PathButtonListener.class.getResourceAsStream("/top/ithaic/icons/compress.png"))));
+        image = new ImageView(new Image(Objects.requireNonNull(SlideListener.class.getResourceAsStream("/top/ithaic/icons/compress.png"))));
         image.setPreserveRatio(true);
         image.setFitWidth(compressImage.getPrefWidth());
         image.setFitHeight(compressImage.getPrefHeight());

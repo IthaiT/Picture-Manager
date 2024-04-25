@@ -32,7 +32,6 @@ import net.coobird.thumbnailator.Thumbnails;
 
 import javax.imageio.ImageIO;
 
-import static java.lang.Math.abs;
 
 public class PictureOperationUtil {
     private static ArrayList<Thumbnail> thumbnails = new ArrayList<>();//被复制的图片，存储以方便粘贴
@@ -49,7 +48,7 @@ public class PictureOperationUtil {
     }
 
     public static void pastePictures() throws IOException {
-        File currentPath = PathUtil.getCurrentPath();
+        File currentPath = FilePathUtil.getCurrentPath();
 
         if (currentPath == null) return;
         if (!currentPath.exists()) return;
@@ -169,9 +168,9 @@ public class PictureOperationUtil {
     }
 
     public static void renamePictures() {
-        File currentPath = PathUtil.getCurrentPath();
+        File currentPath = FilePathUtil.getCurrentPath();
         if (currentPath == null) return;
-        List<File> imageFiles = Arrays.stream(PathUtil.getCurrentPath().listFiles()).filter(file -> PictureUtil.isPicture(file)).toList();
+        List<File> imageFiles = Arrays.stream(FilePathUtil.getCurrentPath().listFiles()).filter(file -> PictureUtil.isPicture(file)).toList();
         ArrayList<Thumbnail> thumbnailArrayList = PictureShowerListener.getThumbnailArrayList();
         //单个图片重命名
         if (thumbnailArrayList.size() == 1) {
@@ -359,8 +358,8 @@ public class PictureOperationUtil {
         }
         pictureShower.showPicture();
         if (PictureShowerListener.getSlideWindow() != null) {
-            PathUtil.updateFiles();
-            SlideFileManager.setPictures(PathUtil.getCurrentFiles());
+            FilePathUtil.updateFiles();
+            SlideFileManager.setPictures(FilePathUtil.getCurrentFiles());
             if (SlideFileManager.getCurrentIndex() == SlideFileManager.getPictures().length)
                 SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex() - 1);
             new SlideShower().drawPicture();

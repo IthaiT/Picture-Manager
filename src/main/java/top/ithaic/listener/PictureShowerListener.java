@@ -1,6 +1,5 @@
 package top.ithaic.listener;
 
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -19,7 +18,7 @@ import top.ithaic.shower.PictureShower;
 import top.ithaic.shower.SlideShower.SlideFileManager;
 import top.ithaic.shower.SlideShower.SlideShower;
 import top.ithaic.shower.SlideShower.SlideWindow;
-import top.ithaic.utils.PathUtil;
+import top.ithaic.utils.FilePathUtil;
 import top.ithaic.utils.PictureOperationUtil;
 import top.ithaic.utils.PictureUtil;
 
@@ -309,7 +308,7 @@ public class PictureShowerListener implements Listener {
                     if (!thumbnailArrayList.isEmpty()) {
                         //如果这次与上次双击的图片相同，创建幻灯片后返回
                         if (thumbnailArrayList.get(0).equals(thumbnail)) {
-                            if(slideWindow==null) slideWindow = new SlideWindow(PathUtil.getCurrentFiles(), PictureUtil.getPictureIndex(thumbnailArrayList.get(0).getImageFile()));
+                            if(slideWindow==null) slideWindow = new SlideWindow(FilePathUtil.getCurrentFiles(), PictureUtil.getPictureIndex(thumbnailArrayList.get(0).getImageFile()));
                             else{
                                 SlideFileManager.setCurrentIndex(PictureUtil.getPictureIndex(thumbnailArrayList.get(0).getImageFile()));
                                 new SlideShower().drawPicture();
@@ -418,7 +417,7 @@ public class PictureShowerListener implements Listener {
             Label label = thumbnail.getLabel();
             String filename = label.getText();
             String suffix = filename.substring(filename.lastIndexOf("."));
-            File currentPath = PathUtil.getCurrentPath();
+            File currentPath = FilePathUtil.getCurrentPath();
             List<File>  imageFiles = Arrays.stream(currentPath.listFiles()).filter(file -> PictureUtil.isPicture(file)).toList();
             //判断名字是否存在,if如果存在
             if(PictureOperationUtil.isNameExit(newName+suffix,imageFiles)){
