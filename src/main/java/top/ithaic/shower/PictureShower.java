@@ -73,6 +73,16 @@ public class PictureShower {
         public ImageLoadThread(File[] pictures){this.pictures = pictures;}
         @Override
         public void run(){
+            //每次加载前，清除上一次的图片缓存
+            Platform.runLater(()->{
+                if(this.isTerminal)return;
+                ArrayList<Thumbnail> thumbnailArrayList = PictureShowerListener.getThumbnailArrayList();
+                for (Thumbnail thumbnail : thumbnailArrayList){
+                    thumbnail.setIsClicked(false);
+                    thumbnail.setUnSelectedStyle();
+                }
+                PictureShowerListener.getThumbnailArrayList().clear();
+            });
             for(File picture : pictures){
                 if(this.isTerminal)break;
                 //当数组中图片等于null时，表明到数组末尾，返回
@@ -83,11 +93,6 @@ public class PictureShower {
                     thumbnails.getChildren().add(thumbnail);
                 });
             }
-            //每次加载完成后，清楚上一次的图片缓存
-            Platform.runLater(()->{
-                if(this.isTerminal)return;
-                PictureShowerListener.getThumbnailArrayList().clear();
-            });
         }
         public void terminate(){
             this.isTerminal = true;
