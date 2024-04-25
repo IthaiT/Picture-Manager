@@ -9,6 +9,7 @@ import top.ithaic.utils.FilePathUtil;
 import top.ithaic.utils.PictureUtil;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class PictureShower {
     private static FlowPane thumbnails;
@@ -53,7 +54,7 @@ public class PictureShower {
 
     //传入路径显示图片
     public void showPicture(File selectedPath){
-        if(selectedPath==null) return;;
+        if(selectedPath==null) return;
         File[] pictures = PictureUtil.getPicturesInDirectory(selectedPath);
         //维护路径信息
         FilePathUtil.updatePath(selectedPath);
