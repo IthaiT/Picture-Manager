@@ -9,6 +9,7 @@ import top.ithaic.utils.FilePathUtil;
 import top.ithaic.utils.PictureUtil;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class PictureShower {
     private static FlowPane thumbnails;
