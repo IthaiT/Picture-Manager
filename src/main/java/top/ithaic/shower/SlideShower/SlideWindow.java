@@ -2,6 +2,7 @@ package top.ithaic.shower.SlideShower;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import top.ithaic.HelloApplication;
 import top.ithaic.listener.PictureShowerListener;
@@ -34,6 +35,8 @@ public class SlideWindow {
         stage.setMinHeight(600);
         stage.setScene(scene);
         StageManager.pushStage(stage);
+        Image icon = new Image(String.valueOf(HelloApplication.class.getResource("/top/ithaic/icons/softIcon.png")));
+        stage.getIcons().add(icon);
         stage.show();
         stage.setOnCloseRequest(windowEvent -> {
             StageManager.popStage();
