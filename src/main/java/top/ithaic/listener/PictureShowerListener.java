@@ -171,9 +171,6 @@ public class PictureShowerListener implements Listener {
     }
 
     private void handleMouseReleased(MouseEvent mouseEvent) {
-        if(mouseEvent.getButton() == MouseButton.SECONDARY){
-            thumbnails.removeEventHandler(MouseEvent.MOUSE_CLICKED,mouseClickEventHandler);
-        }
         scrollPane.setContent(thumbnails);
         rectangle.setVisible(false);
         mouseIsClick = false;
