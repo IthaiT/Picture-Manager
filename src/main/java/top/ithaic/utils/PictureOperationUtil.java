@@ -177,7 +177,7 @@ public class PictureOperationUtil {
             File oldFile = thumbnailArrayList.get(0).getImageFile();
             String pictureName = oldFile.getName();
             String suffix = pictureName.substring(pictureName.lastIndexOf("."));
-            TextInputDialog dialog = new TextInputDialog("defalut");
+            TextInputDialog dialog = new TextInputDialog("default");
             dialog.setTitle("文件重命名");
             dialog.setContentText("请输入新的文件名");
             Optional<String> result = dialog.showAndWait();
@@ -190,8 +190,8 @@ public class PictureOperationUtil {
                     return;
                 }
                 oldFile.renameTo(new File(oldFile.getParentFile() + "/" + newName));
+                pictureShower.showPicture();
             }
-            pictureShower.showPicture();
             return;
         }
 
@@ -340,11 +340,11 @@ public class PictureOperationUtil {
         if (result.isPresent()) {
             String newName = result.get() + suffix;
             oldFile.renameTo(new File(oldFile.getParentFile() + "/" + newName));
+            pictureShower.showPicture();
         }
-        pictureShower.showPicture();
     }
 
-    //TODO 删除图片，为主窗口使用
+    //删除图片，为主窗口使用
     public static void deletePictures() throws IOException {
         ArrayList<Thumbnail> tmp = PictureShowerListener.getThumbnailArrayList();
         if (tmp.isEmpty()) return;
@@ -355,8 +355,8 @@ public class PictureOperationUtil {
             for (Thumbnail thumbnail : tmp) {
                 Desktop.getDesktop().moveToTrash(thumbnail.getImageFile());
             }
+            pictureShower.showPicture();
         }
-        pictureShower.showPicture();
         if (PictureShowerListener.getSlideWindow() != null) {
             FilePathUtil.updateFiles();
             SlideFileManager.setPictures(FilePathUtil.getCurrentFiles());
@@ -366,7 +366,7 @@ public class PictureOperationUtil {
         }
     }
 
-    //TODO 删除图片，为幻灯片窗口使用
+    //删除图片，为幻灯片窗口使用
     public static boolean deletePictures(int currentIndex) throws IOException {
         if (currentIndex < 0 || currentIndex > SlideFileManager.getPictures().length) return false;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -374,13 +374,13 @@ public class PictureOperationUtil {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             Desktop.getDesktop().moveToTrash(SlideFileManager.getPictures()[currentIndex]);
+            pictureShower.showPicture();
             return true;
         }
-        pictureShower.showPicture();
         return false;
     }
 
-    //TODO 选中主窗口所有图片
+    //选中主窗口所有图片
     public static void selectAll() {
         FlowPane flowPane = PictureShower.getThumbnails();
         ArrayList<Thumbnail> thumbnailArrayList = PictureShowerListener.getThumbnailArrayList();
@@ -397,7 +397,7 @@ public class PictureOperationUtil {
         }
     }
 
-    //TODO 判断文件名是否在给定文件中存在
+    //判断文件名是否在给定文件中存在
     public static boolean isNameExit(String sourceName, List<File> Dir) {
         if (Dir.isEmpty()) return false;
         String destName;

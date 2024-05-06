@@ -26,6 +26,8 @@ import java.io.File;
 import java.util.*;
 
 public class SlideListener implements Listener {
+    boolean addFlag = true;  //标志位 false为在头部添加图片 否则在尾部添加图片
+    boolean delFlag = true;  //标志位 false为在头部删除图片 否则在尾部删除图片
     private boolean isMouseInToolBar;
     private static int head;
     private static int tail;
@@ -130,26 +132,43 @@ public class SlideListener implements Listener {
         pictureScanner.widthProperty().addListener((observableValue, oldValue,newValue) -> {
             scannerPictureNum = (int)(pictureScanner.getWidth()/(new SlideThumbnail().getThumbnailWidth()+20));
             int numGap = scannerPictureNum - pictureScanner.getChildren().size();
-            if(numGap > 0){
-                for(int i=tail;i<tail+numGap&&i<pictures.length;i++){
-                    SlideThumbnail temp = new SlideThumbnail(pictures[i]);
+            while(numGap > 0){
+                if(head<0&&tail>=pictures.length)break;
+                if((addFlag &&tail<pictures.length)||head<0) {
+                    SlideThumbnail temp = new SlideThumbnail(pictures[tail]);
                     pictureScanner.getChildren().add(temp);
                     tail++;
                     numGap--;
+                    addFlag = false;
+                    continue;
                 }
-                for(int i=head;i>head-numGap&&i>0;i--){
-                    SlideThumbnail temp = new SlideThumbnail(pictures[i]);
-                    pictureScanner.getChildren().add(0,temp);
+                if((!addFlag &&head>=0)||tail>=pictures.length) {
+                    SlideThumbnail temp = new SlideThumbnail(pictures[head]);
+                    pictureScanner.getChildren().add(0, temp);
                     head--;
                     numGap--;
+                    addFlag = true;
                 }
             }
-            if(numGap < 0){
-                for(int i=pictureScanner.getChildren().size()-1;i>=scannerPictureNum&&i>=0;i--){
-                    pictureScanner.getChildren().remove(i);
+            while(numGap < 0){
+                if(delFlag) {
+                    if(tail-2 <= currentIndex){
+                        delFlag=false;
+                        continue;
+                    }
+                    pictureScanner.getChildren().remove(pictureScanner.getChildren().size() - 1);
                     tail--;
                     numGap++;
+                    delFlag=false;
+                    continue;
                 }
+                if(!delFlag){
+                    pictureScanner.getChildren().remove(0);
+                    head++;
+                    numGap++;
+                    delFlag=true;
+                }
+
             }
         });
     }
@@ -158,7 +177,8 @@ public class SlideListener implements Listener {
         SlideFileManager.currentIndexPropertyProperty().addListener(((observableValue, oldValue,newValue) -> {
             File[] pictures = SlideFileManager.getPictures();
             if(newValue.intValue() < oldValue.intValue()){
-                ((SlideThumbnail) pictureScanner.getChildren().get(oldValue.intValue() - head - 1)).setUnSelectedStyle();
+                if (pictureScanner.getChildren().size() > oldValue.intValue() - head - 1)
+                    ((SlideThumbnail) pictureScanner.getChildren().get(oldValue.intValue() - head - 1)).setUnSelectedStyle();
                 for(int i=0;i<oldValue.intValue()-newValue.intValue()&&head>=0;i++) {
                     pictureScanner.getChildren().add(0, new SlideThumbnail(pictures[head]));
                     head--;
@@ -168,7 +188,8 @@ public class SlideListener implements Listener {
                 ((SlideThumbnail) pictureScanner.getChildren().get(newValue.intValue() - head - 1)).setSelectedStyle();
             }
             if(newValue.intValue() > oldValue.intValue()) {
-                ((SlideThumbnail) pictureScanner.getChildren().get(oldValue.intValue() - head - 1)).setUnSelectedStyle();
+                if (pictureScanner.getChildren().size() > oldValue.intValue() - head - 1)
+                    ((SlideThumbnail) pictureScanner.getChildren().get(oldValue.intValue() - head - 1)).setUnSelectedStyle();
                 for(int i=0;i<newValue.intValue()-oldValue.intValue()&&tail<pictures.length;i++) {
                     pictureScanner.getChildren().remove(0);
                     head++;
@@ -184,7 +205,6 @@ public class SlideListener implements Listener {
         SlideFileManager.picturesLengthProperty().addListener(((observableValue, oldValue, newValue) -> {
                 SlideListener.pictureScanner.getChildren().clear();
                 this.pictureLoad();
-
         }));
     }
 
