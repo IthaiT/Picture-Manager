@@ -53,6 +53,7 @@ public class PictureShowerListener implements Listener {
     private String preName = null;
     private String newName = null;
     private boolean preClick = false;
+    private boolean mouseIsClick = false;
 
 
     public PictureShowerListener(FlowPane thumbnails, ScrollPane scrollPane) {
@@ -112,6 +113,7 @@ public class PictureShowerListener implements Listener {
         thumbnails.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickEventHandler);
         handleNameChange();//处理点击label重命名
         if (isClickBlankArea(mouseEvent)) {
+            mouseIsClick = true;
             if(mouseEvent.getButton() == MouseButton.SECONDARY){
                 contextMenuP.show(scrollPane,mouseEvent.getScreenX(),mouseEvent.getScreenY());
             }
@@ -133,7 +135,8 @@ public class PictureShowerListener implements Listener {
             rectangle.setWidth(0);
             rectangle.setHeight(0);
             rectangle.setVisible(true);
-        } else {
+        } else{
+            if(mouseIsClick)return;
             thumbnails.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedEventHandler);
             thumbnails.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedEventHandler);
         }
@@ -173,6 +176,7 @@ public class PictureShowerListener implements Listener {
         }
         scrollPane.setContent(thumbnails);
         rectangle.setVisible(false);
+        mouseIsClick = false;
     }
 
     private void handleMouseClicked(MouseEvent mouseEvent) {
@@ -249,7 +253,6 @@ public class PictureShowerListener implements Listener {
             }
             thumbnailArrayList.clear();
         }
-
 
         //TODO 单击选中图片
         if (mouseEvent.getClickCount() == 1) {

@@ -21,7 +21,6 @@ public class StageManager {
     public static Stage popStage(){
         stageStack.pop();
         Stage tmp = stageStack.peek();
-        System.out.println("tmp" + tmp);
         tmp.show();
         new PictureShower().showPicture();
         return tmp;
