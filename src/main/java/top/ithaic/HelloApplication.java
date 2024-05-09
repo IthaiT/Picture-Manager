@@ -28,9 +28,4 @@ public class HelloApplication extends Application {
             Platform.exit();
         });
     }
-
-    public static void main(String[] args) {
-        launch();
-        System.exit(0);
-    }
 }
