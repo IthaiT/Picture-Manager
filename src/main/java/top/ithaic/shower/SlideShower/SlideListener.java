@@ -87,6 +87,57 @@ public class SlideListener implements Listener {
         indexListen();
         buttonListen();
         mouseListen();
+
+
+        //按容量继续加载
+        pictureScanner.widthProperty().addListener((observableValue, oldValue,newValue) -> {
+            File[] pictures = SlideFileManager.getPictures();
+            int currentIndex = SlideFileManager.getCurrentIndex();
+            scannerPictureNum = (int)(pictureScanner.getWidth()/(new SlideThumbnail().getThumbnailWidth()+20));
+            int numGap = scannerPictureNum - pictureScanner.getChildren().size();
+            while(numGap > 0){
+                if(head<0&&tail>=pictures.length)break;
+                if((addFlag &&tail<pictures.length)||head<0) {
+                    SlideThumbnail temp = new SlideThumbnail(pictures[tail]);
+                    pictureScanner.getChildren().add(temp);
+                    tail++;
+                    numGap--;
+                    addFlag = false;
+                    continue;
+                }
+                if((!addFlag &&head>=0)||tail>=pictures.length) {
+                    SlideThumbnail temp = new SlideThumbnail(pictures[head]);
+                    pictureScanner.getChildren().add(0, temp);
+                    head--;
+                    numGap--;
+                    addFlag = true;
+                }
+            }
+            while(numGap < 0){
+                if(delFlag) {
+                    if(tail-2 <= currentIndex){
+                        delFlag=false;
+                        continue;
+                    }
+                    pictureScanner.getChildren().remove(pictureScanner.getChildren().size() - 1);
+                    tail--;
+                    numGap++;
+                    delFlag=false;
+                    continue;
+                }
+                if(!delFlag){
+                    if(head+2 >= currentIndex){
+                        delFlag=true;
+                        continue;
+                    }
+                    pictureScanner.getChildren().remove(0);
+                    head++;
+                    numGap++;
+                    delFlag=true;
+                }
+
+            }
+        });
     }
 
     //此定时 隐藏工具栏
@@ -127,50 +178,6 @@ public class SlideListener implements Listener {
                 tail++;
             }
         }
-
-        //按容量继续加载
-        pictureScanner.widthProperty().addListener((observableValue, oldValue,newValue) -> {
-            scannerPictureNum = (int)(pictureScanner.getWidth()/(new SlideThumbnail().getThumbnailWidth()+20));
-            int numGap = scannerPictureNum - pictureScanner.getChildren().size();
-            while(numGap > 0){
-                if(head<0&&tail>=pictures.length)break;
-                if((addFlag &&tail<pictures.length)||head<0) {
-                    SlideThumbnail temp = new SlideThumbnail(pictures[tail]);
-                    pictureScanner.getChildren().add(temp);
-                    tail++;
-                    numGap--;
-                    addFlag = false;
-                    continue;
-                }
-                if((!addFlag &&head>=0)||tail>=pictures.length) {
-                    SlideThumbnail temp = new SlideThumbnail(pictures[head]);
-                    pictureScanner.getChildren().add(0, temp);
-                    head--;
-                    numGap--;
-                    addFlag = true;
-                }
-            }
-            while(numGap < 0){
-                if(delFlag) {
-                    if(tail-2 <= currentIndex){
-                        delFlag=false;
-                        continue;
-                    }
-                    pictureScanner.getChildren().remove(pictureScanner.getChildren().size() - 1);
-                    tail--;
-                    numGap++;
-                    delFlag=false;
-                    continue;
-                }
-                if(!delFlag){
-                    pictureScanner.getChildren().remove(0);
-                    head++;
-                    numGap++;
-                    delFlag=true;
-                }
-
-            }
-        });
     }
 
     private void indexListen(){
@@ -203,8 +210,8 @@ public class SlideListener implements Listener {
 
     private void lengthListen(){
         SlideFileManager.picturesLengthProperty().addListener(((observableValue, oldValue, newValue) -> {
-                SlideListener.pictureScanner.getChildren().clear();
-                this.pictureLoad();
+            SlideListener.pictureScanner.getChildren().clear();
+            this.pictureLoad();
         }));
     }
 

@@ -12,13 +12,12 @@ import java.io.IOException;
 public class ContextMenuListener implements Listener {
     private static ContextMenu contextMenu;
     private final MenuItem copyItem = new MenuItem("复制");
-    private final MenuItem renameItem = new MenuItem("重命名");
     private final MenuItem deleteItem = new MenuItem("删除");
     private final MenuItem slidePlay = new MenuItem("幻灯片放映");
 
     public ContextMenuListener(ContextMenu contextMenu){
         ContextMenuListener.contextMenu = contextMenu;
-        ContextMenuListener.contextMenu.getItems().addAll(copyItem,renameItem,deleteItem,slidePlay);
+        ContextMenuListener.contextMenu.getItems().addAll(copyItem,deleteItem,slidePlay);
         ContextMenuListener.contextMenu.setStyle(" -fx-background-color: white");
         Listen();
     }
@@ -31,12 +30,6 @@ public class ContextMenuListener implements Listener {
             SlideFileManager.setPictures(FilePathUtil.getCurrentFiles());
             new SlideShower().drawPicture();
         });
-        renameItem.setOnAction(actionEvent -> {
-            PictureOperationUtil.renamePictures(SlideFileManager.getCurrentIndex());
-            FilePathUtil.updateFiles();
-            SlideFileManager.setPictures(FilePathUtil.getCurrentFiles());
-            new SlideShower().drawPicture();
-        });
         deleteItem.setOnAction(actionEvent -> {
             try {
                 if(PictureOperationUtil.deletePictures(SlideFileManager.getCurrentIndex())) {
@@ -45,6 +38,7 @@ public class ContextMenuListener implements Listener {
                     if(SlideFileManager.getCurrentIndex()==SlideFileManager.getPictures().length) {
                         SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex() - 1);
                     }
+                    SlideFileManager.setCurrentIndexProperty(SlideFileManager.getCurrentIndex());
                     SlideFileManager.setPicturesLengthProperty(SlideFileManager.getPictures().length);
                     new SlideShower().drawPicture();
                 }
