@@ -2,11 +2,12 @@ package top.ithaic.shower.SlideShower;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
-
 public class SlideShower {
+    private static ImageView imageView;
     private final double FACTORINCREMENT = 0.15;
     private static ScaleTransitionThread scaleTransitionThread;
     private static double factor;
@@ -29,6 +30,7 @@ public class SlideShower {
         SlideShower.factor = 0;
         SlideShower.scaleTransitionThread = null;
         SlideShower.historyAngle = 0.0;
+        SlideShower.imageView = new ImageView();
         initPicture();
         initMouseListen();
         initCanvasEvent();
@@ -91,9 +93,9 @@ public class SlideShower {
      * @param detY  放缩位置偏移量Y
      */
     private void drawPicture(Canvas canvas, Image image, double factor, double detX, double detY,double angle) {
+        pictureShower.getChildren().remove(imageView);
         double canvasWidth = canvas.getWidth();
         double canvasHeight = canvas.getHeight();
-
         // 获取图片的原始尺寸
         double imageWidth = image.getWidth();
         double imageHeight = image.getHeight();
@@ -140,6 +142,17 @@ public class SlideShower {
             X = -Y;
             Y = temp;
         }
+
+        if(image.getUrl().toLowerCase().endsWith(".gif")){
+            imageView.setImage(image);
+            imageView.setFitWidth(scaledWidth);
+            imageView.setFitHeight(scaledHeight);
+            imageView.setX(offsetX+X);
+            imageView.setY(offsetY+Y);
+            pictureShower.getChildren().add(imageView);
+            gc.restore();
+            return;
+        }
         // 在Canvas上绘制缩放后的图像
         gc.drawImage(image, offsetX + X, offsetY + Y, scaledWidth, scaledHeight);
         gc.restore();
@@ -147,7 +160,7 @@ public class SlideShower {
 
     public void drawPicture() {
         image = new Image(SlideFileManager.getPictures()[SlideFileManager.getCurrentIndex()].toURI().toString());
-        this.drawPicture(canvas, image, 1, 0, 0,0);
+        this.drawPicture(canvas, image, 1, 0, 0, 0);
     }
 
     public static void recoverPicture(){

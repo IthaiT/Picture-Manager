@@ -42,6 +42,9 @@ public class ContextMenuListener implements Listener {
                 if(PictureOperationUtil.deletePictures(SlideFileManager.getCurrentIndex())) {
                     FilePathUtil.updateFiles();
                     SlideFileManager.setPictures(FilePathUtil.getCurrentFiles());
+                    if(SlideFileManager.getCurrentIndex()==SlideFileManager.getPictures().length) {
+                        SlideFileManager.setCurrentIndex(SlideFileManager.getCurrentIndex() - 1);
+                    }
                     SlideFileManager.setPicturesLengthProperty(SlideFileManager.getPictures().length);
                     new SlideShower().drawPicture();
                 }
