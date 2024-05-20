@@ -36,12 +36,14 @@ public class CompressListener implements Listener {
         CompressListener.compressResult = compressResult;
         CompressListener.close = close;
         Listen();
-        startTimer();
     }
 
     @Override
     public void Listen(){
-        close.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> pictureShower.getChildren().remove(compressPane));
+        close.addEventFilter(MouseEvent.MOUSE_CLICKED,mouseEvent -> {
+            compressResult.setText("----");
+            pictureShower.getChildren().remove(compressPane);
+        });
 
         sizeShower.setText(" %");
 
@@ -69,20 +71,5 @@ public class CompressListener implements Listener {
             }
             else compressResult.setText("压缩失败");
         });
-    }
-
-    private void startTimer(){
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                Platform.runLater(()->{
-                    if(compressResult.getText().compareTo("----")!=0){
-                        compressResult.setText("----");
-                    }
-                });
-            }
-        };
-        timer.schedule(task,0,10000);
     }
 }
