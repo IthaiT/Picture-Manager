@@ -70,18 +70,21 @@ public class SlideShower {
         }
     }
     public void amplifyPicture() {
+        if(image.getUrl().toLowerCase().endsWith(".gif"))return;
         if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
         scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor+=FACTORINCREMENT);
         scaleTransitionThread.start();
     }
 
     public void shrinkPicture() {
+        if(image.getUrl().toLowerCase().endsWith(".gif"))return;
         if(scaleTransitionThread!=null&&scaleTransitionThread.isAlive())scaleTransitionThread.terminal();
         scaleTransitionThread = new ScaleTransitionThread(SlideShower.factor,SlideShower.factor-=FACTORINCREMENT);
         scaleTransitionThread.start();
     }
 
     public void rotatePicture(double angle){
+        if(image.getUrl().toLowerCase().endsWith(".gif"))return;
         drawPicture(canvas,image,1+factor,dx,dy,angle);
     }
     /**
