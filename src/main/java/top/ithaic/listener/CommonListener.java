@@ -58,7 +58,7 @@ public class CommonListener implements Listener {
 
         //监听Slider的改变
         sizeChanger.valueProperty().addListener(((observableValue, oldValue, newValue) -> {
-            pictureShower.showPicture();
+            pictureShower.showPicture(FilePathUtil.getCurrentFiles());
             Thumbnail thumbnail = new Thumbnail();
             double newWidth = thumbnail.getThumbnailWidth() * ((newValue.doubleValue())/ oldValue.doubleValue());
             double newHeight = thumbnail.getThumbnailHeight() * (newValue.doubleValue() /oldValue.doubleValue());
